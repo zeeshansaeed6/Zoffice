@@ -53,6 +53,14 @@ export function getSlidesRibbonConfig(actions = {}) {
                 icon: <PlusSquare size={18} />,
                 onClick: actions.onNewSlide,
               },
+              {
+                id: 'change-layout',
+                type: 'button',
+                label: 'Layout',
+                size: 'large',
+                icon: <PlusSquare size={18} />,
+                onClick: actions.onOpenLayoutPicker,
+              },
             ],
           },
           {

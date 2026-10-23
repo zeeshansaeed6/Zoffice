@@ -2,6 +2,8 @@ import React, { useState, useMemo, useCallback } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { getSlidesRibbonConfig } from './ribbon-config.jsx'
 import { SlideCanvas } from './canvas/SlideCanvas.jsx'
+import { ThumbnailPanel } from './thumbnails/ThumbnailPanel.jsx'
+import { LayoutPickerDialog } from './dialogs/LayoutPickerDialog.jsx'
 import {
   createPresentationDeck,
   createSlide,
@@ -9,6 +11,7 @@ import {
   createTextElement,
 } from './core/slide-model.js'
 import { ELEMENT_TYPES, SHAPE_TYPES } from './core/slide-constants.js'
+import { createElementsForLayout, LAYOUT_TYPES } from './core/slide-layouts.js'
 import { reorderElement, alignElements } from './core/arrange-utils.js'
 
 /**
@@ -23,6 +26,7 @@ export function ZSlides({ onSave }) {
   const [deck, setDeck] = useState(() => createPresentationDeck())
   const [zoom, setZoom] = useState(100)
   const [selectedElementIds, setSelectedElementIds] = useState([])
+  const [isLayoutPickerOpen, setIsLayoutPickerOpen] = useState(false)
 
   const activeSlideIndex = useMemo(() => {
     const idx = deck.slides.findIndex((s) => s.id === deck.activeSlideId)
@@ -31,34 +35,15 @@ export function ZSlides({ onSave }) {
 
   const currentSlide = deck.slides[activeSlideIndex] || deck.slides[0]
 
-  // Currently selected first element
   const selectedElement = useMemo(() => {
     return currentSlide.elements.find((el) => selectedElementIds.includes(el.id))
   }, [currentSlide.elements, selectedElementIds])
 
-  // Add a new slide
-  const handleNewSlide = useCallback(() => {
+  // Slide management
+  const handleNewSlide = useCallback((layout = LAYOUT_TYPES.TITLE_AND_CONTENT) => {
     const newSlide = createSlide({
-      layout: 'title_and_content',
-      elements: [
-        createTextElement({
-          x: 80,
-          y: 40,
-          width: 800,
-          height: 60,
-          text: 'Slide Title',
-          fontSize: 36,
-          bold: true,
-        }),
-        createTextElement({
-          x: 80,
-          y: 130,
-          width: 800,
-          height: 300,
-          text: '• Click to add bullet points\n• Second bullet point',
-          fontSize: 20,
-        }),
-      ],
+      layout,
+      elements: createElementsForLayout(layout),
     })
     setDeck((prev) => ({
       ...prev,
@@ -68,7 +53,67 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([])
   }, [])
 
-  // Insert a text box
+  const handleApplyLayout = useCallback((layoutType) => {
+    setDeck((prev) => ({
+      ...prev,
+      slides: prev.slides.map((s) => {
+        if (s.id !== prev.activeSlideId) return s
+        return {
+          ...s,
+          layout: layoutType,
+          elements: createElementsForLayout(layoutType, prev.dimensions),
+        }
+      }),
+    }))
+    setSelectedElementIds([])
+  }, [])
+
+  const handleDuplicateSlide = useCallback((slideId) => {
+    setDeck((prev) => {
+      const idx = prev.slides.findIndex((s) => s.id === slideId)
+      if (idx === -1) return prev
+      const source = prev.slides[idx]
+      const cloned = {
+        ...source,
+        id: `slide_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        elements: source.elements.map((el) => ({
+          ...el,
+          id: `elem_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        })),
+      }
+      const newSlides = [...prev.slides]
+      newSlides.splice(idx + 1, 0, cloned)
+      return { ...prev, activeSlideId: cloned.id, slides: newSlides }
+    })
+  }, [])
+
+  const handleDeleteSlide = useCallback((slideId) => {
+    setDeck((prev) => {
+      if (prev.slides.length <= 1) return prev
+      const idx = prev.slides.findIndex((s) => s.id === slideId)
+      const newSlides = prev.slides.filter((s) => s.id !== slideId)
+      const nextActive = newSlides[Math.max(0, idx - 1)].id
+      return { ...prev, activeSlideId: nextActive, slides: newSlides }
+    })
+  }, [])
+
+  const handleToggleHideSlide = useCallback((slideId) => {
+    setDeck((prev) => ({
+      ...prev,
+      slides: prev.slides.map((s) => (s.id === slideId ? { ...s, hidden: !s.hidden } : s)),
+    }))
+  }, [])
+
+  const handleReorderSlides = useCallback((fromIndex, toIndex) => {
+    setDeck((prev) => {
+      const copy = [...prev.slides]
+      const [moved] = copy.splice(fromIndex, 1)
+      copy.splice(toIndex, 0, moved)
+      return { ...prev, slides: copy }
+    })
+  }, [])
+
+  // Element actions
   const handleInsertTextBox = useCallback(() => {
     const newElem = createTextElement({
       x: 280,
@@ -87,7 +132,6 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([newElem.id])
   }, [])
 
-  // Insert a shape onto current slide
   const handleInsertShape = useCallback((shapeType = SHAPE_TYPES.RECTANGLE) => {
     const newElem = createSlideElement({
       type: ELEMENT_TYPES.SHAPE,
@@ -111,7 +155,6 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([newElem.id])
   }, [])
 
-  // Update element properties or transform
   const handleElementChange = useCallback((updated) => {
     setDeck((prev) => ({
       ...prev,
@@ -125,7 +168,6 @@ export function ZSlides({ onSave }) {
     }))
   }, [])
 
-  // Delete elements
   const handleDeleteElements = useCallback((ids) => {
     setDeck((prev) => ({
       ...prev,
@@ -140,7 +182,6 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([])
   }, [])
 
-  // Formatting toggles for selected text element
   const toggleProperty = useCallback(
     (prop) => {
       if (!selectedElement) return
@@ -164,7 +205,6 @@ export function ZSlides({ onSave }) {
     [selectedElement, handleElementChange],
   )
 
-  // Arrange reordering
   const handleArrange = useCallback(
     (action) => {
       if (!selectedElement) return
@@ -182,7 +222,6 @@ export function ZSlides({ onSave }) {
     [selectedElement],
   )
 
-  // Align elements
   const handleAlignElements = useCallback(
     (alignment) => {
       if (selectedElementIds.length === 0) return
@@ -201,7 +240,8 @@ export function ZSlides({ onSave }) {
   )
 
   const ribbonConfig = getSlidesRibbonConfig({
-    onNewSlide: handleNewSlide,
+    onNewSlide: () => handleNewSlide(),
+    onOpenLayoutPicker: () => setIsLayoutPickerOpen(true),
     onInsertTextBox: handleInsertTextBox,
     onInsertShape: handleInsertShape,
     bold: !!selectedElement?.properties?.bold,
@@ -227,30 +267,20 @@ export function ZSlides({ onSave }) {
 
       {/* Main Slide Workspace */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Slides Thumbnail Sidebar */}
-        <div className="flex w-48 flex-col gap-3 overflow-y-auto border-r border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-900">
-          {deck.slides.map((s, idx) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => {
-                setDeck((prev) => ({ ...prev, activeSlideId: s.id }))
-                setSelectedElementIds([])
-              }}
-              className={`flex flex-col gap-1 rounded border p-2 text-left transition-all ${
-                deck.activeSlideId === s.id
-                  ? 'border-blue-600 bg-white ring-2 ring-blue-500/30 dark:bg-neutral-800'
-                  : 'border-neutral-300 bg-neutral-100/60 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800/40'
-              }`}
-            >
-              <span className="text-[10px] font-bold text-neutral-500">{idx + 1}</span>
-              <div className="aspect-video w-full truncate rounded bg-white p-1 text-[8px] shadow-sm dark:bg-neutral-900 dark:text-neutral-300">
-                {s.elements.find((el) => el.type === ELEMENT_TYPES.TEXT)?.properties?.text ||
-                  'Slide'}
-              </div>
-            </button>
-          ))}
-        </div>
+        {/* Thumbnails Sidebar */}
+        <ThumbnailPanel
+          slides={deck.slides}
+          activeSlideId={deck.activeSlideId}
+          dimensions={deck.dimensions}
+          onSelectSlide={(id) => {
+            setDeck((prev) => ({ ...prev, activeSlideId: id }))
+            setSelectedElementIds([])
+          }}
+          onDuplicateSlide={handleDuplicateSlide}
+          onDeleteSlide={handleDeleteSlide}
+          onToggleHideSlide={handleToggleHideSlide}
+          onReorderSlides={handleReorderSlides}
+        />
 
         {/* High-Fidelity Interactive Slide Canvas */}
         <SlideCanvas
@@ -277,6 +307,13 @@ export function ZSlides({ onSave }) {
         centerContent="Ready"
         zoom={zoom}
         onZoomChange={setZoom}
+      />
+
+      {/* Slide Layout Picker Dialog */}
+      <LayoutPickerDialog
+        isOpen={isLayoutPickerOpen}
+        onClose={() => setIsLayoutPickerOpen(false)}
+        onSelectLayout={handleApplyLayout}
       />
     </div>
   )
