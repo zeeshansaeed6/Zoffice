@@ -9,6 +9,7 @@ import {
   createTextElement,
 } from './core/slide-model.js'
 import { ELEMENT_TYPES, SHAPE_TYPES } from './core/slide-constants.js'
+import { reorderElement, alignElements } from './core/arrange-utils.js'
 
 /**
  * ZSlides Presentation Application Component.
@@ -29,6 +30,11 @@ export function ZSlides({ onSave }) {
   }, [deck.slides, deck.activeSlideId])
 
   const currentSlide = deck.slides[activeSlideIndex] || deck.slides[0]
+
+  // Currently selected first element
+  const selectedElement = useMemo(() => {
+    return currentSlide.elements.find((el) => selectedElementIds.includes(el.id))
+  }, [currentSlide.elements, selectedElementIds])
 
   // Add a new slide
   const handleNewSlide = useCallback(() => {
@@ -62,7 +68,26 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([])
   }, [])
 
-  // Insert a new shape onto current slide
+  // Insert a text box
+  const handleInsertTextBox = useCallback(() => {
+    const newElem = createTextElement({
+      x: 280,
+      y: 200,
+      width: 400,
+      height: 100,
+      text: 'Click to add text',
+      fontSize: 24,
+    })
+    setDeck((prev) => ({
+      ...prev,
+      slides: prev.slides.map((s) =>
+        s.id === prev.activeSlideId ? { ...s, elements: [...s.elements, newElem] } : s,
+      ),
+    }))
+    setSelectedElementIds([newElem.id])
+  }, [])
+
+  // Insert a shape onto current slide
   const handleInsertShape = useCallback((shapeType = SHAPE_TYPES.RECTANGLE) => {
     const newElem = createSlideElement({
       type: ELEMENT_TYPES.SHAPE,
@@ -115,9 +140,80 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([])
   }, [])
 
+  // Formatting toggles for selected text element
+  const toggleProperty = useCallback(
+    (prop) => {
+      if (!selectedElement) return
+      const current = !!selectedElement.properties[prop]
+      handleElementChange({
+        ...selectedElement,
+        properties: { ...selectedElement.properties, [prop]: !current },
+      })
+    },
+    [selectedElement, handleElementChange],
+  )
+
+  const setAlign = useCallback(
+    (alignment) => {
+      if (!selectedElement) return
+      handleElementChange({
+        ...selectedElement,
+        properties: { ...selectedElement.properties, align: alignment },
+      })
+    },
+    [selectedElement, handleElementChange],
+  )
+
+  // Arrange reordering
+  const handleArrange = useCallback(
+    (action) => {
+      if (!selectedElement) return
+      setDeck((prev) => ({
+        ...prev,
+        slides: prev.slides.map((s) => {
+          if (s.id !== prev.activeSlideId) return s
+          return {
+            ...s,
+            elements: reorderElement(s.elements, selectedElement.id, action),
+          }
+        }),
+      }))
+    },
+    [selectedElement],
+  )
+
+  // Align elements
+  const handleAlignElements = useCallback(
+    (alignment) => {
+      if (selectedElementIds.length === 0) return
+      setDeck((prev) => ({
+        ...prev,
+        slides: prev.slides.map((s) => {
+          if (s.id !== prev.activeSlideId) return s
+          return {
+            ...s,
+            elements: alignElements(s.elements, selectedElementIds, alignment),
+          }
+        }),
+      }))
+    },
+    [selectedElementIds],
+  )
+
   const ribbonConfig = getSlidesRibbonConfig({
     onNewSlide: handleNewSlide,
+    onInsertTextBox: handleInsertTextBox,
     onInsertShape: handleInsertShape,
+    bold: !!selectedElement?.properties?.bold,
+    italic: !!selectedElement?.properties?.italic,
+    underline: !!selectedElement?.properties?.underline,
+    align: selectedElement?.properties?.align || 'left',
+    toggleBold: () => toggleProperty('bold'),
+    toggleItalic: () => toggleProperty('italic'),
+    toggleUnderline: () => toggleProperty('underline'),
+    setAlign,
+    onArrange: handleArrange,
+    onAlignElements: handleAlignElements,
     onSave,
     canSave: true,
   })

@@ -158,6 +158,12 @@ export function SlideCanvas({
               <SlideElement
                 element={el}
                 isSelected={isSelected}
+                onTextChange={(newText) => {
+                  onElementChange({
+                    ...el,
+                    properties: { ...el.properties, text: newText },
+                  })
+                }}
                 onSelect={(e) => {
                   e.stopPropagation()
                   const isMulti = e.shiftKey || e.ctrlKey || e.metaKey
