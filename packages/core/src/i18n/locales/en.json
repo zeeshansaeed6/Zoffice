@@ -1,0 +1,92 @@
+{
+  "app": {
+    "name": "Zoffice",
+    "tagline": "Your free, open-source office suite",
+    "version": "Version {version}"
+  },
+  "start": {
+    "title": "Start",
+    "newDocument": "New",
+    "openFile": "Open File",
+    "recentFiles": "Recent Files",
+    "templates": "Templates",
+    "noRecentFiles": "No recent files yet",
+    "clearRecent": "Clear Recent",
+    "templatesComing": "Templates coming soon"
+  },
+  "apps": {
+    "writer": {
+      "name": "ZWriter",
+      "description": "Word processing"
+    },
+    "sheets": {
+      "name": "ZSheets",
+      "description": "Spreadsheets"
+    },
+    "slides": {
+      "name": "ZSlides",
+      "description": "Presentations"
+    }
+  },
+  "ribbon": {
+    "home": "Home",
+    "insert": "Insert",
+    "layout": "Layout",
+    "view": "View",
+    "formulas": "Formulas",
+    "data": "Data",
+    "design": "Design",
+    "transitions": "Transitions",
+    "collapse": "Collapse Ribbon",
+    "expand": "Expand Ribbon"
+  },
+  "toolbar": {
+    "save": "Save",
+    "undo": "Undo",
+    "redo": "Redo",
+    "print": "Print"
+  },
+  "tabs": {
+    "close": "Close",
+    "closeConfirm": "Do you want to save changes to \"{title}\"?",
+    "unsavedChanges": "Unsaved Changes"
+  },
+  "file": {
+    "new": "New",
+    "open": "Open",
+    "save": "Save",
+    "saveAs": "Save As",
+    "untitled": "Untitled"
+  },
+  "dialog": {
+    "save": "Save",
+    "dontSave": "Don't Save",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "statusBar": {
+    "words": "{count} words",
+    "pages": "Page {current} of {total}",
+    "zoom": "Zoom",
+    "ready": "Ready"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "settings": "Theme Settings"
+  },
+  "recovery": {
+    "title": "Recover Unsaved Work",
+    "message": "Zoffice found unsaved documents from a previous session. Would you like to recover them?",
+    "recover": "Recover",
+    "discard": "Discard"
+  },
+  "errors": {
+    "fileNotFound": "File not found: {path}",
+    "saveFailed": "Failed to save file: {reason}",
+    "invalidFileType": "Unsupported file type: {ext}"
+  }
+}

@@ -1,0 +1,36 @@
+node_modules/
+dist/
+out/
+.output/
+coverage/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+*.swp
+*.swo
+.vscode/settings.json
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Electron builder output
+release/
+
+# Test results
+test-results/
+playwright-report/
+
+# SQLite databases (user data, not shipped)
+*.sqlite
+*.sqlite3
+*.db

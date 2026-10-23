@@ -1,0 +1,56 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/carlito';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --zoffice-bg: #f8fafc;
+  --zoffice-surface: #ffffff;
+  --zoffice-border: #e2e8f0;
+  --zoffice-text: #0f172a;
+  --zoffice-text-muted: #64748b;
+  --zoffice-accent: #2563eb;
+}
+
+.dark {
+  --zoffice-bg: #090d16;
+  --zoffice-surface: #111827;
+  --zoffice-border: #1f2937;
+  --zoffice-text: #f8fafc;
+  --zoffice-text-muted: #94a3b8;
+  --zoffice-accent: #3b82f6;
+}
+
+body {
+  font-family:
+    'Inter',
+    'Carlito',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Custom scrollbars for clean desktop appearance */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.7);
+}

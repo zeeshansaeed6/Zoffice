@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoffice</title>
+  </head>
+  <body
+    class="select-none overflow-hidden bg-neutral-100 text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100"
+  >
+    <div id="root" class="flex h-screen w-screen flex-col"></div>
+    <script type="module" src="/src/renderer/main.jsx"></script>
+  </body>
+</html>
