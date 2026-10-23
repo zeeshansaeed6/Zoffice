@@ -109,3 +109,5 @@ export async function writePptx(deck, outputType = 'arraybuffer') {
 
   return await pptx.write({ outputType })
 }
+
+export { writePptx as writePptxFile }

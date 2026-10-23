@@ -100,7 +100,10 @@ export function ZSlides({ onSave }) {
 
   const handleExportPptx = useCallback(async () => {
     try {
-      const blob = await writePptxFile(deck)
+      const buffer = await writePptxFile(deck, 'arraybuffer')
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      })
       downloadBlob(blob, 'presentation.pptx')
     } catch {
       // ignore or handle export error

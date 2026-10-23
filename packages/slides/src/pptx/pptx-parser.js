@@ -157,3 +157,5 @@ export async function readPptx(data) {
     slides,
   }
 }
+
+export { readPptx as parsePptxFile }
