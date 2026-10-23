@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
-import { getSheetsRibbonConfig } from './ribbon-config.js'
+import { getSheetsRibbonConfig } from './ribbon-config.jsx'
 
 const COLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 const ROWS = Array.from({ length: 25 }, (_, i) => i + 1)

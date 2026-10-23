@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
-import { getWriterRibbonConfig } from './ribbon-config.js'
+import { getWriterRibbonConfig } from './ribbon-config.jsx'
 
 /**
  * ZWriter Word Processing Component.

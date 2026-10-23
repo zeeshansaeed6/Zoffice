@@ -55,6 +55,26 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
    - [README.md](../README.md) & [ARCHITECTURE.md](ARCHITECTURE.md).
    - Issue and Pull Request templates.
 
+### Phase 0 Verified (E2E & Security Testing)
+
+- **Verification Date:** October 23, 2026
+- **Test Suite Results:**
+  - Vitest Unit Tests: 7 passed files, 22 passed tests.
+  - Playwright Electron Smoke Tests: 6 passed tests (15.1s).
+  - ESLint & Prettier: 0 errors, 0 warnings.
+  - Packaged App: `Zoffice.exe` unpacked build verified and opens successfully.
+- **Evidence Verified:**
+  - Automated Start Screen screenshot captured to `docs/screenshots/start-screen.png`.
+  - `better-sqlite3` native module loads in Electron main process; verified persistent storage of recent files across cold app restarts.
+  - Multi-app tab switching (ZWriter, ZSheets, ZSlides), dirty-state confirmation dialog on close, and HTML5 drag reordering.
+  - QuickAccessToolbar theme toggle switches between light and dark modes and persists state.
+  - Runtime offline verification confirmed 0 external network requests (fonts and icons bundled locally).
+  - Security configuration verified: `sandbox: true`, `contextIsolation: true`, `nodeIntegration: false`, strict CSP headers and meta tag, blocked `window.open` and unexpected navigation, and whitelist-only typed preload bridge.
+- **Known Limitations:**
+  - Document editors in ZWriter, ZSheets, and ZSlides currently use simplified placeholder views pending their respective engine phases (TipTap/Canvas).
+  - Templates on the Start Screen are informational placeholders slated for Phase 1.
+  - Windows code-signing is disabled (`signAndEditExecutable: false`) for local unpacked developer builds.
+
 ---
 
 ## Phase 1: ZWriter Core Document Engine

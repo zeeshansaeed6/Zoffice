@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
-import { getSlidesRibbonConfig } from './ribbon-config.js'
+import { getSlidesRibbonConfig } from './ribbon-config.jsx'
 
 /**
  * ZSlides Presentation Application Component.

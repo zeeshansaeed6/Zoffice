@@ -53,6 +53,7 @@
       "main": "out/main/index.js"
     },
     "win": {
+      "signAndEditExecutable": false,
       "target": [
         {
           "target": "nsis",

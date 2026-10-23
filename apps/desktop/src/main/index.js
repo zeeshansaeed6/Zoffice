@@ -1,5 +1,6 @@
 import { app, BrowserWindow, shell, session } from 'electron'
 import { join } from 'path'
+import { existsSync } from 'fs'
 import { registerIpcHandlers } from './ipc-handlers.js'
 import { setupApplicationMenu } from './menu.js'
 import { getDatabase } from './db.js'
@@ -7,6 +8,12 @@ import { getDatabase } from './db.js'
 let mainWindow = null
 
 function createWindow() {
+  const preloadPath = existsSync(join(__dirname, '../preload/index.cjs'))
+    ? join(__dirname, '../preload/index.cjs')
+    : existsSync(join(__dirname, '../preload/index.mjs'))
+      ? join(__dirname, '../preload/index.mjs')
+      : join(__dirname, '../preload/index.js')
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -16,7 +23,7 @@ function createWindow() {
     autoHideMenuBar: false,
     title: 'Zoffice',
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: preloadPath,
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,
