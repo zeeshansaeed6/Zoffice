@@ -5,6 +5,7 @@ import { SlideCanvas } from './canvas/SlideCanvas.jsx'
 import { ThumbnailPanel } from './thumbnails/ThumbnailPanel.jsx'
 import { LayoutPickerDialog } from './dialogs/LayoutPickerDialog.jsx'
 import { ThemeGalleryDialog } from './dialogs/ThemeGalleryDialog.jsx'
+import { AnimationPane } from './animations/AnimationPane.jsx'
 import { createPresentationDeck, createSlide } from './core/slide-model.js'
 import { SHAPE_TYPES } from './core/slide-constants.js'
 import { createElementsForLayout, LAYOUT_TYPES } from './core/slide-layouts.js'
@@ -37,6 +38,7 @@ export function ZSlides({ onSave }) {
   const [selectedElementIds, setSelectedElementIds] = useState([])
   const [isLayoutPickerOpen, setIsLayoutPickerOpen] = useState(false)
   const [isThemeGalleryOpen, setIsThemeGalleryOpen] = useState(false)
+  const [isAnimationPaneOpen, setIsAnimationPaneOpen] = useState(false)
 
   const activeSlideIndex = useMemo(() => {
     const idx = deck.slides.findIndex((s) => s.id === deck.activeSlideId)
@@ -191,6 +193,26 @@ export function ZSlides({ onSave }) {
         slides: prev.slides.map((s) => ({ ...s, transition: { ...activeTrans } })),
       }))
     },
+    onAddAnimation: (animType) => {
+      if (!selectedElement) return
+      const newAnim = {
+        id: `anim_${Date.now()}`,
+        elementId: selectedElement.id,
+        type: animType,
+        trigger: 'on_click',
+        duration: 0.5,
+      }
+      setDeck((prev) => ({
+        ...prev,
+        slides: prev.slides.map((s) =>
+          s.id === prev.activeSlideId
+            ? { ...s, animations: [...(s.animations || []), newAnim] }
+            : s,
+        ),
+      }))
+      setIsAnimationPaneOpen(true)
+    },
+    onToggleAnimationPane: () => setIsAnimationPaneOpen((prev) => !prev),
     bold: !!selectedElement?.properties?.bold,
     italic: !!selectedElement?.properties?.italic,
     underline: !!selectedElement?.properties?.underline,
@@ -235,6 +257,21 @@ export function ZSlides({ onSave }) {
           onElementChange={handleElementChange}
           onDeleteElements={handleDeleteElements}
         />
+        {isAnimationPaneOpen && (
+          <AnimationPane
+            animations={currentSlide.animations || []}
+            elements={currentSlide.elements}
+            onUpdateAnimations={(updatedAnims) => {
+              setDeck((prev) => ({
+                ...prev,
+                slides: prev.slides.map((s) =>
+                  s.id === prev.activeSlideId ? { ...s, animations: updatedAnims } : s,
+                ),
+              }))
+            }}
+            onClose={() => setIsAnimationPaneOpen(false)}
+          />
+        )}
       </div>
       <StatusBar
         leftContent={

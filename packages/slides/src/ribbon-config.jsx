@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { SHAPE_TYPES } from './core/slide-constants.js'
 import { getTransitionsTab } from './ribbon/ribbon-transitions.jsx'
+import { getAnimationsTab } from './ribbon/ribbon-animations.jsx'
 
 /**
  * Creates data-driven ribbon configuration for ZSlides.
@@ -293,6 +294,7 @@ export function getSlidesRibbonConfig(actions = {}) {
         ],
       },
       getTransitionsTab(actions),
+      getAnimationsTab(actions),
     ],
   }
 }
