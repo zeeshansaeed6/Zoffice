@@ -1,6 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { getSlidesRibbonConfig } from './ribbon-config.jsx'
+import { SlideCanvas } from './canvas/SlideCanvas.jsx'
+import {
+  createPresentationDeck,
+  createSlide,
+  createSlideElement,
+  createTextElement,
+} from './core/slide-model.js'
+import { ELEMENT_TYPES, SHAPE_TYPES } from './core/slide-constants.js'
 
 /**
  * ZSlides Presentation Application Component.
@@ -11,41 +19,105 @@ import { getSlidesRibbonConfig } from './ribbon-config.jsx'
  * @param {() => void} [props.onSave]
  */
 export function ZSlides({ onSave }) {
-  const [slides, setSlides] = useState([
-    { id: 1, title: 'Click to add title', subtitle: 'Click to add subtitle' },
-  ])
-  const [activeSlideIndex, setActiveSlideIndex] = useState(0)
+  const [deck, setDeck] = useState(() => createPresentationDeck())
   const [zoom, setZoom] = useState(100)
-  const [bold, setBold] = useState(false)
-  const [italic, setItalic] = useState(false)
-  const [align, setAlign] = useState('center')
+  const [selectedElementIds, setSelectedElementIds] = useState([])
 
-  const currentSlide = slides[activeSlideIndex] || slides[0]
+  const activeSlideIndex = useMemo(() => {
+    const idx = deck.slides.findIndex((s) => s.id === deck.activeSlideId)
+    return idx >= 0 ? idx : 0
+  }, [deck.slides, deck.activeSlideId])
 
-  const handleUpdateCurrentSlide = (field, value) => {
-    setSlides((prev) =>
-      prev.map((s, idx) => (idx === activeSlideIndex ? { ...s, [field]: value } : s)),
-    )
-  }
+  const currentSlide = deck.slides[activeSlideIndex] || deck.slides[0]
 
-  const handleNewSlide = () => {
-    const newSlide = {
-      id: Date.now(),
-      title: 'New Slide Title',
-      subtitle: 'New slide content',
-    }
-    setSlides((prev) => [...prev, newSlide])
-    setActiveSlideIndex(slides.length)
-  }
+  // Add a new slide
+  const handleNewSlide = useCallback(() => {
+    const newSlide = createSlide({
+      layout: 'title_and_content',
+      elements: [
+        createTextElement({
+          x: 80,
+          y: 40,
+          width: 800,
+          height: 60,
+          text: 'Slide Title',
+          fontSize: 36,
+          bold: true,
+        }),
+        createTextElement({
+          x: 80,
+          y: 130,
+          width: 800,
+          height: 300,
+          text: '• Click to add bullet points\n• Second bullet point',
+          fontSize: 20,
+        }),
+      ],
+    })
+    setDeck((prev) => ({
+      ...prev,
+      activeSlideId: newSlide.id,
+      slides: [...prev.slides, newSlide],
+    }))
+    setSelectedElementIds([])
+  }, [])
+
+  // Insert a new shape onto current slide
+  const handleInsertShape = useCallback((shapeType = SHAPE_TYPES.RECTANGLE) => {
+    const newElem = createSlideElement({
+      type: ELEMENT_TYPES.SHAPE,
+      x: 350,
+      y: 200,
+      width: 200,
+      height: 120,
+      properties: {
+        fill: '#3b82f6',
+        stroke: '#1d4ed8',
+        strokeWidth: 2,
+        shapeType,
+      },
+    })
+    setDeck((prev) => ({
+      ...prev,
+      slides: prev.slides.map((s) =>
+        s.id === prev.activeSlideId ? { ...s, elements: [...s.elements, newElem] } : s,
+      ),
+    }))
+    setSelectedElementIds([newElem.id])
+  }, [])
+
+  // Update element properties or transform
+  const handleElementChange = useCallback((updated) => {
+    setDeck((prev) => ({
+      ...prev,
+      slides: prev.slides.map((s) => {
+        if (s.id !== prev.activeSlideId) return s
+        return {
+          ...s,
+          elements: s.elements.map((el) => (el.id === updated.id ? updated : el)),
+        }
+      }),
+    }))
+  }, [])
+
+  // Delete elements
+  const handleDeleteElements = useCallback((ids) => {
+    setDeck((prev) => ({
+      ...prev,
+      slides: prev.slides.map((s) => {
+        if (s.id !== prev.activeSlideId) return s
+        return {
+          ...s,
+          elements: s.elements.filter((el) => !ids.includes(el.id)),
+        }
+      }),
+    }))
+    setSelectedElementIds([])
+  }, [])
 
   const ribbonConfig = getSlidesRibbonConfig({
-    bold,
-    italic,
-    align,
-    toggleBold: () => setBold(!bold),
-    toggleItalic: () => setItalic(!italic),
-    setAlign,
     onNewSlide: handleNewSlide,
+    onInsertShape: handleInsertShape,
     onSave,
     canSave: true,
   })
@@ -53,59 +125,47 @@ export function ZSlides({ onSave }) {
   return (
     <div
       data-testid="zslides-app"
-      className="flex h-full w-full flex-col bg-neutral-100 dark:bg-neutral-950"
+      className="flex h-full w-full select-none flex-col bg-neutral-100 dark:bg-neutral-950"
     >
       <Ribbon config={ribbonConfig} />
 
       {/* Main Slide Workspace */}
       <div className="flex flex-1 overflow-hidden">
         {/* Slides Thumbnail Sidebar */}
-        <div className="flex w-44 flex-col gap-3 overflow-y-auto border-r border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-900">
-          {slides.map((s, idx) => (
+        <div className="flex w-48 flex-col gap-3 overflow-y-auto border-r border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          {deck.slides.map((s, idx) => (
             <button
               key={s.id}
               type="button"
-              onClick={() => setActiveSlideIndex(idx)}
+              onClick={() => {
+                setDeck((prev) => ({ ...prev, activeSlideId: s.id }))
+                setSelectedElementIds([])
+              }}
               className={`flex flex-col gap-1 rounded border p-2 text-left transition-all ${
-                activeSlideIndex === idx
+                deck.activeSlideId === s.id
                   ? 'border-blue-600 bg-white ring-2 ring-blue-500/30 dark:bg-neutral-800'
                   : 'border-neutral-300 bg-neutral-100/60 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800/40'
               }`}
             >
               <span className="text-[10px] font-bold text-neutral-500">{idx + 1}</span>
               <div className="aspect-video w-full truncate rounded bg-white p-1 text-[8px] shadow-sm dark:bg-neutral-900 dark:text-neutral-300">
-                {s.title || 'Slide'}
+                {s.elements.find((el) => el.type === ELEMENT_TYPES.TEXT)?.properties?.text ||
+                  'Slide'}
               </div>
             </button>
           ))}
         </div>
 
-        {/* Slide Canvas */}
-        <div className="flex flex-1 items-center justify-center overflow-auto p-8">
-          <div
-            className="flex aspect-video w-[720px] origin-center flex-col items-center justify-center gap-6 rounded border border-neutral-200 bg-white p-12 shadow-lg transition-transform dark:border-neutral-800 dark:bg-neutral-900"
-            style={{ transform: `scale(${zoom / 100})` }}
-          >
-            <input
-              type="text"
-              aria-label="Slide title"
-              value={currentSlide.title}
-              onChange={(e) => handleUpdateCurrentSlide('title', e.target.value)}
-              className={`w-full border-b border-dashed border-transparent bg-transparent text-center text-3xl font-bold text-neutral-900 outline-none hover:border-neutral-300 focus:border-blue-500 dark:text-neutral-100 ${
-                bold ? 'font-black' : ''
-              } ${italic ? 'italic' : ''}`}
-            />
-            <textarea
-              aria-label="Slide subtitle"
-              value={currentSlide.subtitle}
-              onChange={(e) => handleUpdateCurrentSlide('subtitle', e.target.value)}
-              rows={3}
-              className={`w-3/4 resize-none border border-dashed border-transparent bg-transparent text-center text-base text-neutral-600 outline-none hover:border-neutral-300 focus:border-blue-500 dark:text-neutral-400 ${
-                italic ? 'italic' : ''
-              }`}
-            />
-          </div>
-        </div>
+        {/* High-Fidelity Interactive Slide Canvas */}
+        <SlideCanvas
+          slide={currentSlide}
+          dimensions={deck.dimensions}
+          zoom={zoom}
+          selectedElementIds={selectedElementIds}
+          onSelectionChange={setSelectedElementIds}
+          onElementChange={handleElementChange}
+          onDeleteElements={handleDeleteElements}
+        />
       </div>
 
       {/* Status Bar */}
@@ -113,7 +173,7 @@ export function ZSlides({ onSave }) {
         leftContent={
           <>
             <StatusBarSlot>
-              Slide {activeSlideIndex + 1} of {slides.length}
+              Slide {activeSlideIndex + 1} of {deck.slides.length}
             </StatusBarSlot>
             <StatusBarSlot>English (US)</StatusBarSlot>
           </>

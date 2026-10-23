@@ -213,3 +213,70 @@ packages/sheets/src/
 │   └── NameManagerDialog.jsx   # Defined names manager
 └── ZSheets.jsx                 # Top-level composite workbook component
 ```
+
+---
+
+## ZSlides Architecture (Phase 3)
+
+### Engine Decision: Layered React + SVG + HTML DOM Overlay
+
+We evaluated **Konva.js** vs. a **Layered React + SVG + HTML DOM Overlay**:
+
+- **Konva.js Evaluation**: While Konva offers canvas-based shape transforms, it abstracts away DOM access needed for rich text formatting, IME support, accessibility, and high-DPI font rendering. It also introduces extra bundle weight and potential native binding quirks in desktop packaging.
+- **Layered React + SVG + HTML DOM Overlay Decision**:
+  - **Base Layer (SVG/Vector)**: Renders geometric shapes, curves, connectors, gradients, and custom slide backgrounds.
+  - **Content Layer (HTML DOM)**: Positioned absolute blocks (`div` / `contentEditable`) for crisp typography, rich text runs (bold, italic, colors, fonts), embedded tables, and charts.
+  - **Transform & Interaction Overlay**: Bounding box with 8 resize handles, rotation pin, smart alignment snapping guides, and marquee multi-selection.
+  - **60fps Transitions & Animations**: CSS 3D transforms (`translate3d`, `rotate3d`, `scale3d`) and Web Animations API deliver butter-smooth 60fps playback.
+  - **Strict AGENTS.md Compliance**: Pure ES2022+ JavaScript and React JSX, zero TypeScript, < 300 lines per file.
+
+### ZSlides Package Structure (`packages/slides`)
+
+```
+packages/slides/
+├── src/
+│   ├── core/
+│   │   ├── slide-model.js         # Slide deck, slides, elements, layouts data structures
+│   │   ├── slide-constants.js     # Dimensions (16:9, 4:3), shape types, defaults
+│   │   ├── geometry-utils.js      # Bounding boxes, rotation math, snapping & guides
+│   │   ├── theme-definitions.js   # 12 original curated themes (colors, fonts, backgrounds)
+│   │   └── history.js             # Slide deck undo/redo stack
+│   ├── canvas/
+│   │   ├── SlideCanvas.jsx        # Top-level viewport with zoom, pan, and slide frame
+│   │   ├── SlideElement.jsx       # Element renderer dispatcher
+│   │   ├── TransformHandle.jsx    # 8 resize handles, rotation pin, aspect-ratio lock
+│   │   ├── AlignmentGuides.jsx    # Smart snapping lines (center, edges, equal spacing)
+│   │   └── MarqueeSelection.jsx   # Drag selection rectangle for multi-select
+│   ├── elements/
+│   │   ├── ShapeElement.jsx       # SVG shapes: rect, rounded, circle, stars, callouts, arrows
+│   │   ├── TextElement.jsx        # Rich text block with inline formatting & WordArt effects
+│   │   ├── ImageElement.jsx       # Image with crop, rotate, opacity, basic filters
+│   │   ├── TableElement.jsx       # Slide table grid
+│   │   ├── ChartElement.jsx       # Slide chart visualization wrapper
+│   │   └── ConnectorElement.jsx   # Line and connector with snap pins
+│   ├── thumbnails/
+│   │   ├── ThumbnailPanel.jsx     # Left sidebar with slide list, drag reorder, duplicate, delete
+│   │   └── SlideThumbnail.jsx     # Mini preview of each slide
+│   ├── presenter/
+│   │   ├── SlideShowView.jsx      # Fullscreen presentation mode with CSS transitions
+│   │   ├── PresenterView.jsx      # Multi-monitor dual view (current, next, notes, timer)
+│   │   ├── LaserPointer.jsx       # Virtual laser pointer & highlighter overlay
+│   │   └── transitions.js         # CSS transitions (Fade, Push, Wipe, Zoom, Cube, Flip)
+│   ├── animations/
+│   │   ├── animation-engine.js    # Entrance, emphasis, and exit animations runner
+│   │   └── AnimationPane.jsx      # Timing, ordering, trigger (click/after previous)
+│   ├── pptx/
+│   │   ├── pptx-writer.js         # PptxGenJS serializer (.pptx generation)
+│   │   ├── pptx-parser.js         # JSZip + XML slide parser (.pptx reading)
+│   │   └── pptx-roundtrip.js      # In-memory validation
+│   ├── ribbon/
+│   │   ├── ribbon-config.jsx      # Composite Ribbon tabs
+│   │   ├── home-actions.js        # Formatting, arrange, group, align
+│   │   └── insert-actions.js      # Insert shapes, text boxes, tables, charts
+│   ├── dialogs/
+│   │   ├── LayoutPickerDialog.jsx # Layout selector (Title, Content, Two Column, Blank)
+│   │   ├── ShapeGalleryDialog.jsx # Organized shape picker
+│   │   └── ExportDialog.jsx       # PDF export, PNG/JPEG slide image export, Handout print
+│   ├── ZSlides.jsx                # Main composite application container
+│   └── index.js
+```

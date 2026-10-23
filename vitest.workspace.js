@@ -5,4 +5,5 @@ export default defineWorkspace([
   'packages/ui',
   'packages/writer',
   'packages/sheets',
+  'packages/slides',
 ])
