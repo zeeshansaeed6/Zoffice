@@ -176,6 +176,21 @@ export function ZSlides({ onSave }) {
     onInsertTable: () => insertElement(createDefaultTable),
     onInsertChart: () => insertElement(createDefaultChart),
     onInsertPicture: () => insertElement(createDefaultPicture),
+    onSetTransition: (tType) => {
+      setDeck((prev) => ({
+        ...prev,
+        slides: prev.slides.map((s) =>
+          s.id === prev.activeSlideId ? { ...s, transition: { ...s.transition, type: tType } } : s,
+        ),
+      }))
+    },
+    onApplyTransitionToAll: () => {
+      const activeTrans = currentSlide.transition || { type: 'fade', duration: 0.5 }
+      setDeck((prev) => ({
+        ...prev,
+        slides: prev.slides.map((s) => ({ ...s, transition: { ...activeTrans } })),
+      }))
+    },
     bold: !!selectedElement?.properties?.bold,
     italic: !!selectedElement?.properties?.italic,
     underline: !!selectedElement?.properties?.underline,
