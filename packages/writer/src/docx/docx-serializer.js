@@ -2,21 +2,16 @@ import {
   Document,
   Paragraph,
   TextRun,
+  ImageRun,
   HeadingLevel,
   AlignmentType,
-  Table,
-  TableRow,
-  TableCell,
-  WidthType,
+  PageOrientation,
   Packer,
   PageBreak as DocxPageBreak,
 } from 'docx'
+import { injectPreservedParts } from './docx-package-preserver.js'
+import { convertTableNode } from './docx-serializer-table.js'
 
-/**
- * Maps alignment strings to docx AlignmentType.
- * @param {string} [align]
- * @returns {any}
- */
 function getAlignment(align) {
   switch (align) {
     case 'center':
@@ -30,35 +25,18 @@ function getAlignment(align) {
   }
 }
 
-/**
- * Maps heading level to docx HeadingLevel.
- * @param {number} level
- * @returns {any}
- */
 function getHeadingLevel(level) {
-  switch (level) {
-    case 1:
-      return HeadingLevel.HEADING_1
-    case 2:
-      return HeadingLevel.HEADING_2
-    case 3:
-      return HeadingLevel.HEADING_3
-    case 4:
-      return HeadingLevel.HEADING_4
-    case 5:
-      return HeadingLevel.HEADING_5
-    case 6:
-      return HeadingLevel.HEADING_6
-    default:
-      return HeadingLevel.HEADING_1
+  const map = {
+    1: HeadingLevel.HEADING_1,
+    2: HeadingLevel.HEADING_2,
+    3: HeadingLevel.HEADING_3,
+    4: HeadingLevel.HEADING_4,
+    5: HeadingLevel.HEADING_5,
+    6: HeadingLevel.HEADING_6,
   }
+  return map[level] || HeadingLevel.HEADING_1
 }
 
-/**
- * Converts a TipTap text node and its marks to a docx TextRun.
- * @param {Object} node
- * @returns {TextRun}
- */
 function convertTextNode(node) {
   const marks = node.marks || []
   let bold = false
@@ -67,9 +45,9 @@ function convertTextNode(node) {
   let strike = false
   let subScript = false
   let superScript = false
-  let color = undefined
-  let font = undefined
-  let size = undefined
+  let color
+  let font
+  let size
 
   marks.forEach((mark) => {
     switch (mark.type) {
@@ -122,78 +100,53 @@ function convertTextNode(node) {
   })
 }
 
-/**
- * Converts inline nodes to an array of TextRuns.
- * @param {Array<any>} [content=[]]
- * @returns {TextRun[]}
- */
 function convertInlineContent(content = []) {
   return content.map((child) => {
     if (child.type === 'text') {
       return convertTextNode(child)
     }
+    if (child.type === 'image' && child.attrs?.src) {
+      try {
+        const clean = child.attrs.src.replace(/^data:.*?;base64,/, '').trim()
+        return new ImageRun({
+          data: Buffer.from(clean, 'base64'),
+          transformation: {
+            width: child.attrs.width || 200,
+            height: child.attrs.height || 150,
+          },
+        })
+      } catch {
+        return new TextRun({ text: '' })
+      }
+    }
     return new TextRun({ text: '' })
   })
 }
 
-/**
- * Converts a ProseMirror table node to a docx Table.
- * @param {Object} tableNode
- * @returns {Table}
- */
-function convertTableNode(tableNode) {
-  const rows = (tableNode.content || []).map((rowNode) => {
-    const cells = (rowNode.content || []).map((cellNode) => {
-      const paragraphs = (cellNode.content || []).map((pNode) => {
-        return new Paragraph({
-          children: convertInlineContent(pNode.content),
-        })
-      })
-      return new TableCell({
-        children: paragraphs.length > 0 ? paragraphs : [new Paragraph({})],
-        width: {
-          size: 100,
-          type: WidthType.PERCENTAGE,
-        },
-      })
-    })
-    return new TableRow({ children: cells })
-  })
-
-  return new Table({
-    rows,
-    width: {
-      size: 100,
-      type: WidthType.PERCENTAGE,
-    },
-  })
-}
-
-/**
- * Converts a TipTap document JSON tree to docx children elements.
- * @param {Object} docJson - TipTap / ProseMirror document JSON
- * @returns {Array<any>} docx elements
- */
-export function convertJsonToDocxElements(docJson) {
-  const content = docJson?.content || []
+function convertJsonToDocxElements(docJson) {
+  if (!docJson || !docJson.content) return []
   const elements = []
 
-  content.forEach((node) => {
+  docJson.content.forEach((node) => {
     switch (node.type) {
-      case 'heading': {
-        const level = node.attrs?.level || 1
+      case 'paragraph': {
+        const lineSpacing = node.attrs?.lineHeight
+          ? parseFloat(node.attrs.lineHeight) * 240
+          : undefined
         elements.push(
           new Paragraph({
-            heading: getHeadingLevel(level),
             alignment: getAlignment(node.attrs?.textAlign),
+            spacing: lineSpacing ? { line: lineSpacing } : undefined,
             children: convertInlineContent(node.content),
           }),
         )
         break
       }
-      case 'paragraph': {
+      case 'heading': {
+        const level = node.attrs?.level || 1
         elements.push(
           new Paragraph({
+            heading: getHeadingLevel(level),
             alignment: getAlignment(node.attrs?.textAlign),
             children: convertInlineContent(node.content),
           }),
@@ -227,24 +180,16 @@ export function convertJsonToDocxElements(docJson) {
         break
       }
       case 'table': {
-        elements.push(convertTableNode(node))
+        elements.push(convertTableNode(node, convertInlineContent))
         break
       }
       case 'pageBreak': {
-        elements.push(
-          new Paragraph({
-            children: [new DocxPageBreak()],
-          }),
-        )
+        elements.push(new Paragraph({ children: [new DocxPageBreak()] }))
         break
       }
       default: {
         if (node.content) {
-          elements.push(
-            new Paragraph({
-              children: convertInlineContent(node.content),
-            }),
-          )
+          elements.push(new Paragraph({ children: convertInlineContent(node.content) }))
         }
         break
       }
@@ -254,21 +199,63 @@ export function convertJsonToDocxElements(docJson) {
   return elements.length > 0 ? elements : [new Paragraph({ children: [new TextRun('')] })]
 }
 
+function buildSectionPageProperties(pageSetup) {
+  if (!pageSetup) return {}
+
+  const isLandscape = pageSetup.orientation === 'landscape'
+  const isLetter = pageSetup.pageSize === 'letter'
+  const widthTwips = isLetter ? 12240 : 11906
+  const heightTwips = isLetter ? 15840 : 16838
+
+  const margins = pageSetup.margins || {}
+  const marginOpts = {
+    top: Math.round(((margins.top || 96) / 96) * 1440),
+    bottom: Math.round(((margins.bottom || 96) / 96) * 1440),
+    left: Math.round(((margins.left || 96) / 96) * 1440),
+    right: Math.round(((margins.right || 96) / 96) * 1440),
+  }
+
+  return {
+    page: {
+      size: {
+        width: isLandscape ? heightTwips : widthTwips,
+        height: isLandscape ? widthTwips : heightTwips,
+        orientation: isLandscape ? PageOrientation.LANDSCAPE : PageOrientation.PORTRAIT,
+      },
+      margin: marginOpts,
+    },
+  }
+}
+
 /**
  * Serializes a TipTap document JSON tree into a .docx base64 string.
+ *
  * @param {Object} docJson - TipTap / ProseMirror document JSON
+ * @param {Object} [options]
+ * @param {Object} [options.pageSetup]
+ * @param {Map<string, any>} [options.preservedFiles]
  * @returns {Promise<string>} Base64-encoded .docx binary data
  */
-export async function serializeDocxToBase64(docJson) {
+export async function serializeDocxToBase64(docJson, options = {}) {
   const children = convertJsonToDocxElements(docJson)
+  const properties = buildSectionPageProperties(options.pageSetup)
+
   const doc = new Document({
-    sections: [
-      {
-        properties: {},
-        children,
-      },
-    ],
+    numbering: {
+      config: [
+        {
+          reference: 'default-numbering',
+          levels: [
+            { level: 0, format: 'decimal', text: '%1.', alignment: AlignmentType.LEFT },
+            { level: 1, format: 'decimal', text: '%1.%2.', alignment: AlignmentType.LEFT },
+          ],
+        },
+      ],
+    },
+    sections: [{ properties, children }],
   })
 
-  return await Packer.toBase64String(doc)
+  const generatedBuf = await Packer.toBuffer(doc)
+  const finalBuf = await injectPreservedParts(generatedBuf, options.preservedFiles)
+  return finalBuf.toString('base64')
 }

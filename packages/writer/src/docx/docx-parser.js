@@ -1,4 +1,4 @@
-import mammoth from 'mammoth'
+import { parseDocxDirect } from './ooxml-parser.js'
 
 /**
  * Converts a base64 string or ArrayBuffer/Buffer into a Node Buffer or Uint8Array.
@@ -7,8 +7,8 @@ import mammoth from 'mammoth'
  */
 function toBinaryBuffer(input) {
   if (typeof input === 'string') {
-    // Check if it's base64 or raw data
-    return Buffer.from(input, 'base64')
+    const clean = input.replace(/^data:.*?;base64,/, '').trim()
+    return Buffer.from(clean, 'base64')
   }
   if (input instanceof ArrayBuffer) {
     return Buffer.from(input)
@@ -18,9 +18,17 @@ function toBinaryBuffer(input) {
 
 /**
  * Parses a .docx document into clean semantic HTML suitable for TipTap.
+ * Uses direct OOXML parser with high fidelity, falling back to mammoth.
  *
  * @param {string | ArrayBuffer | Uint8Array} input - File content as base64 string or buffer
- * @returns {Promise<{ html: string, messages: Array<any> }>}
+ * @returns {Promise<{
+ *   html: string,
+ *   messages: Array<any>,
+ *   pageSetup?: any,
+ *   stats?: any,
+ *   preservedFiles?: Map<string, any>,
+ *   isDirect?: boolean
+ * }>}
  */
 export async function parseDocxToHtml(input) {
   if (!input) {
@@ -28,26 +36,14 @@ export async function parseDocxToHtml(input) {
   }
 
   const buffer = toBinaryBuffer(input)
+  const result = await parseDocxDirect(buffer)
 
-  const options = {
-    styleMap: [
-      "p[style-name='Heading 1'] => h1:fresh",
-      "p[style-name='Heading 2'] => h2:fresh",
-      "p[style-name='Heading 3'] => h3:fresh",
-      "p[style-name='Heading 4'] => h4:fresh",
-      "p[style-name='Heading 5'] => h5:fresh",
-      "p[style-name='Heading 6'] => h6:fresh",
-      "p[style-name='Title'] => h1:fresh",
-      "p[style-name='Subtitle'] => h2:fresh",
-      "p[style-name='Quote'] => blockquote:fresh",
-      "r[style-name='Strong'] => strong",
-      "r[style-name='Emphasis'] => em",
-    ],
-  }
-
-  const result = await mammoth.convertToHtml({ buffer }, options)
   return {
-    html: result.value || '<p></p>',
-    messages: result.messages || [],
+    html: result.html || '<p></p>',
+    messages: [],
+    pageSetup: result.pageSetup,
+    stats: result.stats,
+    preservedFiles: result.preservedFiles,
+    isDirect: result.isDirect,
   }
 }

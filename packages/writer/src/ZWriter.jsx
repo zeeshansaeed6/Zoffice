@@ -28,6 +28,8 @@ export function ZWriter({
   const [pageCount, setPageCount] = useState(1)
   const [showFindReplace, setShowFindReplace] = useState(false)
   const [isFormatPainting, setIsFormatPainting] = useState(false)
+  const [pageSetup, setPageSetup] = useState({ pageSize: 'a4', margins: 'normal' })
+  const [preservedFiles, setPreservedFiles] = useState(null)
 
   const handleEditorChange = useCallback(
     async (html) => {
@@ -56,9 +58,15 @@ export function ZWriter({
     if (!editor || !initialContent) return
     if (!initialContent.startsWith('<')) {
       parseDocxToHtml(initialContent)
-        .then(({ html }) => {
+        .then(({ html, pageSetup: parsedSetup, preservedFiles: files }) => {
           if (html && editor) {
             editor.commands.setContent(html)
+          }
+          if (parsedSetup) {
+            setPageSetup(parsedSetup)
+          }
+          if (files) {
+            setPreservedFiles(files)
           }
         })
         .catch((err) => {
@@ -69,11 +77,14 @@ export function ZWriter({
 
   const handleSave = useCallback(async () => {
     if (!editor) return
-    const docxBase64 = await serializeDocxToBase64(editor.getJSON())
+    const docxBase64 = await serializeDocxToBase64(editor.getJSON(), {
+      pageSetup,
+      preservedFiles,
+    })
     if (onSave) {
       onSave(docxBase64)
     }
-  }, [editor, onSave])
+  }, [editor, onSave, pageSetup, preservedFiles])
 
   const handleFormatPainter = () => {
     if (!editor) return
@@ -150,8 +161,14 @@ export function ZWriter({
       <PaperCanvas
         editor={editor}
         zoom={zoom}
-        pageSize="a4"
-        margins="normal"
+        pageSize={pageSetup.pageSize || 'a4'}
+        margins={
+          typeof pageSetup.margins === 'string'
+            ? pageSetup.margins
+            : pageSetup.margins?.top <= 48
+              ? 'narrow'
+              : 'normal'
+        }
         onPageCountChange={setPageCount}
       />
 

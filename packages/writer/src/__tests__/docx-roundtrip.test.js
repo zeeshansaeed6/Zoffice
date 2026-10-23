@@ -105,7 +105,8 @@ describe('DOCX Parser, Serializer, and Roundtrip Fidelity', () => {
     const fileBuffer = readFileSync(BASIC_FIXTURE_PATH)
     const { html } = await parseDocxToHtml(fileBuffer)
 
-    expect(html).toContain('<h1>Zoffice Basic Document</h1>')
+    expect(html).toContain('<h1')
+    expect(html).toContain('Zoffice Basic Document')
     expect(html).toContain('<strong>bold formatting</strong>')
     expect(html).toContain('<em>italic emphasis</em>')
   })
@@ -114,12 +115,14 @@ describe('DOCX Parser, Serializer, and Roundtrip Fidelity', () => {
     const fileBuffer = readFileSync(FORMATTED_FIXTURE_PATH)
     const { html } = await parseDocxToHtml(fileBuffer)
 
-    expect(html).toContain('<h1>ZWriter Rich Document Test</h1>')
-    expect(html).toContain('<h2>Secondary Section Heading</h2>')
+    expect(html).toContain('<h1')
+    expect(html).toContain('ZWriter Rich Document Test')
+    expect(html).toContain('<h2')
+    expect(html).toContain('Secondary Section Heading')
     expect(html).toContain('First bullet item')
     expect(html).toContain('Cell A1')
     expect(html).toContain('Cell B1')
-    expect(html).toContain('<table>')
+    expect(html).toContain('<table')
   })
 
   it('serializes TipTap JSON document tree to .docx and roundtrips without loss', async () => {
@@ -177,7 +180,8 @@ describe('DOCX Parser, Serializer, and Roundtrip Fidelity', () => {
     const { html } = await parseDocxToHtml(base64Docx)
 
     // 3. Assert fidelity
-    expect(html).toContain('<h1>Roundtrip Verification Title</h1>')
+    expect(html).toContain('<h1')
+    expect(html).toContain('Roundtrip Verification Title')
     expect(html).toContain('<strong>bold</strong>')
     expect(html).toContain('<em>italic</em>')
     expect(html).toContain('List item alpha')

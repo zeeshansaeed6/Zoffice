@@ -67,18 +67,22 @@ packages/writer/
 - **Page Breaks**: Manual page breaks via Ctrl+Enter and visual dashed dividers.
 - **Zoom**: Smooth scaling from 50% to 200% transform via bottom status bar slider.
 
-### Native `.docx` Open & Save
+### Native `.docx` High-Fidelity Engine (Milestone 1A.5)
 
-- **Reading (`docx-parser.js`)**:
-  - Powered by `mammoth` and `jszip`.
-  - Preserves headings (H1–H6), bold, italic, underline, bullet/numbered lists, and tables.
-  - Decodes base64 binary buffer received across sandboxed IPC without corruption.
-- **Writing (`docx-serializer.js`)**:
-  - Powered by `docx` library.
-  - Transforms ProseMirror JSON document tree into OpenXML `.docx` binary.
-  - Preserves headings, text runs, font styling, colors, alignment, lists, tables, and page breaks.
-- **Round-Trip Testing**:
-  - Verified with fixtures in `/test-fixtures/sample-basic.docx` and `/test-fixtures/sample-formatted.docx`.
+- **Direct OOXML Parser (`ooxml-parser.js`)**:
+  - Direct reading and XML DOM traversal of `word/document.xml`, `word/styles.xml`, `word/numbering.xml`, `word/_rels/document.xml.rels`, and `word/media/`.
+  - Full style inheritance resolution against `docDefaults` and `basedOn` hierarchy.
+  - Multi-level bullet and numbered list parsing.
+  - Merged-cell table extraction (`gridSpan`, cell shading, borders).
+  - Inline image extraction from `word/media/` into base64 data URIs with dimensions.
+  - Page setup parsing (`w:sectPr` -> page dimensions, orientation, margins mapped to `PaperCanvas`).
+  - Preserves auxiliary package parts (headers, footers, settings, customXml).
+  - Graceful fallback to `mammoth` if raw OOXML parsing encounters an issue.
+- **DOCX Serializer (`docx-serializer.js`)**:
+  - Re-serializes rich text runs, headings, tables, images, and page setup.
+  - Merges preserved auxiliary package parts back into the saved `.docx` package via `docx-package-preserver.js`.
+- **Fidelity CLI Tool**:
+  - `pnpm docx:report <file>` analyzes feature presence and reports preservation score.
 
 ### Status Bar Metrics
 
@@ -88,7 +92,39 @@ packages/writer/
 
 ---
 
-## 3. Milestone 1B Planned Features
+## 3. DOCX Support Matrix
+
+| Category                 | Feature                 | Import       | Export       | Status    | Notes                                                |
+| ------------------------ | ----------------------- | ------------ | ------------ | --------- | ---------------------------------------------------- |
+| **Run Formatting**       | Font Family             | ✅           | ✅           | Full      | Preserves `w:rFonts` (Inter, Carlito, Georgia, etc.) |
+|                          | Font Size               | ✅           | ✅           | Full      | Converts half-points (`w:sz`) to CSS px & back       |
+|                          | Bold & Italic           | ✅           | ✅           | Full      | `w:b`, `w:i` mapped to `strong`, `em` & `TextRun`    |
+|                          | Underline               | ✅           | ✅           | Full      | `w:u` preserved                                      |
+|                          | Strikethrough           | ✅           | ✅           | Full      | `w:strike` mapped to `<s>` & `TextRun`               |
+|                          | Sub / Superscript       | ✅           | ✅           | Full      | `w:vertAlign` mapped to `sub`, `sup`                 |
+|                          | Text Color              | ✅           | ✅           | Full      | `w:color` hex values preserved                       |
+|                          | Background Highlight    | ✅           | ✅           | Full      | `w:highlight` mapped to background-color             |
+|                          | Small Caps              | ✅           | ✅           | Full      | `w:smallCaps` preserved in inline style              |
+| **Paragraph Formatting** | Alignment               | ✅           | ✅           | Full      | Left, Center, Right, Justify (`w:jc`)                |
+|                          | Headings (H1–H6, Title) | ✅           | ✅           | Full      | Mapped to `<h1>`-`<h6>` with inherited styles        |
+|                          | Line Spacing            | ✅           | ✅           | Full      | Line height ratios (`1.0`, `1.15`, `1.5`, `2.0`)     |
+|                          | Spacing Before / After  | ✅           | ✅           | Full      | Preserved from `w:spacing`                           |
+| **Lists**                | Bullet Lists            | ✅           | ✅           | Full      | Mapped to `<ul>` and `bullet` runs                   |
+|                          | Numbered Lists          | ✅           | ✅           | Full      | Multi-level decimal numbering from `numbering.xml`   |
+| **Tables**               | Grid & Rows             | ✅           | ✅           | Full      | `w:tbl`, `w:tr`, `w:tc` mapped to HTML tables        |
+|                          | Merged Cells            | ✅           | ✅           | Full      | Colspan (`w:gridSpan`) preserved                     |
+|                          | Cell Shading            | ✅           | ✅           | Full      | Background fills (`w:shd`) preserved                 |
+| **Media & Links**        | Embedded Images         | ✅           | ✅           | Full      | Extracted from `word/media/` with dimensions         |
+|                          | External Hyperlinks     | ✅           | ✅           | Full      | Resolved via `_rels` to `<a>` tags and `ImageRun`    |
+| **Page Setup**           | Margins                 | ✅           | ✅           | Full      | Twips to px mapping (top, bottom, left, right)       |
+|                          | Orientation             | ✅           | ✅           | Full      | Portrait & Landscape mapped to canvas                |
+|                          | Page Size               | ✅           | ✅           | Full      | A4 & Letter dimensions mapped to canvas              |
+| **Package Preservation** | Headers & Footers       | ⚠️ Preserved | ⚠️ Preserved | Preserved | Preserved in zip package on roundtrip save           |
+|                          | Settings & Theme        | ⚠️ Preserved | ⚠️ Preserved | Preserved | Unmodified XML parts copied to saved package         |
+
+---
+
+## 4. Milestone 1B Planned Features
 
 - **Insert Tab**: Tables (grid picker, merge/split), images (drag-and-drop, resize, text wrap), hyperlinks, bookmarks, headers/footers, LaTeX equations via KaTeX.
 - **Layout Tab**: Orientation (portrait/landscape), multi-column layout (1, 2, 3 columns), custom margin sliders.
