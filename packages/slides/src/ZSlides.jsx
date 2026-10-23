@@ -6,6 +6,8 @@ import { ThumbnailPanel } from './thumbnails/ThumbnailPanel.jsx'
 import { LayoutPickerDialog } from './dialogs/LayoutPickerDialog.jsx'
 import { ThemeGalleryDialog } from './dialogs/ThemeGalleryDialog.jsx'
 import { AnimationPane } from './animations/AnimationPane.jsx'
+import { SlideShowView } from './presenter/SlideShowView.jsx'
+import { PresenterView } from './presenter/PresenterView.jsx'
 import { createPresentationDeck, createSlide } from './core/slide-model.js'
 import { SHAPE_TYPES } from './core/slide-constants.js'
 import { createElementsForLayout, LAYOUT_TYPES } from './core/slide-layouts.js'
@@ -23,6 +25,13 @@ import {
   arrangeDeckElement,
   alignDeckElements,
 } from './core/deck-operations.js'
+import {
+  duplicateDeckSlide,
+  deleteDeckSlide,
+  reorderDeckSlides,
+  setSlideTransition,
+  applyTransitionToAllSlides,
+} from './core/slide-operations.js'
 
 /**
  * ZSlides Presentation Application Component.
@@ -39,6 +48,8 @@ export function ZSlides({ onSave }) {
   const [isLayoutPickerOpen, setIsLayoutPickerOpen] = useState(false)
   const [isThemeGalleryOpen, setIsThemeGalleryOpen] = useState(false)
   const [isAnimationPaneOpen, setIsAnimationPaneOpen] = useState(false)
+  const [showMode, setShowMode] = useState(null) // 'slideshow' | 'presenter' | null
+  const [showStartIndex, setShowStartIndex] = useState(0)
 
   const activeSlideIndex = useMemo(() => {
     const idx = deck.slides.findIndex((s) => s.id === deck.activeSlideId)
@@ -46,19 +57,15 @@ export function ZSlides({ onSave }) {
   }, [deck.slides, deck.activeSlideId])
 
   const currentSlide = deck.slides[activeSlideIndex] || deck.slides[0]
-
-  const selectedElement = useMemo(() => {
-    return currentSlide.elements.find((el) => selectedElementIds.includes(el.id))
-  }, [currentSlide.elements, selectedElementIds])
+  const selectedElement = useMemo(
+    () => currentSlide.elements.find((el) => selectedElementIds.includes(el.id)),
+    [currentSlide.elements, selectedElementIds],
+  )
 
   // Slide deck mutations
   const handleNewSlide = useCallback((layout = LAYOUT_TYPES.TITLE_AND_CONTENT) => {
     const newSlide = createSlide({ layout, elements: createElementsForLayout(layout) })
-    setDeck((prev) => ({
-      ...prev,
-      activeSlideId: newSlide.id,
-      slides: [...prev.slides, newSlide],
-    }))
+    setDeck((prev) => ({ ...prev, activeSlideId: newSlide.id, slides: [...prev.slides, newSlide] }))
     setSelectedElementIds([])
   }, [])
 
@@ -78,121 +85,58 @@ export function ZSlides({ onSave }) {
     setSelectedElementIds([])
   }, [])
 
-  const handleSelectTheme = useCallback((themeId) => {
-    setDeck((prev) => applyThemeToDeck(prev, themeId))
-  }, [])
-
-  const handleDuplicateSlide = useCallback((slideId) => {
-    setDeck((prev) => {
-      const idx = prev.slides.findIndex((s) => s.id === slideId)
-      if (idx === -1) return prev
-      const src = prev.slides[idx]
-      const cloned = {
-        ...src,
-        id: `slide_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        elements: src.elements.map((el) => ({
-          ...el,
-          id: `elem_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        })),
-      }
-      const newSlides = [...prev.slides]
-      newSlides.splice(idx + 1, 0, cloned)
-      return { ...prev, activeSlideId: cloned.id, slides: newSlides }
-    })
-  }, [])
-
-  const handleDeleteSlide = useCallback((slideId) => {
-    setDeck((prev) => {
-      if (prev.slides.length <= 1) return prev
-      const idx = prev.slides.findIndex((s) => s.id === slideId)
-      const newSlides = prev.slides.filter((s) => s.id !== slideId)
-      return { ...prev, activeSlideId: newSlides[Math.max(0, idx - 1)].id, slides: newSlides }
-    })
-  }, [])
-
-  const handleToggleHideSlide = useCallback((slideId) => {
-    setDeck((prev) => ({
-      ...prev,
-      slides: prev.slides.map((s) => (s.id === slideId ? { ...s, hidden: !s.hidden } : s)),
-    }))
-  }, [])
-
-  const handleReorderSlides = useCallback((fromIndex, toIndex) => {
-    setDeck((prev) => {
-      const copy = [...prev.slides]
-      const [moved] = copy.splice(fromIndex, 1)
-      copy.splice(toIndex, 0, moved)
-      return { ...prev, slides: copy }
-    })
-  }, [])
-
-  // Element insertion
+  // Element actions
   const insertElement = useCallback((factory) => {
     const elem = factory()
-    setDeck((prev) => ({
-      ...prev,
-      slides: prev.slides.map((s) =>
-        s.id === prev.activeSlideId ? { ...s, elements: [...s.elements, elem] } : s,
+    setDeck((p) => ({
+      ...p,
+      slides: p.slides.map((s) =>
+        s.id === p.activeSlideId ? { ...s, elements: [...s.elements, elem] } : s,
       ),
     }))
     setSelectedElementIds([elem.id])
-  }, [])
-
-  // Element mutations
-  const handleElementChange = useCallback((upd) => setDeck((p) => updateDeckElement(p, upd)), [])
-  const handleDeleteElements = useCallback((ids) => {
-    setDeck((p) => deleteDeckElements(p, ids))
-    setSelectedElementIds([])
   }, [])
 
   const toggleProperty = useCallback(
     (prop) => {
       if (!selectedElement) return
       const curr = !!selectedElement.properties[prop]
-      handleElementChange({
-        ...selectedElement,
-        properties: { ...selectedElement.properties, [prop]: !curr },
-      })
+      setDeck((p) =>
+        updateDeckElement(p, {
+          ...selectedElement,
+          properties: { ...selectedElement.properties, [prop]: !curr },
+        }),
+      )
     },
-    [selectedElement, handleElementChange],
-  )
-
-  const setAlign = useCallback(
-    (align) => {
-      if (!selectedElement) return
-      handleElementChange({
-        ...selectedElement,
-        properties: { ...selectedElement.properties, align },
-      })
-    },
-    [selectedElement, handleElementChange],
+    [selectedElement],
   )
 
   const ribbonConfig = getSlidesRibbonConfig({
     onNewSlide: () => handleNewSlide(),
     onOpenLayoutPicker: () => setIsLayoutPickerOpen(true),
     onOpenThemeGallery: () => setIsThemeGalleryOpen(true),
+    onPlayFromBeginning: () => {
+      setShowStartIndex(0)
+      setShowMode('slideshow')
+    },
+    onPlayFromCurrent: () => {
+      setShowStartIndex(activeSlideIndex)
+      setShowMode('slideshow')
+    },
+    onStartPresenterView: () => {
+      setShowStartIndex(activeSlideIndex)
+      setShowMode('presenter')
+    },
     onInsertTextBox: () => insertElement(createDefaultTextBox),
-    onInsertShape: (shapeType = SHAPE_TYPES.RECTANGLE) =>
-      insertElement(() => createDefaultShape(shapeType)),
+    onInsertShape: (st = SHAPE_TYPES.RECTANGLE) => insertElement(() => createDefaultShape(st)),
     onInsertTable: () => insertElement(createDefaultTable),
     onInsertChart: () => insertElement(createDefaultChart),
     onInsertPicture: () => insertElement(createDefaultPicture),
-    onSetTransition: (tType) => {
-      setDeck((prev) => ({
-        ...prev,
-        slides: prev.slides.map((s) =>
-          s.id === prev.activeSlideId ? { ...s, transition: { ...s.transition, type: tType } } : s,
-        ),
-      }))
-    },
-    onApplyTransitionToAll: () => {
-      const activeTrans = currentSlide.transition || { type: 'fade', duration: 0.5 }
-      setDeck((prev) => ({
-        ...prev,
-        slides: prev.slides.map((s) => ({ ...s, transition: { ...activeTrans } })),
-      }))
-    },
+    onSetTransition: (t) => setDeck((p) => setSlideTransition(p, p.activeSlideId, t)),
+    onApplyTransitionToAll: () =>
+      setDeck((p) =>
+        applyTransitionToAllSlides(p, currentSlide.transition || { type: 'fade', duration: 0.5 }),
+      ),
     onAddAnimation: (animType) => {
       if (!selectedElement) return
       const newAnim = {
@@ -202,17 +146,15 @@ export function ZSlides({ onSave }) {
         trigger: 'on_click',
         duration: 0.5,
       }
-      setDeck((prev) => ({
-        ...prev,
-        slides: prev.slides.map((s) =>
-          s.id === prev.activeSlideId
-            ? { ...s, animations: [...(s.animations || []), newAnim] }
-            : s,
+      setDeck((p) => ({
+        ...p,
+        slides: p.slides.map((s) =>
+          s.id === p.activeSlideId ? { ...s, animations: [...(s.animations || []), newAnim] } : s,
         ),
       }))
       setIsAnimationPaneOpen(true)
     },
-    onToggleAnimationPane: () => setIsAnimationPaneOpen((prev) => !prev),
+    onToggleAnimationPane: () => setIsAnimationPaneOpen((p) => !p),
     bold: !!selectedElement?.properties?.bold,
     italic: !!selectedElement?.properties?.italic,
     underline: !!selectedElement?.properties?.underline,
@@ -220,7 +162,14 @@ export function ZSlides({ onSave }) {
     toggleBold: () => toggleProperty('bold'),
     toggleItalic: () => toggleProperty('italic'),
     toggleUnderline: () => toggleProperty('underline'),
-    setAlign,
+    setAlign: (al) =>
+      selectedElement &&
+      setDeck((p) =>
+        updateDeckElement(p, {
+          ...selectedElement,
+          properties: { ...selectedElement.properties, align: al },
+        }),
+      ),
     onArrange: (act) =>
       selectedElement && setDeck((p) => arrangeDeckElement(p, selectedElement.id, act)),
     onAlignElements: (al) => setDeck((p) => alignDeckElements(p, selectedElementIds, al)),
@@ -243,10 +192,15 @@ export function ZSlides({ onSave }) {
             setDeck((p) => ({ ...p, activeSlideId: id }))
             setSelectedElementIds([])
           }}
-          onDuplicateSlide={handleDuplicateSlide}
-          onDeleteSlide={handleDeleteSlide}
-          onToggleHideSlide={handleToggleHideSlide}
-          onReorderSlides={handleReorderSlides}
+          onDuplicateSlide={(id) => setDeck((p) => duplicateDeckSlide(p, id))}
+          onDeleteSlide={(id) => setDeck((p) => deleteDeckSlide(p, id))}
+          onToggleHideSlide={(id) =>
+            setDeck((p) => ({
+              ...p,
+              slides: p.slides.map((s) => (s.id === id ? { ...s, hidden: !s.hidden } : s)),
+            }))
+          }
+          onReorderSlides={(from, to) => setDeck((p) => reorderDeckSlides(p, from, to))}
         />
         <SlideCanvas
           slide={currentSlide}
@@ -254,21 +208,24 @@ export function ZSlides({ onSave }) {
           zoom={zoom}
           selectedElementIds={selectedElementIds}
           onSelectionChange={setSelectedElementIds}
-          onElementChange={handleElementChange}
-          onDeleteElements={handleDeleteElements}
+          onElementChange={(upd) => setDeck((p) => updateDeckElement(p, upd))}
+          onDeleteElements={(ids) => {
+            setDeck((p) => deleteDeckElements(p, ids))
+            setSelectedElementIds([])
+          }}
         />
         {isAnimationPaneOpen && (
           <AnimationPane
             animations={currentSlide.animations || []}
             elements={currentSlide.elements}
-            onUpdateAnimations={(updatedAnims) => {
-              setDeck((prev) => ({
-                ...prev,
-                slides: prev.slides.map((s) =>
-                  s.id === prev.activeSlideId ? { ...s, animations: updatedAnims } : s,
+            onUpdateAnimations={(upd) =>
+              setDeck((p) => ({
+                ...p,
+                slides: p.slides.map((s) =>
+                  s.id === p.activeSlideId ? { ...s, animations: upd } : s,
                 ),
               }))
-            }}
+            }
             onClose={() => setIsAnimationPaneOpen(false)}
           />
         )}
@@ -295,8 +252,24 @@ export function ZSlides({ onSave }) {
         isOpen={isThemeGalleryOpen}
         currentThemeId={deck.themeId}
         onClose={() => setIsThemeGalleryOpen(false)}
-        onSelectTheme={handleSelectTheme}
+        onSelectTheme={(t) => setDeck((p) => applyThemeToDeck(p, t))}
       />
+      {showMode === 'slideshow' && (
+        <SlideShowView
+          slides={deck.slides}
+          initialIndex={showStartIndex}
+          dimensions={deck.dimensions}
+          onExit={() => setShowMode(null)}
+        />
+      )}
+      {showMode === 'presenter' && (
+        <PresenterView
+          slides={deck.slides}
+          initialIndex={showStartIndex}
+          dimensions={deck.dimensions}
+          onExit={() => setShowMode(null)}
+        />
+      )}
     </div>
   )
 }
