@@ -134,7 +134,7 @@ function convertInlineContent(content = []) {
   })
 }
 
-function convertJsonToDocxElements(docJson) {
+export function convertJsonToDocxElements(docJson) {
   if (!docJson || !docJson.content) return []
   const elements = []
 
