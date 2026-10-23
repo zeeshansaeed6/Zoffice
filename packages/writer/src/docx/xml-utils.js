@@ -1,7 +1,3 @@
-import { createRequire } from 'module'
-
-const cjsRequire = typeof window === 'undefined' ? createRequire(import.meta.url) : null
-
 /**
  * Parses an XML string into a DOM Document.
  * Supports browser DOMParser and Node.js environments via jsdom.
@@ -16,11 +12,9 @@ export function parseXml(xmlString) {
 
   // Node.js fallback using jsdom
   try {
-    if (cjsRequire) {
-      const { JSDOM } = cjsRequire('jsdom')
-      return new new JSDOM().window.DOMParser().parseFromString(xmlString, 'text/xml')
-    }
-    throw new Error('No require available')
+    const nodeRequire = eval('require')
+    const { JSDOM } = nodeRequire('jsdom')
+    return new new JSDOM().window.DOMParser().parseFromString(xmlString, 'text/xml')
   } catch {
     throw new Error('No XML DOMParser available in current environment')
   }

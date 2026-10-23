@@ -2,7 +2,6 @@ import { Node, mergeAttributes } from '@tiptap/core'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 
-
 /**
  * TipTap extension for inline LaTeX math equations via KaTeX.
  */

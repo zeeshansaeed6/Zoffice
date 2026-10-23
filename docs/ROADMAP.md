@@ -79,26 +79,46 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
 
 ## Phase 1: ZWriter Core Document Engine
 
-**Status:** In Progress ⏳ (Milestone 1A Completed & Verified ✅)
+**Status:** In Progress ⏳ (Milestones 1A, 1A.5, & Insert Tab Completed & Verified ✅)
 
 ### Milestone 1A: Editor Core, Home Ribbon, Layout & DOCX Roundtrip
 
 - **Status:** Completed & Verified ✅ (October 23, 2026)
 - **Deliverables:**
-  - **TipTap/ProseMirror Schema**: Rich character formatting (bold, italic, underline, strike, sub/super, font colors, highlights, clear formatting), typography (Inter, Carlito, system fonts), font size scale (10–36pt, A+/A-).
-  - **Paragraph Controls**: Bullets, numbering, text alignment (left, center, right, justify), custom line spacing extension (1.0, 1.15, 1.5, 2.0).
-  - **Home Ribbon**: Full ribbon layout with Clipboard (Cut, Copy, Paste, Format Painter state machine), Font styling, Paragraph controls, Styles gallery (Normal, H1–H3, Quote, Code), and Find & Replace modal with regex and case-sensitive options.
+  - **TipTap/ProseMirror Schema**: Rich character formatting, typography (`Inter`, `Carlito`), font size scale (10–36pt, A+/A-).
+  - **Paragraph Controls**: Bullets, numbering, text alignment (left, center, right, justify), custom line spacing (1.0, 1.15, 1.5, 2.0).
+  - **Home Ribbon**: Full ribbon layout with Clipboard, Font styling, Paragraph controls, Styles gallery, and Find & Replace modal with regex.
   - **Paper-Style Page Layout**: Authentic drop-shadow paper rendering (`PaperCanvas.jsx`), A4 & Letter presets, standard margins, zoom scaling (50%–200%), page budgeting, and visual dashed page breaks (`Ctrl+Enter`).
-  - **DOCX Roundtrip Engine**: Native OOXML reading via `mammoth` and writing via `docx` without external servers; sandboxed binary base64 IPC transfer; verified with test fixtures in `/test-fixtures`.
+  - **DOCX Roundtrip Engine**: Sandboxed base64 IPC transfer, verified with test fixtures in `/test-fixtures`.
   - **Status Bar Metrics**: Real-time word count, character count, page count, and zoom control.
-  - **Playwright E2E & Unit Test Coverage**: End-to-end verification of document typing, styling, status bar updates, docx saving, and screenshot capture (`docs/screenshots/zwriter-editor.png`).
+  - **Playwright E2E & Unit Test Coverage**: End-to-end verification and screenshot capture (`docs/screenshots/zwriter-editor.png`).
 
-### Milestone 1B: Insert, Layout, Review, References, View & PDF/Print
+### Milestone 1A.5: DOCX Fidelity Hardening
 
-- **Status:** Pending Review & Approval 🎯
+- **Status:** Completed & Verified ✅ (October 23, 2026)
+- **Deliverables:**
+  - Direct OOXML engine with JSZip and XML parsing (`word/document.xml`, `styles.xml`, `numbering.xml`).
+  - Style hierarchy resolution (`rPrDefault`, `pPrDefault`, `w:basedOn`) and multi-level list preservation.
+  - Transparent preservation of unhandled OOXML parts and media.
+  - Automated fidelity reporting CLI (`pnpm docx:report <file>`) and comprehensive test suite.
+
+### Milestone 1B (Part 1): Insert Tab — Tables, Illustrations, Links, & Symbols
+
+- **Status:** Completed & Verified ✅ (October 23, 2026)
+- **Deliverables:**
+  - **Insert Tab Ribbon**: Pages, Tables, Illustrations, Links, Text, and Symbols ribbon groups.
+  - **Tables**: Interactive grid picker dialog (rows x cols up to 50x20), header row toggling, row/column insertion & deletion, cell merge/split, cell background shading.
+  - **Illustrations**: Picture upload from computer (local base64) or web URL with alignment and custom width; horizontal divider rules.
+  - **Links & Bookmarks**: Hyperlink creation and editing dialog; named in-document bookmark targets (`data-bookmark`).
+  - **Text & Symbols**: Date & Time insertion (date, time, full formats); special character and symbol dialog (Typography, Math, Currency, Arrows, Greek).
+  - **LaTeX Equations**: Inline equation rendering via bundled KaTeX with real-time live preview and formula template presets.
+  - **Testing & Verification**: 5 new unit tests, Playwright Electron E2E test suite passing, zero ESLint errors/warnings, and screenshot captured (`docs/screenshots/zwriter-insert-tab.png`).
+
+### Milestone 1B (Part 2): Layout, Review, References, View & PDF/Print
+
+- **Status:** Next Up 🎯
 - **Planned Scope:**
-  - Insert Tab: Tables, image embed/resize, hyperlinks, headers/footers, math equations.
-  - Layout Tab: Portrait/landscape orientation, multi-column layouts, custom margins.
+  - Layout Tab: Page setup (orientation, margins, multi-column layouts, breaks, line numbers).
   - Review Tab: Native spellcheck, comment bubbles, track changes (insertions/deletions, accept/reject).
   - References Tab: Table of contents generation, footnotes, citations.
   - View Tab: Print layout, Web layout, Read mode, Outline navigation.

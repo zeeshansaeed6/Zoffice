@@ -90,6 +90,24 @@ packages/writer/
 - Dynamic page count calculations.
 - Integrated zoom slider.
 
+### Insert Tab Features (Milestone 1B — Part 1)
+
+- **Tables**:
+  - Interactive grid selector dialog (`TablePickerDialog.jsx`) supporting up to 8x8 quick hover selection and custom row/col inputs up to 50x20.
+  - Header row configuration.
+  - Table manipulation ribbon tools: Add Row Above/Below, Add Column Left/Right, Delete Row/Column/Table, Merge Cells, Split Cell.
+  - Cell background shading and column resizing.
+- **Illustrations**:
+  - Insert Picture dialog (`ImageInsertDialog.jsx`): local image file upload (auto-converted to data URI) or web URL with custom alignment (left, center, right) and optional width.
+  - Horizontal divider rules (`insertHorizontalRule`).
+- **Links & Bookmarks**:
+  - Hyperlink dialog (`HyperlinkDialog.jsx`): insert and edit web links (`https://...`, `mailto:`, or bookmark anchor `#name`) with text display options and removal tool.
+  - Named in-document bookmarks (`BookmarkDialog.jsx`): anchor tag targets for cross-referencing.
+- **Text & Symbols**:
+  - Quick Date & Time insertion dropdown (Short Date, Time, Long Date & Time).
+  - Special character and symbol dialog (`SymbolDialog.jsx`): categorized grid (Typography, Math, Currency, Arrows, Greek).
+  - Inline LaTeX Math Equations (`EquationDialog.jsx`): KaTeX renderer with real-time live preview and template presets (fractions, square roots, integrals, matrices, Greek letters).
+
 ---
 
 ## 3. DOCX Support Matrix
@@ -124,11 +142,10 @@ packages/writer/
 
 ---
 
-## 4. Milestone 1B Planned Features
+## 4. Upcoming Features
 
-- **Insert Tab**: Tables (grid picker, merge/split), images (drag-and-drop, resize, text wrap), hyperlinks, bookmarks, headers/footers, LaTeX equations via KaTeX.
-- **Layout Tab**: Orientation (portrait/landscape), multi-column layout (1, 2, 3 columns), custom margin sliders.
+- **Layout Tab**: Orientation (portrait/landscape), multi-column layout (1, 2, 3 columns), custom margin presets & sliders, section breaks, line numbers.
 - **Review Tab**: Electron native spellchecker, comment bubbles, track changes (record insertions/deletions with author metadata, accept/reject).
-- **References Tab**: Automatic Table of Contents generated from headings, footnotes, endnotes, citations (APA, MLA).
+- **References Tab**: Automatic Table of Contents generated from headings, footnotes, endnotes, citations (APA, MLA, IEEE).
 - **View Tab**: Print Layout, Web Layout, Read Mode, Focus Mode, outline navigation pane.
 - **Export & Print**: High-fidelity PDF export via Electron `printToPDF` and native system print dialog.

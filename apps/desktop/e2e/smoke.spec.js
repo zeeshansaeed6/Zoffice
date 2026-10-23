@@ -197,7 +197,7 @@ test.describe('Zoffice Electron Smoke Tests', () => {
     await page.getByRole('button', { name: 'Start Screen' }).click()
     await page.getByRole('button', { name: /ZSheets/i }).click()
 
-    const tabs = page.locator('[role="tab"]')
+    const tabs = page.locator('[data-testid="tab-bar"] [role="tab"]')
     await expect(tabs).toHaveCount(2)
     await expect(tabs.nth(0)).toContainText('Document 1')
     await expect(tabs.nth(1)).toContainText('Workbook 1')
