@@ -10,8 +10,14 @@
   "dependencies": {
     "@tiptap/extension-color": "^3.32.0",
     "@tiptap/extension-highlight": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-link": "^3.32.0",
     "@tiptap/extension-subscript": "^3.32.0",
     "@tiptap/extension-superscript": "^3.32.0",
+    "@tiptap/extension-table": "^3.32.0",
+    "@tiptap/extension-table-cell": "^3.32.0",
+    "@tiptap/extension-table-header": "^3.32.0",
+    "@tiptap/extension-table-row": "^3.32.0",
     "@tiptap/extension-text-align": "^3.32.0",
     "@tiptap/extension-text-style": "^3.32.0",
     "@tiptap/extension-underline": "^3.32.0",
@@ -22,6 +28,7 @@
     "@zoffice/ui": "workspace:*",
     "docx": "^9.14.0",
     "jszip": "^3.10.2",
+    "katex": "^0.19.0",
     "lucide-react": "^0.460.0",
     "mammoth": "^1.13.0"
   },
