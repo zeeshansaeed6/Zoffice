@@ -64,9 +64,12 @@ export async function showOpenDialog(win) {
     throw new Error('Unsupported file extension')
   }
 
-  const content = readFileSync(filePath, 'utf-8')
   const title = basename(filePath)
   const ext = extname(filePath).replace('.', '').toLowerCase()
+  const isBinary = ['docx', 'xlsx', 'pptx', 'odt', 'ods'].includes(ext)
+  const content = isBinary
+    ? readFileSync(filePath).toString('base64')
+    : readFileSync(filePath, 'utf-8')
 
   let appId = 'writer'
   if (['xlsx', 'ods', 'csv'].includes(ext)) appId = 'sheets'
@@ -87,7 +90,14 @@ export function saveToFile(filePath, content) {
   if (!isValidExtension(filePath)) {
     throw new Error('Unsupported file extension for save')
   }
-  writeFileSync(filePath, content, 'utf-8')
+  const ext = extname(filePath).replace('.', '').toLowerCase()
+  const isBinary = ['docx', 'xlsx', 'pptx', 'odt', 'ods'].includes(ext)
+
+  if (isBinary) {
+    writeFileSync(filePath, Buffer.from(content, 'base64'))
+  } else {
+    writeFileSync(filePath, content, 'utf-8')
+  }
   return { success: true }
 }
 
@@ -115,10 +125,16 @@ export async function showSaveAsDialog(win, defaultName, content, defaultExtensi
     throw new Error('Unsupported file extension for save')
   }
 
-  writeFileSync(filePath, content, 'utf-8')
+  const ext = extname(filePath).replace('.', '').toLowerCase()
+  const isBinary = ['docx', 'xlsx', 'pptx', 'odt', 'ods'].includes(ext)
+
+  if (isBinary) {
+    writeFileSync(filePath, Buffer.from(content, 'base64'))
+  } else {
+    writeFileSync(filePath, content, 'utf-8')
+  }
 
   const title = basename(filePath)
-  const ext = extname(filePath).replace('.', '').toLowerCase()
   let appId = 'writer'
   if (['xlsx', 'ods', 'csv'].includes(ext)) appId = 'sheets'
   if (['pptx'].includes(ext)) appId = 'slides'

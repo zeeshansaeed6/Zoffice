@@ -21,14 +21,15 @@ export function AppLoader() {
     return <StartScreen />
   }
 
-  const handleSave = async () => {
+  const handleSave = async (overrideContent) => {
+    const contentToSave = typeof overrideContent === 'string' ? overrideContent : activeTab.content
     if (activeTab.filePath) {
-      await saveFile(activeTab.filePath, activeTab.content)
+      await saveFile(activeTab.filePath, contentToSave)
       markClean(activeTab.id, activeTab.filePath)
     } else {
       const ext =
         activeTab.appId === 'sheets' ? 'xlsx' : activeTab.appId === 'slides' ? 'pptx' : 'docx'
-      const res = await saveFileAs(activeTab.title, activeTab.content, ext)
+      const res = await saveFileAs(activeTab.title, contentToSave, ext)
       if (!res.cancelled && res.filePath) {
         markClean(activeTab.id, res.filePath)
       }

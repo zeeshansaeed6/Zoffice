@@ -23,14 +23,18 @@ export function PaperCanvas({
   const sizeConfig = PAGE_SIZES[pageSize] || PAGE_SIZES.a4
   const marginConfig = PAGE_MARGINS[margins] || PAGE_MARGINS.normal
 
+  const editorHtml = editor?.getHTML()
+  const pageHeight = sizeConfig.heightPx
+  const totalMarginY = marginConfig.top + marginConfig.bottom
+
   // Calculate and update page count on scroll/content change
   useEffect(() => {
     if (!containerRef.current || !onPageCountChange) return
     const el = containerRef.current
     const scrollH = el.scrollHeight
-    const count = calculatePageCount(scrollH, sizeConfig.heightPx, marginConfig.top + marginConfig.bottom)
+    const count = calculatePageCount(scrollH, pageHeight, totalMarginY)
     onPageCountChange(count)
-  }, [editor?.getHTML(), sizeConfig.heightPx, marginConfig, onPageCountChange])
+  }, [editorHtml, pageHeight, totalMarginY, onPageCountChange])
 
   return (
     <div

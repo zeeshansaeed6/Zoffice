@@ -1,4 +1,9 @@
-import { copyFormatting, applyFormatting } from './format-painter.js'
+import {
+  copyFormatting,
+  applyFormatting,
+  isFormatPainterActive,
+  cancelFormatPainter,
+} from './format-painter.js'
 
 /**
  * Dispatches formatting and editing commands to a TipTap editor instance.
@@ -124,4 +129,4 @@ export function selectAll(editor) {
   editor?.chain().focus().selectAll().run()
 }
 
-export { copyFormatting, applyFormatting }
+export { copyFormatting, applyFormatting, isFormatPainterActive, cancelFormatPainter }

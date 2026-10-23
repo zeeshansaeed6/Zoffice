@@ -43,6 +43,7 @@ export function RibbonButton({
       aria-label={label}
       aria-pressed={active}
       disabled={disabled}
+      onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className={`${baseStyle} ${sizeStyle} ${stateStyle} ${className}`}
     >

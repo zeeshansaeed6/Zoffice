@@ -1,44 +1,142 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
-import { getWriterRibbonConfig } from './ribbon-config.jsx'
+import { getWriterRibbonConfig } from './ribbon/ribbon-config.jsx'
+import { PaperCanvas } from './page-layout/PaperCanvas.jsx'
+import { useWriterEditor } from './core/use-writer-editor.js'
+import { FindReplaceDialog } from './dialogs/FindReplaceDialog.jsx'
+import { parseDocxToHtml, serializeDocxToBase64 } from './docx/index.js'
+import * as actions from './ribbon/home-actions.js'
 
 /**
- * ZWriter Word Processing Component.
+ * ZWriter Desktop Word Processing Component.
  *
  * @param {Object} props
  * @param {string} props.id - Document tab ID
- * @param {string} [props.title] - Document title
- * @param {string} [props.initialContent='']
+ * @param {string} [props.title='Untitled Document'] - Document display title
+ * @param {string} [props.initialContent=''] - Raw HTML or base64 .docx binary
  * @param {(content: string) => void} [props.onChange]
- * @param {() => void} [props.onSave]
+ * @param {(content?: string) => void} [props.onSave]
  */
-export function ZWriter({ title = 'Untitled Document', initialContent = '', onChange, onSave }) {
-  const [content, setContent] = useState(initialContent)
+export function ZWriter({
+  id: _id,
+  title: _title = 'Untitled Document',
+  initialContent = '',
+  onChange,
+  onSave,
+}) {
   const [zoom, setZoom] = useState(100)
-  const [bold, setBold] = useState(false)
-  const [italic, setItalic] = useState(false)
-  const [underline, setUnderline] = useState(false)
-  const [align, setAlign] = useState('left')
+  const [pageCount, setPageCount] = useState(1)
+  const [showFindReplace, setShowFindReplace] = useState(false)
+  const [isFormatPainting, setIsFormatPainting] = useState(false)
 
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
+  const handleEditorChange = useCallback(
+    async (html) => {
+      if (onChange) {
+        onChange(html)
+      }
+    },
+    [onChange],
+  )
 
-  const handleTextChange = (e) => {
-    const val = e.target.value
-    setContent(val)
-    if (onChange) onChange(val)
+  const handleSelectionUpdate = useCallback((editorInstance) => {
+    if (actions.isFormatPainterActive() && editorInstance) {
+      actions.applyFormatting(editorInstance)
+      setIsFormatPainting(false)
+    }
+  }, [])
+
+  const { editor, wordCount, characterCount, activeMarks } = useWriterEditor({
+    initialContent: initialContent && initialContent.startsWith('<') ? initialContent : '',
+    onChange: handleEditorChange,
+    onSelectionUpdate: handleSelectionUpdate,
+  })
+
+  // Load and decode base64 .docx if passed as initial content
+  useEffect(() => {
+    if (!editor || !initialContent) return
+    if (!initialContent.startsWith('<')) {
+      parseDocxToHtml(initialContent)
+        .then(({ html }) => {
+          if (html && editor) {
+            editor.commands.setContent(html)
+          }
+        })
+        .catch((err) => {
+          console.error('[ZWriter] Failed to parse initial docx:', err)
+        })
+    }
+  }, [editor, initialContent])
+
+  const handleSave = useCallback(async () => {
+    if (!editor) return
+    const docxBase64 = await serializeDocxToBase64(editor.getJSON())
+    if (onSave) {
+      onSave(docxBase64)
+    }
+  }, [editor, onSave])
+
+  const handleFormatPainter = () => {
+    if (!editor) return
+    if (isFormatPainting) {
+      actions.cancelFormatPainter()
+      setIsFormatPainting(false)
+    } else {
+      actions.copyFormatting(editor)
+      setIsFormatPainting(true)
+    }
   }
 
   const ribbonConfig = getWriterRibbonConfig({
-    bold,
-    italic,
-    underline,
-    align,
-    toggleBold: () => setBold(!bold),
-    toggleItalic: () => setItalic(!italic),
-    toggleUnderline: () => setUnderline(!underline),
-    setAlign,
-    onSave,
+    activeMarks,
+    isFormatPainting,
+    onSave: handleSave,
     canSave: true,
+    onUndo: () => editor?.chain().focus().undo().run(),
+    onRedo: () => editor?.chain().focus().redo().run(),
+    canUndo: editor?.can().undo() || false,
+    canRedo: editor?.can().redo() || false,
+
+    // Clipboard
+    onPaste: () => {
+      navigator.clipboard?.readText?.().then((text) => {
+        if (text && editor) editor.commands.insertContent(text)
+      })
+    },
+    onCut: () => {
+      document.execCommand('cut')
+    },
+    onCopy: () => {
+      document.execCommand('copy')
+    },
+    onFormatPainter: handleFormatPainter,
+
+    // Font
+    setFontFamily: (font) => actions.setFontFamily(editor, font),
+    setFontSize: (size) => actions.setFontSize(editor, size),
+    onGrowFont: () => actions.growFontSize(editor),
+    onShrinkFont: () => actions.shrinkFontSize(editor),
+    onClearFormatting: () => actions.clearFormatting(editor),
+    toggleBold: () => actions.toggleBold(editor),
+    toggleItalic: () => actions.toggleItalic(editor),
+    toggleUnderline: () => actions.toggleUnderline(editor),
+    toggleStrike: () => actions.toggleStrike(editor),
+    toggleSubscript: () => actions.toggleSubscript(editor),
+    toggleSuperscript: () => actions.toggleSuperscript(editor),
+    setTextColor: (color) => actions.setTextColor(editor, color),
+    setHighlightColor: (color) => actions.setHighlightColor(editor, color),
+
+    // Paragraph
+    toggleBulletList: () => actions.toggleBulletList(editor),
+    toggleOrderedList: () => actions.toggleOrderedList(editor),
+    setLineSpacing: (spacing) => actions.setLineSpacing(editor, spacing),
+    setTextAlign: (align) => actions.setTextAlign(editor, align),
+
+    // Styles
+    setStyle: (style) => actions.setDocumentStyle(editor, style),
+
+    // Editing
+    onFindReplace: () => setShowFindReplace(true),
+    onSelectAll: () => actions.selectAll(editor),
   })
 
   return (
@@ -48,31 +146,24 @@ export function ZWriter({ title = 'Untitled Document', initialContent = '', onCh
     >
       <Ribbon config={ribbonConfig} />
 
-      {/* Document Workspace / Canvas */}
-      <div className="flex flex-1 justify-center overflow-auto p-8">
-        <div
-          className="relative min-h-[842px] w-[595px] origin-top border border-neutral-200 bg-white p-12 shadow-md transition-transform dark:border-neutral-800 dark:bg-neutral-900"
-          style={{ transform: `scale(${zoom / 100})` }}
-        >
-          <h1 className="mb-4 text-xl font-bold text-neutral-800 dark:text-neutral-100">{title}</h1>
-          <textarea
-            aria-label="Document editor"
-            value={content}
-            onChange={handleTextChange}
-            placeholder="Type your text here..."
-            className={`h-[680px] w-full resize-none border-none bg-transparent font-sans leading-relaxed text-neutral-800 outline-none dark:text-neutral-200 ${
-              bold ? 'font-bold' : ''
-            } ${italic ? 'italic' : ''} ${underline ? 'underline' : ''} text-${align}`}
-          />
-        </div>
-      </div>
+      {/* Paper-style document canvas */}
+      <PaperCanvas
+        editor={editor}
+        zoom={zoom}
+        pageSize="a4"
+        margins="normal"
+        onPageCountChange={setPageCount}
+      />
 
       {/* Status Bar */}
       <StatusBar
         leftContent={
           <>
-            <StatusBarSlot>Page 1 of 1</StatusBarSlot>
+            <StatusBarSlot>
+              Page {pageCount} of {pageCount}
+            </StatusBarSlot>
             <StatusBarSlot>{wordCount} words</StatusBarSlot>
+            <StatusBarSlot>{characterCount} characters</StatusBarSlot>
             <StatusBarSlot>English (US)</StatusBarSlot>
           </>
         }
@@ -80,6 +171,15 @@ export function ZWriter({ title = 'Untitled Document', initialContent = '', onCh
         zoom={zoom}
         onZoomChange={setZoom}
       />
+
+      {/* Find and Replace Modal */}
+      {showFindReplace && (
+        <FindReplaceDialog
+          isOpen={showFindReplace}
+          onClose={() => setShowFindReplace(false)}
+          editor={editor}
+        />
+      )}
     </div>
   )
 }

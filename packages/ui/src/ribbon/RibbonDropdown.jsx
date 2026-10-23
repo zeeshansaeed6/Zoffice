@@ -50,6 +50,7 @@ export function RibbonDropdown({
       <button
         type="button"
         disabled={disabled}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={() => setOpen(!open)}
         className={`inline-flex items-center justify-center rounded border border-transparent text-xs transition-colors focus:outline-none focus:ring-1 focus:ring-blue-500 ${
           isLarge ? 'h-[58px] min-w-[50px] flex-col gap-1 px-2 py-1' : 'h-6 flex-row gap-1 px-1.5'
@@ -79,6 +80,7 @@ export function RibbonDropdown({
               <button
                 key={item.id || idx}
                 type="button"
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
                   setOpen(false)
                   if (item.onClick) item.onClick()

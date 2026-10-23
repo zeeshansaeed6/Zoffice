@@ -78,7 +78,7 @@ export function useWriterEditor({ initialContent = '', onChange, onSelectionUpda
     onSelectionUpdate: ({ editor: currentEditor }) => {
       updateMetrics(currentEditor)
       if (onSelectionUpdate) {
-        onSelectionUpdate()
+        onSelectionUpdate(currentEditor)
       }
     },
   })

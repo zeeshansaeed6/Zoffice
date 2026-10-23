@@ -40,16 +40,12 @@ export const LineSpacing = Extension.create({
       setLineSpacing:
         (lineHeight) =>
         ({ commands }) => {
-          return this.options.types.every((type) =>
-            commands.updateAttributes(type, { lineHeight }),
-          )
+          return this.options.types.every((type) => commands.updateAttributes(type, { lineHeight }))
         },
       unsetLineSpacing:
         () =>
         ({ commands }) => {
-          return this.options.types.every((type) =>
-            commands.resetAttributes(type, 'lineHeight'),
-          )
+          return this.options.types.every((type) => commands.resetAttributes(type, 'lineHeight'))
         },
     }
   },

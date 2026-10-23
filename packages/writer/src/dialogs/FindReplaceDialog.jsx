@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Dialog } from '@zoffice/ui'
-import { Search, Replace, ChevronDown, ChevronUp } from 'lucide-react'
 
 /**
  * Find and Replace Dialog for ZWriter.

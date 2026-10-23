@@ -79,21 +79,30 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
 
 ## Phase 1: ZWriter Core Document Engine
 
-**Status:** Ready to start 🎯
+**Status:** In Progress ⏳ (Milestone 1A Completed & Verified ✅)
 
-### Goals:
+### Milestone 1A: Editor Core, Home Ribbon, Layout & DOCX Roundtrip
 
-1. **Document Model & Rendering**:
-   - Integration of a robust rich-text document model (ProseMirror / TipTap) with standard paragraph styles, headings, lists, and character formatting.
-2. **Native `.docx` Parser & Serializer**:
-   - Full OOXML parser to open `.docx` files without third-party web servers.
-   - Round-trip fidelity preserving paragraphs, fonts, colors, and margins.
-3. **Page Layout Engine**:
-   - Accurate page budgeting, page breaks, margins (Letter, A4), headers and footers.
-4. **Find & Replace**:
-   - In-document search, replace, and case-sensitive matching.
-5. **Print & PDF Export**:
-   - High-fidelity PDF export and native OS print dialog integration.
+- **Status:** Completed & Verified ✅ (October 23, 2026)
+- **Deliverables:**
+  - **TipTap/ProseMirror Schema**: Rich character formatting (bold, italic, underline, strike, sub/super, font colors, highlights, clear formatting), typography (Inter, Carlito, system fonts), font size scale (10–36pt, A+/A-).
+  - **Paragraph Controls**: Bullets, numbering, text alignment (left, center, right, justify), custom line spacing extension (1.0, 1.15, 1.5, 2.0).
+  - **Home Ribbon**: Full ribbon layout with Clipboard (Cut, Copy, Paste, Format Painter state machine), Font styling, Paragraph controls, Styles gallery (Normal, H1–H3, Quote, Code), and Find & Replace modal with regex and case-sensitive options.
+  - **Paper-Style Page Layout**: Authentic drop-shadow paper rendering (`PaperCanvas.jsx`), A4 & Letter presets, standard margins, zoom scaling (50%–200%), page budgeting, and visual dashed page breaks (`Ctrl+Enter`).
+  - **DOCX Roundtrip Engine**: Native OOXML reading via `mammoth` and writing via `docx` without external servers; sandboxed binary base64 IPC transfer; verified with test fixtures in `/test-fixtures`.
+  - **Status Bar Metrics**: Real-time word count, character count, page count, and zoom control.
+  - **Playwright E2E & Unit Test Coverage**: End-to-end verification of document typing, styling, status bar updates, docx saving, and screenshot capture (`docs/screenshots/zwriter-editor.png`).
+
+### Milestone 1B: Insert, Layout, Review, References, View & PDF/Print
+
+- **Status:** Pending Review & Approval 🎯
+- **Planned Scope:**
+  - Insert Tab: Tables, image embed/resize, hyperlinks, headers/footers, math equations.
+  - Layout Tab: Portrait/landscape orientation, multi-column layouts, custom margins.
+  - Review Tab: Native spellcheck, comment bubbles, track changes (insertions/deletions, accept/reject).
+  - References Tab: Table of contents generation, footnotes, citations.
+  - View Tab: Print layout, Web layout, Read mode, Outline navigation.
+  - PDF & Print: High-fidelity export via `printToPDF` and native system print dialog.
 
 ---
 

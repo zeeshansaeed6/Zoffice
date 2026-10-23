@@ -28,6 +28,7 @@ export function RibbonToggle({ icon, label, pressed, onToggle, disabled = false,
       aria-label={label}
       aria-pressed={pressed}
       disabled={disabled}
+      onMouseDown={(e) => e.preventDefault()}
       onClick={() => onToggle(!pressed)}
       className={`${baseStyle} ${stateStyle}`}
     >
