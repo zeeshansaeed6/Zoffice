@@ -1,37 +1,173 @@
-import React, { useState } from 'react'
-import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
+import React, { useState, useMemo, useCallback } from 'react'
+import { Ribbon, StatusBar, StatusBarSlot, useTheme } from '@zoffice/ui'
 import { getSheetsRibbonConfig } from './ribbon-config.jsx'
-
-const COLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-const ROWS = Array.from({ length: 25 }, (_, i) => i + 1)
+import { CanvasGrid } from './grid/CanvasGrid.jsx'
+import { FormulaBar } from './formula-bar/FormulaBar.jsx'
+import { SheetTabBar } from './components/SheetTabBar.jsx'
+import {
+  createWorkbook,
+  createSheet,
+  getCell,
+  setCell,
+  coordsToCellId,
+} from './core/sheet-model.js'
 
 /**
  * ZSheets Spreadsheet Application Component.
  *
  * @param {Object} props
- * @param {string} props.id
+ * @param {string} props.id - Active document tab ID
  * @param {string} [props.title='Untitled Spreadsheet']
- * @param {() => void} [props.onSave]
+ * @param {(content?: string) => void} [props.onSave]
  */
 export function ZSheets({ onSave }) {
-  const [selectedCell, setSelectedCell] = useState('A1')
-  const [cellValues, setCellValues] = useState(/** @type {Record<string, string>} */ ({}))
-  const [zoom, setZoom] = useState(100)
-  const [bold, setBold] = useState(false)
-  const [italic, setItalic] = useState(false)
-  const [align, setAlign] = useState('left')
+  const { mode: themeMode } = useTheme()
 
-  const handleCellChange = (cellId, value) => {
-    setCellValues((prev) => ({ ...prev, [cellId]: value }))
-  }
+  const [workbook, setWorkbook] = useState(() => createWorkbook('Sheet1'))
+  const [activeCell, setActiveCell] = useState({ row: 0, col: 0 })
+  const [selectedRange, setSelectedRange] = useState({
+    startRow: 0,
+    startCol: 0,
+    endRow: 0,
+    endCol: 0,
+  })
+  const [isEditing, setIsEditing] = useState(false)
+  const [editValue, setEditValue] = useState('')
+  const [zoom, setZoom] = useState(100)
+
+  // Get active sheet
+  const activeSheet = useMemo(() => {
+    return workbook.sheets.find((s) => s.id === workbook.activeSheetId) || workbook.sheets[0]
+  }, [workbook])
+
+  // Current active cell data
+  const currentCell = useMemo(() => {
+    return getCell(activeSheet, activeCell.row, activeCell.col)
+  }, [activeSheet, activeCell])
+
+  // Display formula bar value
+  const formulaValue = isEditing ? editValue : currentCell?.raw || currentCell?.value || ''
+
+  // Commit editing changes to sheet
+  const handleCommitEdit = useCallback(() => {
+    if (!isEditing) return
+    setWorkbook((prev) => {
+      const sheets = prev.sheets.map((s) => {
+        if (s.id !== prev.activeSheetId) return s
+        const updated = { ...s, data: { ...s.data } }
+        setCell(updated, activeCell.row, activeCell.col, editValue)
+        return updated
+      })
+      return { ...prev, sheets }
+    })
+    setIsEditing(false)
+  }, [isEditing, activeCell, editValue])
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false)
+    setEditValue('')
+  }, [])
+
+  const handleStartEdit = useCallback(() => {
+    setIsEditing(true)
+    setEditValue(currentCell?.raw || currentCell?.value || '')
+  }, [currentCell])
+
+  const handleSelectionChange = useCallback((cell, range) => {
+    setActiveCell(cell)
+    setSelectedRange(
+      range || { startRow: cell.row, startCol: cell.col, endRow: cell.row, endCol: cell.col },
+    )
+  }, [])
+
+  const handleColResize = useCallback((col, width) => {
+    setWorkbook((prev) => {
+      const sheets = prev.sheets.map((s) => {
+        if (s.id !== prev.activeSheetId) return s
+        return { ...s, colWidths: { ...s.colWidths, [col]: width } }
+      })
+      return { ...prev, sheets }
+    })
+  }, [])
+
+  const handleRowResize = useCallback((row, height) => {
+    setWorkbook((prev) => {
+      const sheets = prev.sheets.map((s) => {
+        if (s.id !== prev.activeSheetId) return s
+        return { ...s, rowHeights: { ...s.rowHeights, [row]: height } }
+      })
+      return { ...prev, sheets }
+    })
+  }, [])
+
+  const handleClearRange = useCallback(() => {
+    setWorkbook((prev) => {
+      const sheets = prev.sheets.map((s) => {
+        if (s.id !== prev.activeSheetId) return s
+        const updated = { ...s, data: { ...s.data } }
+        for (let r = selectedRange.startRow; r <= selectedRange.endRow; r++) {
+          for (let c = selectedRange.startCol; c <= selectedRange.endCol; c++) {
+            setCell(updated, r, c, null)
+          }
+        }
+        return updated
+      })
+      return { ...prev, sheets }
+    })
+  }, [selectedRange])
+
+  // Sheet Tabs Management
+  const handleAddSheet = useCallback(() => {
+    setWorkbook((prev) => {
+      const newIndex = prev.sheets.length + 1
+      const newSheet = createSheet(`sheet_${Date.now()}`, `Sheet${newIndex}`)
+      return {
+        ...prev,
+        activeSheetId: newSheet.id,
+        sheets: [...prev.sheets, newSheet],
+      }
+    })
+  }, [])
+
+  const handleSelectSheet = useCallback((sheetId) => {
+    setWorkbook((prev) => ({ ...prev, activeSheetId: sheetId }))
+  }, [])
+
+  const handleRenameSheet = useCallback((sheetId, newName) => {
+    setWorkbook((prev) => ({
+      ...prev,
+      sheets: prev.sheets.map((s) => (s.id === sheetId ? { ...s, name: newName } : s)),
+    }))
+  }, [])
+
+  // Range calculation summary for status bar (Count, Sum, Average)
+  const selectionStats = useMemo(() => {
+    let count = 0
+    let numericCount = 0
+    let sum = 0
+
+    for (let r = selectedRange.startRow; r <= selectedRange.endRow; r++) {
+      for (let c = selectedRange.startCol; c <= selectedRange.endCol; c++) {
+        const cell = getCell(activeSheet, r, c)
+        if (cell && (cell.value !== undefined || cell.raw !== undefined)) {
+          count++
+          const num = Number(cell.value ?? cell.raw)
+          if (!isNaN(num) && String(cell.value ?? cell.raw).trim() !== '') {
+            numericCount++
+            sum += num
+          }
+        }
+      }
+    }
+
+    if (numericCount === 0) {
+      return count > 0 ? `Count: ${count}` : 'Ready'
+    }
+    const avg = (sum / numericCount).toFixed(2).replace(/\.00$/, '')
+    return `Count: ${count} | Sum: ${sum} | Average: ${avg}`
+  }, [activeSheet, selectedRange])
 
   const ribbonConfig = getSheetsRibbonConfig({
-    bold,
-    italic,
-    align,
-    toggleBold: () => setBold(!bold),
-    toggleItalic: () => setItalic(!italic),
-    setAlign,
     onSave,
     canSave: true,
   })
@@ -39,93 +175,60 @@ export function ZSheets({ onSave }) {
   return (
     <div
       data-testid="zsheets-app"
-      className="flex h-full w-full flex-col bg-white dark:bg-neutral-950"
+      className="flex h-full w-full select-none flex-col bg-white dark:bg-neutral-950"
     >
       <Ribbon config={ribbonConfig} />
 
       {/* Formula Bar */}
-      <div className="flex items-center gap-2 border-b border-neutral-200 bg-neutral-50 px-3 py-1 text-xs dark:border-neutral-800 dark:bg-neutral-900">
-        <span className="w-12 font-mono font-semibold text-neutral-600 dark:text-neutral-400">
-          {selectedCell}
-        </span>
-        <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-700" />
-        <span className="font-serif italic text-neutral-400">fx</span>
-        <input
-          type="text"
-          aria-label="Formula bar"
-          value={cellValues[selectedCell] || ''}
-          onChange={(e) => handleCellChange(selectedCell, e.target.value)}
-          placeholder="Enter formula or value"
-          className="flex-1 bg-transparent px-1 font-mono text-neutral-800 outline-none dark:text-neutral-200"
-        />
-      </div>
+      <FormulaBar
+        activeCell={activeCell}
+        value={formulaValue}
+        onChange={(val) => {
+          if (!isEditing) setIsEditing(true)
+          setEditValue(val)
+        }}
+        onCommit={handleCommitEdit}
+        onCancel={handleCancelEdit}
+        onFxClick={handleStartEdit}
+      />
 
-      {/* Spreadsheet Grid */}
-      <div className="flex-1 overflow-auto">
-        <div
-          className="inline-block min-w-full origin-top-left transition-transform"
-          style={{ transform: `scale(${zoom / 100})` }}
-        >
-          <table className="border-collapse text-xs">
-            <thead>
-              <tr>
-                <th className="h-6 w-10 border border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900" />
-                {COLS.map((col) => (
-                  <th
-                    key={col}
-                    className="h-6 w-24 border border-neutral-200 bg-neutral-100 font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400"
-                  >
-                    {col}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((row) => (
-                <tr key={row}>
-                  <td className="h-6 border border-neutral-200 bg-neutral-100 text-center font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400">
-                    {row}
-                  </td>
-                  {COLS.map((col) => {
-                    const cellId = `${col}${row}`
-                    const isSelected = selectedCell === cellId
-                    return (
-                      <td
-                        key={cellId}
-                        onClick={() => setSelectedCell(cellId)}
-                        className={`h-6 border border-neutral-200 p-0 dark:border-neutral-800 ${
-                          isSelected ? 'z-10 outline outline-2 outline-blue-600' : ''
-                        }`}
-                      >
-                        <input
-                          type="text"
-                          aria-label={`Cell ${cellId}`}
-                          value={cellValues[cellId] || ''}
-                          onChange={(e) => handleCellChange(cellId, e.target.value)}
-                          onFocus={() => setSelectedCell(cellId)}
-                          className={`h-full w-full bg-transparent px-1.5 text-neutral-800 outline-none dark:text-neutral-200 ${
-                            bold ? 'font-bold' : ''
-                          } ${italic ? 'italic' : ''} text-${align}`}
-                        />
-                      </td>
-                    )
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* High-Performance Canvas Virtual Grid */}
+      <CanvasGrid
+        sheet={activeSheet}
+        activeCell={activeCell}
+        selectedRange={selectedRange}
+        themeMode={themeMode}
+        onSelectionChange={handleSelectionChange}
+        onColResize={handleColResize}
+        onRowResize={handleRowResize}
+        isEditing={isEditing}
+        editValue={editValue}
+        onEditValueChange={setEditValue}
+        onStartEdit={handleStartEdit}
+        onCommitEdit={handleCommitEdit}
+        onCancelEdit={handleCancelEdit}
+        onClearRange={handleClearRange}
+      />
+
+      {/* Multi-Sheet Bottom Tabs */}
+      <SheetTabBar
+        sheets={workbook.sheets}
+        activeSheetId={workbook.activeSheetId}
+        onSelectSheet={handleSelectSheet}
+        onAddSheet={handleAddSheet}
+        onRenameSheet={handleRenameSheet}
+      />
 
       {/* Status Bar */}
       <StatusBar
         leftContent={
           <>
-            <StatusBarSlot>Sheet1</StatusBarSlot>
+            <StatusBarSlot>{coordsToCellId(activeCell.row, activeCell.col)}</StatusBarSlot>
+            <StatusBarSlot>{activeSheet.name}</StatusBarSlot>
             <StatusBarSlot>Ready</StatusBarSlot>
           </>
         }
-        centerContent="Count: 0 | Sum: 0"
+        centerContent={selectionStats}
         zoom={zoom}
         onZoomChange={setZoom}
       />

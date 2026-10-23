@@ -1,3 +1,8 @@
 import { defineWorkspace } from 'vitest/config'
 
-export default defineWorkspace(['packages/core', 'packages/ui', 'packages/writer'])
+export default defineWorkspace([
+  'packages/core',
+  'packages/ui',
+  'packages/writer',
+  'packages/sheets',
+])

@@ -144,4 +144,72 @@ All fonts and icons are strictly open-source and bundled inside the application 
 
 - **Fonts**: `@fontsource-variable/inter`, `@fontsource/carlito`, Liberation Sans.
 - **Icons**: `lucide-react`.
+- **Math**: Bundled KaTeX CSS and WOFF/WOFF2 fonts.
 - Zero external CDN dependencies.
+
+---
+
+## 7. ZSheets Architecture & Engine Decision
+
+### 7.1 Engine Evaluation: Univer vs. Custom Canvas Virtualized Grid
+
+| Criteria                     | Univer (Apache-2.0)                                                                                                       | Custom Canvas Grid + HyperFormula                                                                | Decision                                                  |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------- | :-------------------------------------------------------- |
+| **Language & Rules**         | Monolithic TypeScript codebase, heavy DI tokens (`@Inject`), RxJS streams.                                                | 100% Plain JavaScript (ES2022+), ES modules, React JSX, `< 300 lines` per file.                  | **Custom Grid Wins** (Strict AGENTS.md compliance).       |
+| **UI Integration**           | Ships its own full-screen workbench, toolbar, and dialogs. Conflicts with `@zoffice/ui` Ribbon, TabBar, and theme system. | Seamlessly driven by `@zoffice/ui` Ribbon, StatusBar, ThemeProvider, and shell modals.           | **Custom Grid Wins** (Unified UX & branding).             |
+| **Performance (100k+ rows)** | Canvas-based rendering, but heavier memory footprint due to state tree.                                                   | Lightweight, high-DPI virtualized `<canvas>` rendering only visible viewport cells at 60fps.     | **Custom Grid Wins** (Instant scrolling, minimal memory). |
+| **Formula Engine**           | Built-in `@univerjs/engine-formula`.                                                                                      | **HyperFormula** (industrial-strength, 300+ Excel functions, dependency graphs, array formulas). | **HyperFormula Wins** (Standard formula compatibility).   |
+| **File I/O**                 | Custom adapters required.                                                                                                 | **ExcelJS** (full fidelity `.xlsx` styles, formulas, merges, validations, and column widths).    | **ExcelJS Wins** (Standard OOXML fidelity).               |
+| **Bundle & Footprint**       | 30MB+ across dozens of `@univerjs/*` packages.                                                                            | Lean, targeted dependencies (`hyperformula`, `exceljs`, `chart.js`).                             | **Custom Grid Wins** (Small, auditable bundle).           |
+
+**Architectural Decision**:
+We adopt a **Custom HTML5 `<canvas>` Virtualized Grid Engine** paired with **HyperFormula** for formula evaluation, **ExcelJS** for `.xlsx` read/write fidelity, and **Chart.js** for embedded charts.
+
+### 7.2 ZSheets Component Architecture
+
+```
+packages/sheets/src/
+├── core/
+│   ├── sheet-model.js          # Multi-sheet workbook state, cell store, dimensions
+│   ├── formula-engine.js       # HyperFormula instance, dependency tracking, evaluation
+│   ├── cell-formatter.js       # Number formatting (Currency, Percent, Date, Custom)
+│   ├── clipboard.js            # Copy, Cut, Paste, Paste Special, Transpose
+│   └── undo-manager.js         # Command-based transactional undo/redo
+├── grid/
+│   ├── CanvasGrid.jsx          # React canvas wrapper, high-DPI scaling, scrollbars
+│   ├── grid-renderer.js        # Canvas drawing (cells, text, gridlines, headers, borders)
+│   ├── grid-viewport.js        # Viewport coordinates, visible row/col calculation
+│   ├── grid-selection.js       # Range selection, active cell, fill handle
+│   ├── grid-mouse.js           # Pointer events, dragging, column/row resize
+│   └── grid-keyboard.js        # Excel keyboard navigation (Tab, Enter, arrows, F2)
+├── formula-bar/
+│   ├── FormulaBar.jsx          # Name box, fx button, syntax-highlighted editor
+│   └── formula-autocomplete.js # Function name autocompletion & argument hints
+├── ribbon/
+│   ├── ribbon-config.jsx       # Data-driven ribbon configuration
+│   ├── ribbon-home.jsx         # Home tab: formatting, cells, editing, sort/filter
+│   ├── ribbon-insert.jsx       # Insert tab: charts, tables, pivot, illustrations
+│   ├── ribbon-page-layout.jsx  # Page Layout tab: orientation, margins, gridlines
+│   ├── ribbon-formulas.jsx     # Formulas tab: function library, names, auditing
+│   ├── ribbon-data.jsx         # Data tab: sort, filter, validation, text-to-columns
+│   ├── ribbon-view.jsx         # View tab: freeze panes, zoom, gridlines toggle
+│   └── sheets-actions.js       # Dispatchers connecting ribbon to active sheet model
+├── xlsx/
+│   ├── xlsx-reader.js          # ExcelJS workbook importer
+│   ├── xlsx-writer.js          # ExcelJS workbook exporter
+│   └── csv-io.js               # Fast streaming CSV/TSV parser & generator
+├── features/
+│   ├── sort-filter.js          # Multi-column sorting and auto-filter dropdowns
+│   ├── conditional-format.js   # Highlight rules, color scales, data bars
+│   ├── data-validation.js      # List validation, ranges, error alerts
+│   ├── pivot-table.js          # Pivot table engine (rows, cols, values, aggregations)
+│   └── charts/
+│       ├── ChartContainer.jsx  # Floating/embedded Chart.js visualizer
+│       └── chart-options.js    # Chart types (Bar, Line, Pie, Scatter, Combo)
+├── dialogs/
+│   ├── InsertFunctionDialog.jsx# Function catalog by category with argument help
+│   ├── ConditionalFormatDialog.jsx # Rules builder
+│   ├── DataValidationDialog.jsx# Validation criteria setup
+│   └── NameManagerDialog.jsx   # Defined names manager
+└── ZSheets.jsx                 # Top-level composite workbook component
+```

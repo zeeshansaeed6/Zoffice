@@ -7,6 +7,9 @@
   "exports": {
     ".": "./src/index.js"
   },
+  "scripts": {
+    "test": "vitest run"
+  },
   "dependencies": {
     "@zoffice/core": "workspace:*",
     "@zoffice/ui": "workspace:*",
