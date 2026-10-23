@@ -98,13 +98,16 @@ export function createSlide({
   id = createId('slide'),
   layout = 'title_and_content',
   elements = [],
+  notes = '',
+  background = { type: 'solid', color: '#ffffff' },
+  transition = { type: 'none', duration: 0.5 },
 } = {}) {
   return {
     id,
     layout,
-    background: { type: 'solid', color: '#ffffff' },
-    notes: '',
-    transition: { type: 'none', duration: 0.5 },
+    background: typeof background === 'string' ? { type: 'solid', color: background } : background,
+    notes,
+    transition,
     elements,
   }
 }

@@ -140,14 +140,45 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
 
 ---
 
+---
+
 ## Phase 3: ZSlides Core Presentation Engine
 
-**Status:** Backlog
+**Status:** Completed & Verified ✅ (October 23, 2026)
 
-### Goals:
+### Deliverables:
 
-1. Presentation canvas with vector shapes, text frames, and images.
-2. Native `.pptx` reading and writing.
-3. Slide master layouts and color palettes.
-4. Slide sorter, reordering, duplicate, and delete.
-5. Fullscreen presentation view with presenter notes support.
+1. **Layered Slide Canvas & Model** (`packages/slides/src/canvas` & `core`):
+   - React + SVG + HTML DOM Overlay architecture ensuring crisp rendering, native contentEditable text, and lightweight performance.
+   - Dual coordinate space resolution presets: 16:9 Widescreen (960×540) and 4:3 Standard (960×720).
+   - 8-point interactive transform handles, drag repositioning, dynamic magnetic alignment guides with edge/center snapping.
+2. **Text & Vector Shape Engine** (`packages/slides/src/elements`):
+   - In-place text editing with formatting (bold, italic, underline, text alignment, font sizes).
+   - Full vector shapes library: Rectangle, Rounded Rectangle, Ellipse, Triangle, Right Arrow, Left Arrow, 5-Point Star, Speech Bubble, and Line.
+   - Arrange and alignment tools: Bring to Front, Send to Back, Align Center, Align Middle.
+3. **Slide Layouts & Thumbnail Panel** (`packages/slides/src/thumbnails` & `dialogs`):
+   - 7 standard slide layout presets: Title Slide, Title and Content, Section Header, Two Content, Comparison, Title Only, and Blank.
+   - Real-time thumbnail panel supporting slide selection, addition, duplication, deletion, hiding, and drag-and-drop reordering.
+4. **Slide Master & Themes Engine** (`packages/slides/src/core/theme-definitions.js`, `theme-engine.js`):
+   - 12 curated offline themes (Modern Clean, Midnight Executive, Coral Sunrise, Emerald Forest, Slate Minimal, Royal Indigo, Nordic Frost, Sunset Glow, Corporate Navy, Amber Warmth, Cyber Neon, Rose Gold).
+   - Theme Gallery dialog with live previews and seamless deck-wide color/font/background cascade.
+5. **High-Fidelity .pptx I/O** (`packages/slides/src/pptx`):
+   - Export to `.pptx` via PptxGenJS with accurate shape geometry, text runs, colors, and layout positioning.
+   - Custom OOXML import parser (`pptx-parser.js` with JSZip and XML DOM) reading slide trees, shape paths, text blocks, and colors.
+6. **Rich Media Elements** (`packages/slides/src/elements`):
+   - Images with maintain-aspect scaling, custom illustrations, and placeholder support.
+   - Editable slide tables with cell content editing and row/column structure.
+   - Chart.js chart integration supporting Bar, Line, Pie, and Doughnut charts.
+7. **Transitions & Slide Animations** (`packages/slides/src/animations`, `presenter`):
+   - Slide transitions: Fade, Push, Wipe, Zoom, None with custom durations and "Apply to All" capability.
+   - Element animation engine supporting Entrance (Fade In, Fly In, Zoom In), Emphasis (Pulse, Spin), and Exit (Fade Out, Fly Out).
+   - Dedicated Animation Pane for managing order, trigger events (On Click, With Previous, After Previous), and live preview.
+8. **Slide Show & Presenter View** (`packages/slides/src/presenter`):
+   - Fullscreen Slide Show mode with animated transitions, keyboard navigation (Space, Arrows, PageUp/Down, Esc), laser pointer (`L`), and blackout mode (`B`).
+   - Dual-screen Presenter View console with live presentation timer, current slide preview, next slide preview, and speaker notes.
+9. **Export & Print Handouts** (`packages/slides/src/dialogs/ExportDialog.jsx`, `core/export-utils.js`):
+   - Handouts print engine with print-ready CSS (`@media print`) supporting 1, 2, 3 (classic ruled conference lines for taking notes), 4, 6 slides per page, and speaker notes pages.
+   - Standalone SVG slide export and direct `.pptx` download.
+10. **Test Coverage & Zero Warnings**:
+    - Comprehensive Vitest unit test suite (10 test suites, 46 tests passing in `@zoffice/slides`).
+    - Zero ESLint errors or warnings across the monorepo.

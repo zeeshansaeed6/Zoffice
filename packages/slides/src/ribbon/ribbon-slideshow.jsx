@@ -1,5 +1,5 @@
 import React from 'react'
-import { Presentation, Play, Monitor } from 'lucide-react'
+import { Presentation, Play, Monitor, Printer, FileDown } from 'lucide-react'
 
 /**
  * Creates Slide Show ribbon tab configuration.
@@ -39,6 +39,28 @@ export function getSlideShowTab(actions = {}) {
             size: 'large',
             icon: <Monitor size={18} />,
             onClick: actions.onStartPresenterView,
+          },
+        ],
+      },
+      {
+        id: 'export-handouts',
+        label: 'Print & Handouts',
+        controls: [
+          {
+            id: 'print-handouts-btn',
+            type: 'button',
+            label: 'Print Handouts',
+            size: 'large',
+            icon: <Printer size={18} />,
+            onClick: actions.onOpenExportDialog,
+          },
+          {
+            id: 'export-deck-btn',
+            type: 'button',
+            label: 'Export',
+            size: 'large',
+            icon: <FileDown size={18} />,
+            onClick: actions.onOpenExportDialog,
           },
         ],
       },

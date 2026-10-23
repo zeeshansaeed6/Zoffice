@@ -38,7 +38,7 @@ export function SlideShowView({
         setTimeout(() => setStage('entered'), 20)
       }, transitionDuration * 500)
     },
-    [slides.length, currentIndex, transitionDuration]
+    [slides.length, currentIndex, transitionDuration],
   )
 
   useEffect(() => {

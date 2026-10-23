@@ -1,6 +1,8 @@
 /**
- * Slide deck presentation navigation and slide show state helpers.
+ * Slide deck presentation navigation, animation and slide show state helpers.
  */
+
+import { createElementsForLayout } from './slide-layouts.js'
 
 export function duplicateDeckSlide(deck, slideId) {
   const idx = deck.slides.findIndex((s) => s.id === slideId)
@@ -33,6 +35,13 @@ export function reorderDeckSlides(deck, fromIndex, toIndex) {
   return { ...deck, slides: copy }
 }
 
+export function toggleSlideHidden(deck, slideId) {
+  return {
+    ...deck,
+    slides: deck.slides.map((s) => (s.id === slideId ? { ...s, hidden: !s.hidden } : s)),
+  }
+}
+
 export function setSlideTransition(deck, slideId, transitionType) {
   return {
     ...deck,
@@ -46,5 +55,29 @@ export function applyTransitionToAllSlides(deck, transition) {
   return {
     ...deck,
     slides: deck.slides.map((s) => ({ ...s, transition: { ...transition } })),
+  }
+}
+
+export function applySlideLayout(deck, slideId, layoutType) {
+  return {
+    ...deck,
+    slides: deck.slides.map((s) =>
+      s.id !== slideId
+        ? s
+        : {
+            ...s,
+            layout: layoutType,
+            elements: createElementsForLayout(layoutType, deck.dimensions),
+          },
+    ),
+  }
+}
+
+export function addSlideAnimation(deck, slideId, animation) {
+  return {
+    ...deck,
+    slides: deck.slides.map((s) =>
+      s.id === slideId ? { ...s, animations: [...(s.animations || []), animation] } : s,
+    ),
   }
 }
