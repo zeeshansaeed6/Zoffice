@@ -18,6 +18,9 @@ import {
   AlignHorizontalDistributeCenter,
   AlignVerticalDistributeCenter,
   Palette,
+  Image,
+  Table,
+  BarChart3,
 } from 'lucide-react'
 import { SHAPE_TYPES } from './core/slide-constants.js'
 
@@ -222,6 +225,48 @@ export function getSlidesRibbonConfig(actions = {}) {
                   onClick: () => actions.onAlignElements?.('middle'),
                 },
               ],
+            ],
+          },
+        ],
+      },
+      {
+        id: 'insert',
+        label: 'Insert',
+        groups: [
+          {
+            id: 'tables-group',
+            label: 'Tables',
+            controls: [
+              {
+                id: 'insert-table-btn',
+                type: 'button',
+                label: 'Table',
+                size: 'large',
+                icon: <Table size={18} />,
+                onClick: actions.onInsertTable,
+              },
+            ],
+          },
+          {
+            id: 'illustrations-group',
+            label: 'Illustrations',
+            controls: [
+              {
+                id: 'insert-picture-btn',
+                type: 'button',
+                label: 'Pictures',
+                size: 'large',
+                icon: <Image size={18} />,
+                onClick: actions.onInsertPicture,
+              },
+              {
+                id: 'insert-chart-btn',
+                type: 'button',
+                label: 'Chart',
+                size: 'large',
+                icon: <BarChart3 size={18} />,
+                onClick: actions.onInsertChart,
+              },
             ],
           },
         ],

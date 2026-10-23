@@ -164,6 +164,12 @@ export function SlideCanvas({
                     properties: { ...el.properties, text: newText },
                   })
                 }}
+                onTableChange={(newData) => {
+                  onElementChange({
+                    ...el,
+                    properties: { ...el.properties, data: newData },
+                  })
+                }}
                 onSelect={(e) => {
                   e.stopPropagation()
                   const isMulti = e.shiftKey || e.ctrlKey || e.metaKey

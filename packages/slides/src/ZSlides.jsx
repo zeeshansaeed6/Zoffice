@@ -5,16 +5,23 @@ import { SlideCanvas } from './canvas/SlideCanvas.jsx'
 import { ThumbnailPanel } from './thumbnails/ThumbnailPanel.jsx'
 import { LayoutPickerDialog } from './dialogs/LayoutPickerDialog.jsx'
 import { ThemeGalleryDialog } from './dialogs/ThemeGalleryDialog.jsx'
-import {
-  createPresentationDeck,
-  createSlide,
-  createSlideElement,
-  createTextElement,
-} from './core/slide-model.js'
-import { ELEMENT_TYPES, SHAPE_TYPES } from './core/slide-constants.js'
+import { createPresentationDeck, createSlide } from './core/slide-model.js'
+import { SHAPE_TYPES } from './core/slide-constants.js'
 import { createElementsForLayout, LAYOUT_TYPES } from './core/slide-layouts.js'
-import { reorderElement, alignElements } from './core/arrange-utils.js'
 import { applyThemeToDeck } from './core/theme-engine.js'
+import {
+  createDefaultTextBox,
+  createDefaultShape,
+  createDefaultTable,
+  createDefaultChart,
+  createDefaultPicture,
+} from './core/element-factories.js'
+import {
+  updateDeckElement,
+  deleteDeckElements,
+  arrangeDeckElement,
+  alignDeckElements,
+} from './core/deck-operations.js'
 
 /**
  * ZSlides Presentation Application Component.
@@ -42,12 +49,9 @@ export function ZSlides({ onSave }) {
     return currentSlide.elements.find((el) => selectedElementIds.includes(el.id))
   }, [currentSlide.elements, selectedElementIds])
 
-  // Slide management
+  // Slide deck mutations
   const handleNewSlide = useCallback((layout = LAYOUT_TYPES.TITLE_AND_CONTENT) => {
-    const newSlide = createSlide({
-      layout,
-      elements: createElementsForLayout(layout),
-    })
+    const newSlide = createSlide({ layout, elements: createElementsForLayout(layout) })
     setDeck((prev) => ({
       ...prev,
       activeSlideId: newSlide.id,
@@ -59,14 +63,15 @@ export function ZSlides({ onSave }) {
   const handleApplyLayout = useCallback((layoutType) => {
     setDeck((prev) => ({
       ...prev,
-      slides: prev.slides.map((s) => {
-        if (s.id !== prev.activeSlideId) return s
-        return {
-          ...s,
-          layout: layoutType,
-          elements: createElementsForLayout(layoutType, prev.dimensions),
-        }
-      }),
+      slides: prev.slides.map((s) =>
+        s.id !== prev.activeSlideId
+          ? s
+          : {
+              ...s,
+              layout: layoutType,
+              elements: createElementsForLayout(layoutType, prev.dimensions),
+            },
+      ),
     }))
     setSelectedElementIds([])
   }, [])
@@ -79,11 +84,11 @@ export function ZSlides({ onSave }) {
     setDeck((prev) => {
       const idx = prev.slides.findIndex((s) => s.id === slideId)
       if (idx === -1) return prev
-      const source = prev.slides[idx]
+      const src = prev.slides[idx]
       const cloned = {
-        ...source,
+        ...src,
         id: `slide_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        elements: source.elements.map((el) => ({
+        elements: src.elements.map((el) => ({
           ...el,
           id: `elem_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
         })),
@@ -99,8 +104,7 @@ export function ZSlides({ onSave }) {
       if (prev.slides.length <= 1) return prev
       const idx = prev.slides.findIndex((s) => s.id === slideId)
       const newSlides = prev.slides.filter((s) => s.id !== slideId)
-      const nextActive = newSlides[Math.max(0, idx - 1)].id
-      return { ...prev, activeSlideId: nextActive, slides: newSlides }
+      return { ...prev, activeSlideId: newSlides[Math.max(0, idx - 1)].id, slides: newSlides }
     })
   }, [])
 
@@ -120,138 +124,58 @@ export function ZSlides({ onSave }) {
     })
   }, [])
 
-  // Element actions
-  const handleInsertTextBox = useCallback(() => {
-    const newElem = createTextElement({
-      x: 280,
-      y: 200,
-      width: 400,
-      height: 100,
-      text: 'Click to add text',
-      fontSize: 24,
-    })
+  // Element insertion
+  const insertElement = useCallback((factory) => {
+    const elem = factory()
     setDeck((prev) => ({
       ...prev,
       slides: prev.slides.map((s) =>
-        s.id === prev.activeSlideId ? { ...s, elements: [...s.elements, newElem] } : s,
+        s.id === prev.activeSlideId ? { ...s, elements: [...s.elements, elem] } : s,
       ),
     }))
-    setSelectedElementIds([newElem.id])
+    setSelectedElementIds([elem.id])
   }, [])
 
-  const handleInsertShape = useCallback((shapeType = SHAPE_TYPES.RECTANGLE) => {
-    const newElem = createSlideElement({
-      type: ELEMENT_TYPES.SHAPE,
-      x: 350,
-      y: 200,
-      width: 200,
-      height: 120,
-      properties: {
-        fill: '#3b82f6',
-        stroke: '#1d4ed8',
-        strokeWidth: 2,
-        shapeType,
-      },
-    })
-    setDeck((prev) => ({
-      ...prev,
-      slides: prev.slides.map((s) =>
-        s.id === prev.activeSlideId ? { ...s, elements: [...s.elements, newElem] } : s,
-      ),
-    }))
-    setSelectedElementIds([newElem.id])
-  }, [])
-
-  const handleElementChange = useCallback((updated) => {
-    setDeck((prev) => ({
-      ...prev,
-      slides: prev.slides.map((s) => {
-        if (s.id !== prev.activeSlideId) return s
-        return {
-          ...s,
-          elements: s.elements.map((el) => (el.id === updated.id ? updated : el)),
-        }
-      }),
-    }))
-  }, [])
-
+  // Element mutations
+  const handleElementChange = useCallback((upd) => setDeck((p) => updateDeckElement(p, upd)), [])
   const handleDeleteElements = useCallback((ids) => {
-    setDeck((prev) => ({
-      ...prev,
-      slides: prev.slides.map((s) => {
-        if (s.id !== prev.activeSlideId) return s
-        return {
-          ...s,
-          elements: s.elements.filter((el) => !ids.includes(el.id)),
-        }
-      }),
-    }))
+    setDeck((p) => deleteDeckElements(p, ids))
     setSelectedElementIds([])
   }, [])
 
   const toggleProperty = useCallback(
     (prop) => {
       if (!selectedElement) return
-      const current = !!selectedElement.properties[prop]
+      const curr = !!selectedElement.properties[prop]
       handleElementChange({
         ...selectedElement,
-        properties: { ...selectedElement.properties, [prop]: !current },
+        properties: { ...selectedElement.properties, [prop]: !curr },
       })
     },
     [selectedElement, handleElementChange],
   )
 
   const setAlign = useCallback(
-    (alignment) => {
+    (align) => {
       if (!selectedElement) return
       handleElementChange({
         ...selectedElement,
-        properties: { ...selectedElement.properties, align: alignment },
+        properties: { ...selectedElement.properties, align },
       })
     },
     [selectedElement, handleElementChange],
-  )
-
-  const handleArrange = useCallback(
-    (action) => {
-      if (!selectedElement) return
-      setDeck((prev) => ({
-        ...prev,
-        slides: prev.slides.map((s) => {
-          if (s.id !== prev.activeSlideId) return s
-          return {
-            ...s,
-            elements: reorderElement(s.elements, selectedElement.id, action),
-          }
-        }),
-      }))
-    },
-    [selectedElement],
-  )
-
-  const handleAlignElements = useCallback(
-    (alignment) => {
-      if (selectedElementIds.length === 0) return
-      setDeck((prev) => ({
-        ...prev,
-        slides: prev.slides.map((s) => {
-          if (s.id !== prev.activeSlideId) return s
-          return {
-            ...s,
-            elements: alignElements(s.elements, selectedElementIds, alignment),
-          }
-        }),
-      }))
-    },
-    [selectedElementIds],
   )
 
   const ribbonConfig = getSlidesRibbonConfig({
     onNewSlide: () => handleNewSlide(),
     onOpenLayoutPicker: () => setIsLayoutPickerOpen(true),
     onOpenThemeGallery: () => setIsThemeGalleryOpen(true),
-    onInsertTextBox: handleInsertTextBox,
-    onInsertShape: handleInsertShape,
+    onInsertTextBox: () => insertElement(createDefaultTextBox),
+    onInsertShape: (shapeType = SHAPE_TYPES.RECTANGLE) =>
+      insertElement(() => createDefaultShape(shapeType)),
+    onInsertTable: () => insertElement(createDefaultTable),
+    onInsertChart: () => insertElement(createDefaultChart),
+    onInsertPicture: () => insertElement(createDefaultPicture),
     bold: !!selectedElement?.properties?.bold,
     italic: !!selectedElement?.properties?.italic,
     underline: !!selectedElement?.properties?.underline,
@@ -260,8 +184,9 @@ export function ZSlides({ onSave }) {
     toggleItalic: () => toggleProperty('italic'),
     toggleUnderline: () => toggleProperty('underline'),
     setAlign,
-    onArrange: handleArrange,
-    onAlignElements: handleAlignElements,
+    onArrange: (act) =>
+      selectedElement && setDeck((p) => arrangeDeckElement(p, selectedElement.id, act)),
+    onAlignElements: (al) => setDeck((p) => alignDeckElements(p, selectedElementIds, al)),
     onSave,
     canSave: true,
   })
@@ -272,16 +197,13 @@ export function ZSlides({ onSave }) {
       className="flex h-full w-full select-none flex-col bg-neutral-100 dark:bg-neutral-950"
     >
       <Ribbon config={ribbonConfig} />
-
-      {/* Main Slide Workspace */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Thumbnails Sidebar */}
         <ThumbnailPanel
           slides={deck.slides}
           activeSlideId={deck.activeSlideId}
           dimensions={deck.dimensions}
           onSelectSlide={(id) => {
-            setDeck((prev) => ({ ...prev, activeSlideId: id }))
+            setDeck((p) => ({ ...p, activeSlideId: id }))
             setSelectedElementIds([])
           }}
           onDuplicateSlide={handleDuplicateSlide}
@@ -289,8 +211,6 @@ export function ZSlides({ onSave }) {
           onToggleHideSlide={handleToggleHideSlide}
           onReorderSlides={handleReorderSlides}
         />
-
-        {/* High-Fidelity Interactive Slide Canvas */}
         <SlideCanvas
           slide={currentSlide}
           dimensions={deck.dimensions}
@@ -301,8 +221,6 @@ export function ZSlides({ onSave }) {
           onDeleteElements={handleDeleteElements}
         />
       </div>
-
-      {/* Status Bar */}
       <StatusBar
         leftContent={
           <>
@@ -316,15 +234,11 @@ export function ZSlides({ onSave }) {
         zoom={zoom}
         onZoomChange={setZoom}
       />
-
-      {/* Slide Layout Picker Dialog */}
       <LayoutPickerDialog
         isOpen={isLayoutPickerOpen}
         onClose={() => setIsLayoutPickerOpen(false)}
         onSelectLayout={handleApplyLayout}
       />
-
-      {/* Theme Gallery Dialog */}
       <ThemeGalleryDialog
         isOpen={isThemeGalleryOpen}
         currentThemeId={deck.themeId}
