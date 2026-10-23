@@ -11,6 +11,7 @@ import {
   setCell,
   coordsToCellId,
 } from './core/sheet-model.js'
+import { FormulaEngine } from './core/formula-engine.js'
 
 /**
  * ZSheets Spreadsheet Application Component.
@@ -35,6 +36,13 @@ export function ZSheets({ onSave }) {
   const [editValue, setEditValue] = useState('')
   const [zoom, setZoom] = useState(100)
 
+  // Formula engine instance
+  const formulaEngine = useMemo(() => {
+    const engine = new FormulaEngine()
+    engine.ensureSheet('sheet1', 'Sheet1')
+    return engine
+  }, [])
+
   // Get active sheet
   const activeSheet = useMemo(() => {
     return workbook.sheets.find((s) => s.id === workbook.activeSheetId) || workbook.sheets[0]
@@ -51,17 +59,25 @@ export function ZSheets({ onSave }) {
   // Commit editing changes to sheet
   const handleCommitEdit = useCallback(() => {
     if (!isEditing) return
+    formulaEngine.ensureSheet(activeSheet.id, activeSheet.name)
+    formulaEngine.setCell(activeSheet.id, activeCell.row, activeCell.col, editValue)
+
+    const computedVal = formulaEngine.getCellValue(activeSheet.id, activeCell.row, activeCell.col)
+
     setWorkbook((prev) => {
       const sheets = prev.sheets.map((s) => {
         if (s.id !== prev.activeSheetId) return s
         const updated = { ...s, data: { ...s.data } }
-        setCell(updated, activeCell.row, activeCell.col, editValue)
+        setCell(updated, activeCell.row, activeCell.col, {
+          raw: editValue,
+          value: computedVal !== undefined ? computedVal : editValue,
+        })
         return updated
       })
       return { ...prev, sheets }
     })
     setIsEditing(false)
-  }, [isEditing, activeCell, editValue])
+  }, [isEditing, activeSheet, activeCell, editValue, formulaEngine])
 
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false)
