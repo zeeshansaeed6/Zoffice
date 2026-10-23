@@ -6,6 +6,8 @@ import { useWriterEditor } from './core/use-writer-editor.js'
 import { FindReplaceDialog } from './dialogs/FindReplaceDialog.jsx'
 import { parseDocxToHtml, serializeDocxToBase64 } from './docx/index.js'
 import * as actions from './ribbon/home-actions.js'
+import * as insertActions from './ribbon/insert-actions.js'
+import { WriterInsertDialogs } from './dialogs/WriterInsertDialogs.jsx'
 
 /**
  * ZWriter Desktop Word Processing Component.
@@ -30,6 +32,14 @@ export function ZWriter({
   const [isFormatPainting, setIsFormatPainting] = useState(false)
   const [pageSetup, setPageSetup] = useState({ pageSize: 'a4', margins: 'normal' })
   const [preservedFiles, setPreservedFiles] = useState(null)
+
+  // Insert Dialog states
+  const [showTablePicker, setShowTablePicker] = useState(false)
+  const [showImageDialog, setShowImageDialog] = useState(false)
+  const [showHyperlinkDialog, setShowHyperlinkDialog] = useState(false)
+  const [showBookmarkDialog, setShowBookmarkDialog] = useState(false)
+  const [showEquationDialog, setShowEquationDialog] = useState(false)
+  const [showSymbolDialog, setShowSymbolDialog] = useState(false)
 
   const handleEditorChange = useCallback(
     async (html) => {
@@ -148,6 +158,26 @@ export function ZWriter({
     // Editing
     onFindReplace: () => setShowFindReplace(true),
     onSelectAll: () => actions.selectAll(editor),
+
+    // Insert
+    onInsertPageBreak: () => insertActions.insertPageBreak(editor),
+    onOpenTablePicker: () => setShowTablePicker(true),
+    onAddRowAbove: () => insertActions.addRowAbove(editor),
+    onAddRowBelow: () => insertActions.addRowBelow(editor),
+    onDeleteRow: () => insertActions.deleteRow(editor),
+    onAddColumnLeft: () => insertActions.addColumnLeft(editor),
+    onAddColumnRight: () => insertActions.addColumnRight(editor),
+    onDeleteColumn: () => insertActions.deleteColumn(editor),
+    onMergeCells: () => insertActions.mergeCells(editor),
+    onSplitCell: () => insertActions.splitCell(editor),
+    onDeleteTable: () => insertActions.deleteTable(editor),
+    onOpenImageDialog: () => setShowImageDialog(true),
+    onInsertHorizontalRule: () => insertActions.insertHorizontalRule(editor),
+    onOpenHyperlinkDialog: () => setShowHyperlinkDialog(true),
+    onOpenBookmarkDialog: () => setShowBookmarkDialog(true),
+    onInsertDateTime: (format) => insertActions.insertDateTime(editor, format),
+    onOpenEquationDialog: () => setShowEquationDialog(true),
+    onOpenSymbolDialog: () => setShowSymbolDialog(true),
   })
 
   return (
@@ -197,6 +227,25 @@ export function ZWriter({
           editor={editor}
         />
       )}
+
+      {/* Insert Tab Modals */}
+      <WriterInsertDialogs
+        editor={editor}
+        dialogs={{
+          showTablePicker,
+          setShowTablePicker,
+          showImageDialog,
+          setShowImageDialog,
+          showHyperlinkDialog,
+          setShowHyperlinkDialog,
+          showBookmarkDialog,
+          setShowBookmarkDialog,
+          showEquationDialog,
+          setShowEquationDialog,
+          showSymbolDialog,
+          setShowSymbolDialog,
+        }}
+      />
     </div>
   )
 }

@@ -119,4 +119,50 @@ test.describe('ZWriter Document Engine E2E Tests', () => {
     expect(testDocContent).toContain('TipTap ProseMirror Core Engine')
     expect(existsSync(TEST_DOCX_PATH)).toBe(true)
   })
+
+  test('switches to Insert tab, opens Table dialog, and inserts symbols and equations', async () => {
+    // 1. Open ZWriter from Start Screen
+    const writerTile = page.getByRole('button', { name: /ZWriter/i })
+    await expect(writerTile).toBeVisible()
+    await writerTile.click()
+
+    const editor = page.getByRole('textbox', { name: 'Document editor' })
+    await expect(editor).toBeVisible()
+
+    // 2. Switch to Insert tab on the Ribbon
+    const insertTabBtn = page.getByRole('tab', { name: 'Insert' })
+    await expect(insertTabBtn).toBeVisible()
+    await insertTabBtn.click()
+
+    // 3. Verify Insert tab groups are rendered
+    await expect(page.getByRole('button', { name: 'Table' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Picture' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Link' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Equation' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Symbol' })).toBeVisible()
+
+    // 4. Open and verify Table Picker Dialog
+    const tableBtn = page.getByRole('button', { name: 'Table' })
+    await tableBtn.click()
+    const tableDialog = page.getByRole('dialog')
+    await expect(tableDialog).toBeVisible()
+    await expect(page.getByText(/Insert Table/i)).toBeVisible()
+
+    // Click Insert in Table Dialog
+    const insertBtn = page.getByRole('button', { name: 'Insert', exact: true })
+    await insertBtn.click()
+    await expect(tableDialog).not.toBeVisible()
+
+    // Verify table is inserted into editor
+    const tableElement = page.locator('.tiptap table')
+    await expect(tableElement).toBeVisible()
+
+    // Capture screenshot of Insert Tab and table in editor
+    const insertScreenshotPath = resolve(
+      __dirname,
+      '../../../docs/screenshots/zwriter-insert-tab.png',
+    )
+    await page.screenshot({ path: insertScreenshotPath })
+    expect(existsSync(insertScreenshotPath)).toBe(true)
+  })
 })

@@ -6,8 +6,13 @@ import Highlight from '@tiptap/extension-highlight'
 import TextAlign from '@tiptap/extension-text-align'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
+import Link from '@tiptap/extension-link'
 import { LineSpacing } from './line-spacing-extension.js'
 import { PageBreak } from './page-break-extension.js'
+import { ConfiguredTable, TableRow, TableHeader, CustomTableCell } from './table-extension.js'
+import { CustomImage } from './image-extension.js'
+import { MathEquation } from './math-extension.js'
+import { Bookmark } from './bookmark-extension.js'
 
 /**
  * Custom TextStyle extension supporting fontFamily and fontSize.
@@ -68,5 +73,18 @@ export function getWriterExtensions() {
     Superscript,
     LineSpacing,
     PageBreak,
+    ConfiguredTable,
+    TableRow,
+    TableHeader,
+    CustomTableCell,
+    CustomImage,
+    Link.configure({
+      openOnClick: false,
+      HTMLAttributes: {
+        class: 'text-primary underline cursor-pointer hover:opacity-80',
+      },
+    }),
+    MathEquation,
+    Bookmark,
   ]
 }

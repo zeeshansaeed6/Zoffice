@@ -99,6 +99,8 @@ export function Ribbon({
               <button
                 key={tab.id}
                 type="button"
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => handleTabClick(tab.id)}
                 className={`relative border-b-2 px-3 py-1.5 text-xs font-medium transition-colors ${
                   isActive

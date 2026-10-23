@@ -1,4 +1,5 @@
 import { getHomeRibbonGroups } from './ribbon-groups.jsx'
+import { getInsertRibbonGroups } from './ribbon-insert.jsx'
 
 /**
  * Creates data-driven ribbon configuration for ZWriter.
@@ -23,6 +24,11 @@ export function getWriterRibbonConfig(actions = {}) {
         id: 'home',
         label: 'Home',
         groups: getHomeRibbonGroups(actions, marks),
+      },
+      {
+        id: 'insert',
+        label: 'Insert',
+        groups: getInsertRibbonGroups(actions),
       },
     ],
   }

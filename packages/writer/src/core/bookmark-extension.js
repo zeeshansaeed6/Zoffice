@@ -26,10 +26,7 @@ export const Bookmark = Node.create({
   },
 
   parseHTML() {
-    return [
-      { tag: 'span[data-bookmark]' },
-      { tag: 'a[name]' },
-    ]
+    return [{ tag: 'span[data-bookmark]' }, { tag: 'a[name]' }]
   },
 
   renderHTML({ node, HTMLAttributes }) {

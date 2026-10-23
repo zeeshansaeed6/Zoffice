@@ -1,4 +1,4 @@
-import Table from '@tiptap/extension-table'
+import { Table } from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableHeader from '@tiptap/extension-table-header'
 import TableCell from '@tiptap/extension-table-cell'
@@ -43,7 +43,8 @@ export const CustomTableCell = TableCell.extend({
 export const ConfiguredTable = Table.configure({
   resizable: true,
   HTMLAttributes: {
-    class: 'border-collapse border border-neutral-300 dark:border-neutral-700 w-full my-4 shadow-xs',
+    class:
+      'border-collapse border border-neutral-300 dark:border-neutral-700 w-full my-4 shadow-xs',
   },
 })
 

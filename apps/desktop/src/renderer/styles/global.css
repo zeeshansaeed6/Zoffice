@@ -1,6 +1,7 @@
 @import '@fontsource-variable/inter';
 @import '@fontsource/carlito';
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

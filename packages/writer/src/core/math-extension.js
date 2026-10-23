@@ -1,5 +1,7 @@
 import { Node, mergeAttributes } from '@tiptap/core'
 import katex from 'katex'
+import 'katex/dist/katex.min.css'
+
 
 /**
  * TipTap extension for inline LaTeX math equations via KaTeX.
@@ -46,7 +48,8 @@ export const MathEquation = Node.create({
     return [
       'span',
       mergeAttributes(HTMLAttributes, {
-        class: 'math-node inline-block px-1 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 cursor-pointer select-none',
+        class:
+          'math-node inline-block px-1 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 cursor-pointer select-none',
         'data-equation': 'true',
       }),
       ['span', { class: 'math-content' }, rendered],

@@ -81,6 +81,10 @@ function convertTextNode(node) {
           size = Math.round(px * 1.5) // half-points
         }
         break
+      case 'link':
+        color = color || '0044CC'
+        underline = {}
+        break
       default:
         break
     }
@@ -104,6 +108,13 @@ function convertInlineContent(content = []) {
   return content.map((child) => {
     if (child.type === 'text') {
       return convertTextNode(child)
+    }
+    if (child.type === 'mathEquation' && child.attrs?.latex) {
+      return new TextRun({
+        text: child.attrs.latex,
+        italics: true,
+        font: 'Cambria Math',
+      })
     }
     if (child.type === 'image' && child.attrs?.src) {
       try {
@@ -187,6 +198,18 @@ function convertJsonToDocxElements(docJson) {
         elements.push(new Paragraph({ children: [new DocxPageBreak()] }))
         break
       }
+      case 'horizontalRule': {
+        elements.push(
+          new Paragraph({
+            border: {
+              bottom: { style: 'single', size: 6, space: 1, color: 'CCCCCC' },
+            },
+            children: [new TextRun('')],
+          }),
+        )
+        break
+      }
+
       default: {
         if (node.content) {
           elements.push(new Paragraph({ children: convertInlineContent(node.content) }))
