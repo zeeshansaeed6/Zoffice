@@ -4,6 +4,7 @@ import { getSlidesRibbonConfig } from './ribbon-config.jsx'
 import { SlideCanvas } from './canvas/SlideCanvas.jsx'
 import { ThumbnailPanel } from './thumbnails/ThumbnailPanel.jsx'
 import { LayoutPickerDialog } from './dialogs/LayoutPickerDialog.jsx'
+import { ThemeGalleryDialog } from './dialogs/ThemeGalleryDialog.jsx'
 import {
   createPresentationDeck,
   createSlide,
@@ -13,6 +14,7 @@ import {
 import { ELEMENT_TYPES, SHAPE_TYPES } from './core/slide-constants.js'
 import { createElementsForLayout, LAYOUT_TYPES } from './core/slide-layouts.js'
 import { reorderElement, alignElements } from './core/arrange-utils.js'
+import { applyThemeToDeck } from './core/theme-engine.js'
 
 /**
  * ZSlides Presentation Application Component.
@@ -27,6 +29,7 @@ export function ZSlides({ onSave }) {
   const [zoom, setZoom] = useState(100)
   const [selectedElementIds, setSelectedElementIds] = useState([])
   const [isLayoutPickerOpen, setIsLayoutPickerOpen] = useState(false)
+  const [isThemeGalleryOpen, setIsThemeGalleryOpen] = useState(false)
 
   const activeSlideIndex = useMemo(() => {
     const idx = deck.slides.findIndex((s) => s.id === deck.activeSlideId)
@@ -66,6 +69,10 @@ export function ZSlides({ onSave }) {
       }),
     }))
     setSelectedElementIds([])
+  }, [])
+
+  const handleSelectTheme = useCallback((themeId) => {
+    setDeck((prev) => applyThemeToDeck(prev, themeId))
   }, [])
 
   const handleDuplicateSlide = useCallback((slideId) => {
@@ -242,6 +249,7 @@ export function ZSlides({ onSave }) {
   const ribbonConfig = getSlidesRibbonConfig({
     onNewSlide: () => handleNewSlide(),
     onOpenLayoutPicker: () => setIsLayoutPickerOpen(true),
+    onOpenThemeGallery: () => setIsThemeGalleryOpen(true),
     onInsertTextBox: handleInsertTextBox,
     onInsertShape: handleInsertShape,
     bold: !!selectedElement?.properties?.bold,
@@ -301,7 +309,7 @@ export function ZSlides({ onSave }) {
             <StatusBarSlot>
               Slide {activeSlideIndex + 1} of {deck.slides.length}
             </StatusBarSlot>
-            <StatusBarSlot>English (US)</StatusBarSlot>
+            <StatusBarSlot>Theme: {deck.themeId}</StatusBarSlot>
           </>
         }
         centerContent="Ready"
@@ -314,6 +322,14 @@ export function ZSlides({ onSave }) {
         isOpen={isLayoutPickerOpen}
         onClose={() => setIsLayoutPickerOpen(false)}
         onSelectLayout={handleApplyLayout}
+      />
+
+      {/* Theme Gallery Dialog */}
+      <ThemeGalleryDialog
+        isOpen={isThemeGalleryOpen}
+        currentThemeId={deck.themeId}
+        onClose={() => setIsThemeGalleryOpen(false)}
+        onSelectTheme={handleSelectTheme}
       />
     </div>
   )

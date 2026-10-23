@@ -17,6 +17,7 @@ import {
   SendToBack,
   AlignHorizontalDistributeCenter,
   AlignVerticalDistributeCenter,
+  Palette,
 } from 'lucide-react'
 import { SHAPE_TYPES } from './core/slide-constants.js'
 
@@ -221,6 +222,26 @@ export function getSlidesRibbonConfig(actions = {}) {
                   onClick: () => actions.onAlignElements?.('middle'),
                 },
               ],
+            ],
+          },
+        ],
+      },
+      {
+        id: 'design',
+        label: 'Design',
+        groups: [
+          {
+            id: 'themes-group',
+            label: 'Themes',
+            controls: [
+              {
+                id: 'theme-gallery',
+                type: 'button',
+                label: 'Themes',
+                size: 'large',
+                icon: <Palette size={18} />,
+                onClick: actions.onOpenThemeGallery,
+              },
             ],
           },
         ],
