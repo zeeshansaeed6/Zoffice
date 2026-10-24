@@ -13,6 +13,7 @@ import {
   Mail,
   CheckSquare,
   Kanban,
+  PenTool,
 } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
@@ -109,6 +110,14 @@ export function StartScreen() {
       color: 'bg-rose-600 hover:bg-rose-700 text-white',
       accent: 'border-rose-500/20 bg-rose-50/50 dark:bg-rose-950/20',
       icon: <Kanban size={32} className="text-rose-600 dark:text-rose-400" />,
+    },
+    {
+      id: 'draw',
+      name: 'ZDraw',
+      tagline: 'Flowcharts, diagrams and schemas',
+      color: 'bg-cyan-600 hover:bg-cyan-700 text-white',
+      accent: 'border-cyan-500/20 bg-cyan-50/50 dark:bg-cyan-950/20',
+      icon: <PenTool size={32} className="text-cyan-600 dark:text-cyan-400" />,
     },
   ]
 
@@ -232,6 +241,8 @@ export function StartScreen() {
                             <CheckSquare size={18} className="text-teal-600" />
                           ) : item.appId === 'planner' ? (
                             <Kanban size={18} className="text-rose-600" />
+                          ) : item.appId === 'draw' ? (
+                            <PenTool size={18} className="text-cyan-600" />
                           ) : (
                             <FileText size={18} className="text-blue-600" />
                           )}

@@ -244,3 +244,17 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
   - **SQLite Database & IPC Bridge** (`planner-db.js`, `ipc-handlers.js`, `preload/planner-api.js`): Offline persistence for boards, columns, and tasks with typed preload bridge.
   - **Desktop Shell Integration**: Registered in Start Screen (`ZPlanner` tile + recent file icon), `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
   - **Test Coverage**: 14 passing unit tests across 4 test suites in `@zoffice/planner` plus Playwright E2E test in `apps/desktop/e2e/planner.spec.js`.
+
+### App 5: ZDraw (Vector Diagramming & Flowcharts)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **Infinite SVG Canvas & Pan/Zoom** (`packages/draw/src/canvas/DiagramCanvas.jsx`): Interactive SVG canvas with dot grid, smooth panning (space / middle-click), zoom (25%–300%), and drag-and-drop shape placement.
+  - **Comprehensive Shape Library** (`ShapeLibraryPanel.jsx` & `constants.js`): Organized categories for Flowchart (process, decision, terminator, document, io), Basic (rect, round-rect, ellipse, diamond, triangle, star, cylinder, hexagon), UML (class, interface, package, usecase, actor), ERD (entity, weak entity, relationship, attribute), and Network (server, router, switch, cloud, firewall, database).
+  - **Smart Connector Routing** (`connector-router.js` & `ConnectorRenderer.jsx`): Orthogonal 90° elbow routing, curved cubic Bezier routing, and straight connections dynamically anchored to connection points on shapes, with midpoint text labels and SVG arrowheads.
+  - **Shape Styling & Properties Inspector** (`PropertiesPanel.jsx`): Color swatches, custom fill and stroke color pickers, stroke width slider, solid/dashed/dotted line styles, dimensions (X, Y, W, H), and inline double-click text editing.
+  - **Arrange, Align & Grouping** (`align-distribute.js`): Align left/center/right/top/middle/bottom, distribute horizontally/vertically, bring to front/send to back, and group/ungroup selections.
+  - **Custom Shapes from SVG** (`CustomShapeModal.jsx`): Custom shape generator allowing users to supply raw SVG path strings (`d="..."`).
+  - **Multi-Format Export Engine** (`svg-exporter.js` & `ExportModal.jsx`): Pure offline export to standalone scalable vector graphic (`.svg`), lossless raster image (`.png`), and print-to-PDF (`.pdf`).
+  - **SQLite Database & Desktop Shell Integration**: Stored locally in `draw_diagrams` table via `draw-db.js`, typed preload IPC bridge, Start Screen launcher tile with icon, `AppLoader` mount, and `tab-store` persistence.
+  - **Test Coverage**: 18 passing unit tests across 5 test suites in `@zoffice/draw` plus Playwright E2E test in `apps/desktop/e2e/draw.spec.js`.
