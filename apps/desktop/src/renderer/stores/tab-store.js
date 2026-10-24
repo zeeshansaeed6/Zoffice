@@ -4,7 +4,7 @@ import { create } from 'zustand'
  * @typedef {Object} DocumentTab
  * @property {string} id - Unique tab identifier
  * @property {string} title - Display title
- * @property {'writer' | 'sheets' | 'slides' | 'notes' | 'mail'} appId
+ * @property {'writer' | 'sheets' | 'slides' | 'notes' | 'mail' | 'forms'} appId
  * @property {string|null} filePath - Associated file path if saved
  * @property {string} content - Current document content
  * @property {boolean} dirty - Whether unsaved changes exist
@@ -14,7 +14,7 @@ import { create } from 'zustand'
  * @typedef {Object} TabStore
  * @property {DocumentTab[]} tabs
  * @property {string|null} activeTabId - null means Start Screen is visible
- * @property {(appId: 'writer' | 'sheets' | 'slides' | 'notes' | 'mail', title?: string, filePath?: string|null, content?: string) => string} openTab
+ * @property {(appId: 'writer' | 'sheets' | 'slides' | 'notes' | 'mail' | 'forms', title?: string, filePath?: string|null, content?: string) => string} openTab
  * @property {(id: string) => void} closeTab
  * @property {(id: string | null) => void} setActiveTab
  * @property {(id: string, content: string) => void} updateContent
@@ -37,6 +37,7 @@ export const useTabStore = create(
           slides: 'Presentation',
           notes: 'Notebook',
           mail: 'Mailbox',
+          forms: 'Form',
         }
         const id = `doc-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
         const count = get().tabs.filter((t) => t.appId === appId).length + 1

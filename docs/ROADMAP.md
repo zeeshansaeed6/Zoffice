@@ -218,3 +218,16 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
   - **Address Book & Contacts** (`packages/mail/src/contacts`): Contact management with initials avatars, one-click "Send Email" action, and RFC 6350 vCard (`.vcf`) import/export.
   - **Modular Ribbon & Shell Integration**: Dynamic ribbon switching across Mail, Calendar, and Contacts modes (`ribbon-config.jsx`), Start Screen launcher tile, `AppLoader` mount, and SQLite persistence.
   - **Test Coverage**: 30 passing unit tests across 6 test suites in `@zoffice/mail`.
+
+### App 3: ZForms (Form Builder, Surveys & Responses)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **9 Core Question Types** (`form-model.js` & `QuestionEditor.jsx`): Short answer, paragraph, multiple choice, checkboxes, dropdown, linear scale (0-5, 1-5, 1-10 with low/high anchor labels), date, time, and file upload.
+  - **Section Breaks & Branching Logic** (`SectionCard.jsx`, `BranchingModal.jsx`, `logic-engine.js`): Multi-page forms with section headers, required question validation, and choice-level conditional routing (`go_to_section`, `submit_form`).
+  - **Respondent Preview Mode** (`FormPreview.jsx`): Full live preview to fill and validate forms as a respondent, with section pagination and submission recording.
+  - **Responses Dashboard & Visual Analytics** (`ResponsesView.jsx` & `SummaryCharts.jsx`): Summary statistics with pure SVG/HTML bar and distribution charts (no heavy chart dependencies) plus individual submission review stepper (`IndividualResponseViewer.jsx`).
+  - **Export & Embed Capabilities** (`export-csv.js` & `embed-generator.js`): RFC 4180 compliant CSV export for ZSheets/spreadsheets and customizable HTML `<iframe>` embed code generation.
+  - **Main Process Backend & Storage** (`forms-db.js`, `ipc-handlers.js`, `preload/forms-api.js`): SQLite tables for forms and submissions with typed preload bridge.
+  - **Desktop Shell Integration**: Registered in Start Screen, `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
+  - **Test Coverage**: 21 passing unit tests across 4 test suites in `@zoffice/forms`.

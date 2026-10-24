@@ -17,6 +17,7 @@
     "@fontsource-variable/inter": "^5.1.0",
     "@fontsource/carlito": "^5.1.0",
     "@zoffice/core": "workspace:*",
+    "@zoffice/forms": "workspace:*",
     "@zoffice/mail": "workspace:*",
     "@zoffice/notes": "workspace:*",
     "@zoffice/sheets": "workspace:*",

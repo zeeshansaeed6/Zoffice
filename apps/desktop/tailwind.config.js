@@ -9,6 +9,7 @@ export default {
     '../../packages/slides/src/**/*.{js,jsx}',
     '../../packages/notes/src/**/*.{js,jsx}',
     '../../packages/mail/src/**/*.{js,jsx}',
+    '../../packages/forms/src/**/*.{js,jsx}',
   ],
   darkMode: 'class',
   theme: {

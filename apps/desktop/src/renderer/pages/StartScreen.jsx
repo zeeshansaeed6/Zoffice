@@ -11,6 +11,7 @@ import {
   File,
   Book,
   Mail,
+  CheckSquare,
 } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
@@ -91,6 +92,14 @@ export function StartScreen() {
       color: 'bg-indigo-600 hover:bg-indigo-700 text-white',
       accent: 'border-indigo-500/20 bg-indigo-50/50 dark:bg-indigo-950/20',
       icon: <Mail size={32} className="text-indigo-600 dark:text-indigo-400" />,
+    },
+    {
+      id: 'forms',
+      name: 'ZForms',
+      tagline: 'Forms, surveys and responses',
+      color: 'bg-teal-600 hover:bg-teal-700 text-white',
+      accent: 'border-teal-500/20 bg-teal-50/50 dark:bg-teal-950/20',
+      icon: <CheckSquare size={32} className="text-teal-600 dark:text-teal-400" />,
     },
   ]
 
@@ -210,6 +219,8 @@ export function StartScreen() {
                             <Book size={18} className="text-violet-600" />
                           ) : item.appId === 'mail' ? (
                             <Mail size={18} className="text-indigo-600" />
+                          ) : item.appId === 'forms' ? (
+                            <CheckSquare size={18} className="text-teal-600" />
                           ) : (
                             <FileText size={18} className="text-blue-600" />
                           )}

@@ -5,6 +5,7 @@ import { getSetting, setSetting } from './settings.js'
 import { saveAutosaveDocument, listAutosaveDocuments, removeAutosaveDocument } from './autosave.js'
 import * as notesDb from './notes-db.js'
 import * as mailDb from './mail-db.js'
+import * as formsDb from './forms-db.js'
 
 /**
  * Registers all validated IPC handlers for main process.
@@ -161,4 +162,16 @@ export function registerIpcHandlers(win) {
   ipcMain.handle('contacts:getContacts', async () => mailDb.getContacts())
   ipcMain.handle('contacts:saveContact', async (_event, c) => mailDb.saveContact(c))
   ipcMain.handle('contacts:deleteContact', async (_event, id) => mailDb.deleteContact(id))
+
+  // Forms SQLite persistence
+  ipcMain.handle('forms:getForms', async () => formsDb.getAllForms())
+  ipcMain.handle('forms:getForm', async (_event, id) => formsDb.getFormById(id))
+  ipcMain.handle('forms:saveForm', async (_event, form) => formsDb.saveForm(form))
+  ipcMain.handle('forms:deleteForm', async (_event, id) => formsDb.deleteForm(id))
+  ipcMain.handle('forms:getResponses', async (_event, formId) => formsDb.getFormResponses(formId))
+  ipcMain.handle('forms:saveResponse', async (_event, resp) => formsDb.saveResponse(resp))
+  ipcMain.handle('forms:deleteResponse', async (_event, id) => formsDb.deleteResponse(id))
+  ipcMain.handle('forms:clearResponses', async (_event, formId) =>
+    formsDb.clearFormResponses(formId),
+  )
 }

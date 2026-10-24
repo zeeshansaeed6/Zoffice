@@ -1,4 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { notesBridge } from './notes-api.js'
+import { mailBridge, calendarBridge, contactsBridge } from './mail-api.js'
+import { formsBridge } from './forms-api.js'
 
 /**
  * Validated Electron IPC Bridge.
@@ -149,122 +152,11 @@ const zofficeAPI = {
     },
   },
 
-  notes: {
-    listNotebooks: () => ipcRenderer.invoke('notes:listNotebooks'),
-    saveNotebook: (nb) => {
-      if (!nb || typeof nb !== 'object' || typeof nb.id !== 'string') {
-        return Promise.reject(new TypeError('nb must have string id'))
-      }
-      return ipcRenderer.invoke('notes:saveNotebook', nb)
-    },
-    deleteNotebook: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('notes:deleteNotebook', id)
-    },
-    listSections: (nbId) => {
-      if (typeof nbId !== 'string') return Promise.reject(new TypeError('nbId must be string'))
-      return ipcRenderer.invoke('notes:listSections', nbId)
-    },
-    saveSection: (sec) => {
-      if (!sec || typeof sec !== 'object' || typeof sec.id !== 'string') {
-        return Promise.reject(new TypeError('sec must have string id'))
-      }
-      return ipcRenderer.invoke('notes:saveSection', sec)
-    },
-    deleteSection: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('notes:deleteSection', id)
-    },
-    listPages: (secId) => {
-      if (typeof secId !== 'string') return Promise.reject(new TypeError('secId must be string'))
-      return ipcRenderer.invoke('notes:listPages', secId)
-    },
-    savePage: (pg) => {
-      if (!pg || typeof pg !== 'object' || typeof pg.id !== 'string') {
-        return Promise.reject(new TypeError('pg must have string id'))
-      }
-      return ipcRenderer.invoke('notes:savePage', pg)
-    },
-    deletePage: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('notes:deletePage', id)
-    },
-    listBlocks: (pageId) => {
-      if (typeof pageId !== 'string') return Promise.reject(new TypeError('pageId must be string'))
-      return ipcRenderer.invoke('notes:listBlocks', pageId)
-    },
-    saveBlock: (b) => {
-      if (!b || typeof b !== 'object' || typeof b.id !== 'string') {
-        return Promise.reject(new TypeError('b must have string id'))
-      }
-      return ipcRenderer.invoke('notes:saveBlock', b)
-    },
-    deleteBlock: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('notes:deleteBlock', id)
-    },
-  },
-
-  mail: {
-    getAccounts: () => ipcRenderer.invoke('mail:getAccounts'),
-    saveAccount: (acc, password = '') => {
-      if (!acc || typeof acc !== 'object' || typeof acc.id !== 'string') {
-        return Promise.reject(new TypeError('acc must have string id'))
-      }
-      return ipcRenderer.invoke('mail:saveAccount', acc, String(password))
-    },
-    deleteAccount: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('mail:deleteAccount', id)
-    },
-    getMessages: (accId, fldId) => ipcRenderer.invoke('mail:getMessages', accId, fldId),
-    saveMessage: (msg) => {
-      if (!msg || typeof msg !== 'object' || typeof msg.id !== 'string') {
-        return Promise.reject(new TypeError('msg must have string id'))
-      }
-      return ipcRenderer.invoke('mail:saveMessage', msg)
-    },
-    deleteMessage: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('mail:deleteMessage', id)
-    },
-    markRead: (id, unread) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('mail:markRead', id, Boolean(unread))
-    },
-    setFlag: (id, flagged) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('mail:setFlag', id, Boolean(flagged))
-    },
-  },
-
-  calendar: {
-    getEvents: () => ipcRenderer.invoke('calendar:getEvents'),
-    saveEvent: (ev) => {
-      if (!ev || typeof ev !== 'object' || typeof ev.id !== 'string') {
-        return Promise.reject(new TypeError('ev must have string id'))
-      }
-      return ipcRenderer.invoke('calendar:saveEvent', ev)
-    },
-    deleteEvent: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('calendar:deleteEvent', id)
-    },
-  },
-
-  contacts: {
-    getContacts: () => ipcRenderer.invoke('contacts:getContacts'),
-    saveContact: (c) => {
-      if (!c || typeof c !== 'object' || typeof c.id !== 'string') {
-        return Promise.reject(new TypeError('c must have string id'))
-      }
-      return ipcRenderer.invoke('contacts:saveContact', c)
-    },
-    deleteContact: (id) => {
-      if (typeof id !== 'string') return Promise.reject(new TypeError('id must be string'))
-      return ipcRenderer.invoke('contacts:deleteContact', id)
-    },
-  },
+  notes: notesBridge,
+  mail: mailBridge,
+  calendar: calendarBridge,
+  contacts: contactsBridge,
+  forms: formsBridge,
 
   /**
    * Subscribe to native menu actions and keyboard shortcuts.

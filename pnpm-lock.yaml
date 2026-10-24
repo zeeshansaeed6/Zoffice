@@ -19,7 +19,7 @@ importers:
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@vitejs/plugin-react':
         specifier: ^4.3.0
-        version: 4.7.0(vite@5.4.21(@types/node@26.6.5))
+        version: 4.7.0(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.7))
       docx:
         specifier: ^9.14.0
         version: 9.14.0
@@ -59,6 +59,9 @@ importers:
       '@zoffice/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@zoffice/forms':
+        specifier: workspace:*
+        version: link:../../packages/forms
       '@zoffice/mail':
         specifier: workspace:*
         version: link:../../packages/mail
@@ -122,6 +125,25 @@ importers:
         version: 6.4.5(@types/node@26.6.5)(jiti@1.21.7)
 
   packages/core: {}
+
+  packages/forms:
+    dependencies:
+      '@zoffice/core':
+        specifier: workspace:*
+        version: link:../core
+      '@zoffice/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lucide-react:
+        specifier: ^0.460.0
+        version: 0.460.0(react@19.3.1)
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.16(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
+    devDependencies:
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@26.6.5)(jsdom@25.0.1)
 
   packages/mail:
     dependencies:
@@ -5269,18 +5291,6 @@ snapshots:
     dependencies:
       '@types/node': 20.19.43
     optional: true
-
-  '@vitejs/plugin-react@4.7.0(vite@5.4.21(@types/node@26.6.5))':
-    dependencies:
-      '@babel/core': 7.29.7
-      '@babel/plugin-transform-react-jsx-self': 7.29.7(@babel/core@7.29.7)
-      '@babel/plugin-transform-react-jsx-source': 7.29.7(@babel/core@7.29.7)
-      '@rolldown/pluginutils': 1.0.0-beta.27
-      '@types/babel__core': 7.20.5
-      react-refresh: 0.17.0
-      vite: 5.4.21(@types/node@26.6.5)
-    transitivePeerDependencies:
-      - supports-color
 
   '@vitejs/plugin-react@4.7.0(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.7))':
     dependencies:
