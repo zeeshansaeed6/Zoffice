@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import {
-  FileText,
-  Sheet,
-  Presentation,
   FolderOpen,
   Plus,
   Clock,
   LayoutTemplate,
   Trash2,
   File,
-  Book,
-  Mail,
-  CheckSquare,
-  Kanban,
-  PenTool,
 } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
+import { APP_TILES, getRecentAppIcon } from './start-screen-tiles.jsx'
 
 /**
  * Zoffice Start Screen / Launcher home window.
@@ -54,73 +47,6 @@ export function StartScreen() {
     setRecent([])
   }
 
-  const appTiles = [
-    {
-      id: 'writer',
-      name: 'ZWriter',
-      tagline: 'Word processing documents',
-      color: 'bg-blue-600 hover:bg-blue-700 text-white',
-      accent: 'border-blue-500/20 bg-blue-50/50 dark:bg-blue-950/20',
-      icon: <FileText size={32} className="text-blue-600 dark:text-blue-400" />,
-    },
-    {
-      id: 'sheets',
-      name: 'ZSheets',
-      tagline: 'Spreadsheets and workbooks',
-      color: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-      accent: 'border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20',
-      icon: <Sheet size={32} className="text-emerald-600 dark:text-emerald-400" />,
-    },
-    {
-      id: 'slides',
-      name: 'ZSlides',
-      tagline: 'Slide decks and presentations',
-      color: 'bg-amber-600 hover:bg-amber-700 text-white',
-      accent: 'border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/20',
-      icon: <Presentation size={32} className="text-amber-600 dark:text-amber-400" />,
-    },
-    {
-      id: 'notes',
-      name: 'ZNotes',
-      tagline: 'Notebooks, notes and sketches',
-      color: 'bg-violet-600 hover:bg-violet-700 text-white',
-      accent: 'border-violet-500/20 bg-violet-50/50 dark:bg-violet-950/20',
-      icon: <Book size={32} className="text-violet-600 dark:text-violet-400" />,
-    },
-    {
-      id: 'mail',
-      name: 'ZMail',
-      tagline: 'Email, calendar and contacts',
-      color: 'bg-indigo-600 hover:bg-indigo-700 text-white',
-      accent: 'border-indigo-500/20 bg-indigo-50/50 dark:bg-indigo-950/20',
-      icon: <Mail size={32} className="text-indigo-600 dark:text-indigo-400" />,
-    },
-    {
-      id: 'forms',
-      name: 'ZForms',
-      tagline: 'Forms, surveys and responses',
-      color: 'bg-teal-600 hover:bg-teal-700 text-white',
-      accent: 'border-teal-500/20 bg-teal-50/50 dark:bg-teal-950/20',
-      icon: <CheckSquare size={32} className="text-teal-600 dark:text-teal-400" />,
-    },
-    {
-      id: 'planner',
-      name: 'ZPlanner',
-      tagline: 'Kanban, Gantt and project tasks',
-      color: 'bg-rose-600 hover:bg-rose-700 text-white',
-      accent: 'border-rose-500/20 bg-rose-50/50 dark:bg-rose-950/20',
-      icon: <Kanban size={32} className="text-rose-600 dark:text-rose-400" />,
-    },
-    {
-      id: 'draw',
-      name: 'ZDraw',
-      tagline: 'Flowcharts, diagrams and schemas',
-      color: 'bg-cyan-600 hover:bg-cyan-700 text-white',
-      accent: 'border-cyan-500/20 bg-cyan-50/50 dark:bg-cyan-950/20',
-      icon: <PenTool size={32} className="text-cyan-600 dark:text-cyan-400" />,
-    },
-  ]
-
   return (
     <div
       data-testid="start-screen"
@@ -139,57 +65,63 @@ export function StartScreen() {
               </h1>
             </div>
             <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-              {t('app.tagline')}
+              {t('start.welcome')}
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={handleOpenFile}
-            className="dark:hover:bg-neutral-750 inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200"
-          >
-            <FolderOpen size={18} />
-            {t('start.openFile')}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleOpenFile}
+              className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+            >
+              <FolderOpen size={16} />
+              {t('start.openExisting')}
+            </button>
+          </div>
         </div>
 
-        {/* App Launch Tiles */}
+        {/* New Document Section */}
         <div className="mb-10">
           <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             {t('start.newDocument')}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {appTiles.map((app) => (
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {APP_TILES.map((app) => (
               <button
                 key={app.id}
                 type="button"
                 onClick={() => openTab(app.id)}
-                className={`group flex flex-col justify-between rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5 hover:shadow-md ${app.accent} dark:border-neutral-800`}
+                className={`group flex flex-col justify-between rounded-xl border p-5 text-left transition-all hover:scale-[1.02] hover:shadow-md dark:border-neutral-800 ${app.accent}`}
               >
-                <div className="flex items-start justify-between">
-                  <div className="rounded-lg bg-white p-2.5 shadow-sm dark:bg-neutral-900">
-                    {app.icon}
+                <div>
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="rounded-lg bg-white p-2.5 shadow-sm dark:bg-neutral-900">
+                      {app.icon}
+                    </span>
+                    <span className="opacity-0 transition-opacity group-hover:opacity-100">
+                      <Plus size={18} className="text-neutral-400" />
+                    </span>
                   </div>
-                  <span className="rounded-full bg-neutral-200/50 p-1 text-neutral-600 opacity-0 transition-opacity group-hover:opacity-100 dark:bg-neutral-800 dark:text-neutral-300">
-                    <Plus size={16} />
-                  </span>
-                </div>
-                <div className="mt-6">
                   <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
                     {app.name}
                   </h3>
-                  <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    {app.tagline}
-                  </p>
+                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{app.tagline}</p>
+                </div>
+
+                <div className="mt-4 flex items-center gap-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                  <Plus size={14} />
+                  <span>Create new</span>
                 </div>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Main Content Grid: Recent Files & Templates */}
+        {/* Recent & Templates Split Section */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {/* Recent Files List (2 cols) */}
+          {/* Recent Files (2 cols) */}
           <div className="md:col-span-2">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
@@ -200,7 +132,7 @@ export function StartScreen() {
                 <button
                   type="button"
                   onClick={handleClearRecent}
-                  className="flex items-center gap-1 text-xs text-neutral-400 hover:text-red-600 dark:hover:text-red-400"
+                  className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
                 >
                   <Trash2 size={12} />
                   {t('start.clearRecent')}
@@ -208,14 +140,14 @@ export function StartScreen() {
               )}
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
               {loading ? (
-                <div className="p-8 text-center text-xs text-neutral-400">Loading...</div>
+                <div className="p-8 text-center text-sm text-neutral-400">Loading...</div>
               ) : recent.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-12 text-center">
-                  <File size={32} className="mb-2 text-neutral-300 dark:text-neutral-600" />
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                    {t('start.noRecentFiles')}
+                <div className="p-8 text-center">
+                  <File size={32} className="mx-auto mb-2 text-neutral-300 dark:text-neutral-700" />
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {t('start.noRecent')}
                   </p>
                 </div>
               ) : (
@@ -229,23 +161,7 @@ export function StartScreen() {
                     >
                       <div className="flex items-center gap-3 truncate">
                         <span className="text-neutral-400">
-                          {item.appId === 'sheets' ? (
-                            <Sheet size={18} className="text-emerald-600" />
-                          ) : item.appId === 'slides' ? (
-                            <Presentation size={18} className="text-amber-600" />
-                          ) : item.appId === 'notes' ? (
-                            <Book size={18} className="text-violet-600" />
-                          ) : item.appId === 'mail' ? (
-                            <Mail size={18} className="text-indigo-600" />
-                          ) : item.appId === 'forms' ? (
-                            <CheckSquare size={18} className="text-teal-600" />
-                          ) : item.appId === 'planner' ? (
-                            <Kanban size={18} className="text-rose-600" />
-                          ) : item.appId === 'draw' ? (
-                            <PenTool size={18} className="text-cyan-600" />
-                          ) : (
-                            <FileText size={18} className="text-blue-600" />
-                          )}
+                          {getRecentAppIcon(item.appId)}
                         </span>
                         <div className="truncate">
                           <p className="truncate text-xs font-medium text-neutral-800 dark:text-neutral-200">

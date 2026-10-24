@@ -56,6 +56,9 @@ importers:
       '@fontsource/carlito':
         specifier: ^5.1.0
         version: 5.3.0
+      '@zoffice/base':
+        specifier: workspace:*
+        version: link:../../packages/base
       '@zoffice/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -129,6 +132,25 @@ importers:
       vite:
         specifier: ^6.0.0
         version: 6.4.5(@types/node@26.6.5)(jiti@1.21.7)
+
+  packages/base:
+    dependencies:
+      '@zoffice/core':
+        specifier: workspace:*
+        version: link:../core
+      '@zoffice/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lucide-react:
+        specifier: ^0.460.0
+        version: 0.460.0(react@19.3.1)
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.16(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
+    devDependencies:
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@26.6.5)(jsdom@25.0.1)
 
   packages/core: {}
 

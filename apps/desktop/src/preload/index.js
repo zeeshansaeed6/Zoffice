@@ -4,6 +4,7 @@ import { mailBridge, calendarBridge, contactsBridge } from './mail-api.js'
 import { formsBridge } from './forms-api.js'
 import { plannerBridge } from './planner-api.js'
 import { drawBridge } from './draw-api.js'
+import { baseBridge } from './base-api.js'
 
 /**
  * Validated Electron IPC Bridge.
@@ -161,6 +162,7 @@ const zofficeAPI = {
   forms: formsBridge,
   planner: plannerBridge,
   draw: drawBridge,
+  base: baseBridge,
 
   /**
    * Subscribe to native menu actions and keyboard shortcuts.

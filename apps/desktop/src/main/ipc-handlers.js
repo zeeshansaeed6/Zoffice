@@ -8,6 +8,7 @@ import * as mailDb from './mail-db.js'
 import * as formsDb from './forms-db.js'
 import * as plannerDb from './planner-db.js'
 import * as drawDb from './draw-db.js'
+import * as baseDb from './base-db.js'
 
 /**
  * Registers all validated IPC handlers for main process.
@@ -188,4 +189,10 @@ export function registerIpcHandlers(win) {
   ipcMain.handle('draw:getDiagram', async (_event, id) => drawDb.getDiagramById(id))
   ipcMain.handle('draw:saveDiagram', async (_event, diagram) => drawDb.saveDiagram(diagram))
   ipcMain.handle('draw:deleteDiagram', async (_event, id) => drawDb.deleteDiagram(id))
+
+  // Base SQLite persistence
+  ipcMain.handle('base:getBases', async () => baseDb.getAllBases())
+  ipcMain.handle('base:getBase', async (_event, id) => baseDb.getBaseById(id))
+  ipcMain.handle('base:saveBase', async (_event, base) => baseDb.saveBase(base))
+  ipcMain.handle('base:deleteBase', async (_event, id) => baseDb.deleteBase(id))
 }

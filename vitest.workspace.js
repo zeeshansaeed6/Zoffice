@@ -11,4 +11,5 @@ export default defineWorkspace([
   'packages/forms',
   'packages/planner',
   'packages/draw',
+  'packages/base',
 ])

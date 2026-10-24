@@ -12,6 +12,7 @@ export default {
     '../../packages/forms/src/**/*.{js,jsx}',
     '../../packages/planner/src/**/*.{js,jsx}',
     '../../packages/draw/src/**/*.{js,jsx}',
+    '../../packages/base/src/**/*.{js,jsx}',
   ],
   darkMode: 'class',
   theme: {

@@ -9,6 +9,7 @@ import { ZMail } from '@zoffice/mail'
 import { ZForms } from '@zoffice/forms'
 import { ZPlanner } from '@zoffice/planner'
 import { ZDraw } from '@zoffice/draw'
+import { ZBase } from '@zoffice/base'
 import { saveFile, saveFileAs } from '@zoffice/core'
 
 /**
@@ -107,6 +108,17 @@ export function AppLoader() {
     case 'draw':
       return (
         <ZDraw
+          key={activeTab.id}
+          id={activeTab.id}
+          title={activeTab.title}
+          initialContent={activeTab.content}
+          onChange={handleContentChange}
+          onSave={handleSave}
+        />
+      )
+    case 'base':
+      return (
+        <ZBase
           key={activeTab.id}
           id={activeTab.id}
           title={activeTab.title}
