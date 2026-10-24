@@ -59,11 +59,25 @@ export function AppLoader() {
     switch (activeTab.appId) {
       case 'sheets':
         return (
-          <ZSheets key={activeTab.id} id={activeTab.id} title={activeTab.title} onSave={handleSave} />
+          <ZSheets
+            key={activeTab.id}
+            id={activeTab.id}
+            title={activeTab.title}
+            initialContent={activeTab.content}
+            onChange={handleContentChange}
+            onSave={handleSave}
+          />
         )
       case 'slides':
         return (
-          <ZSlides key={activeTab.id} id={activeTab.id} title={activeTab.title} onSave={handleSave} />
+          <ZSlides
+            key={activeTab.id}
+            id={activeTab.id}
+            title={activeTab.title}
+            initialContent={activeTab.content}
+            onChange={handleContentChange}
+            onSave={handleSave}
+          />
         )
       case 'notes':
         return (

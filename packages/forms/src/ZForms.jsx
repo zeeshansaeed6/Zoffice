@@ -41,8 +41,20 @@ export function ZForms({
 
   // Initialize on mount
   useEffect(() => {
+    if (_initialContent) {
+      try {
+        const parsed =
+          typeof _initialContent === 'string' ? JSON.parse(_initialContent) : _initialContent
+        if (parsed?.form) {
+          initForm(parsed.form)
+          return
+        }
+      } catch {
+        // Fallback to fresh form
+      }
+    }
     initForm()
-  }, [initForm])
+  }, [_initialContent, initForm])
 
   // Sync state changes with parent document tab
   useEffect(() => {

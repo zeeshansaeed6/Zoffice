@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { FolderOpen, Plus, Clock, LayoutTemplate, Trash2, File } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
-import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
+import { getRecentFiles, clearRecentFiles, openFile, t, getFeaturedTemplates } from '@zoffice/core'
 import { APP_TILES, getRecentAppIcon } from './start-screen-tiles.jsx'
+import { TemplatesGalleryModal } from '../components/TemplatesGalleryModal.jsx'
 
 /**
  * Zoffice Start Screen / Launcher home window.
@@ -11,6 +12,8 @@ export function StartScreen() {
   const openTab = useTabStore((s) => s.openTab)
   const [recent, setRecent] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+  const featuredTemplates = getFeaturedTemplates()
 
   const loadRecent = async () => {
     setLoading(true)
@@ -63,6 +66,14 @@ export function StartScreen() {
           </div>
 
           <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setIsGalleryOpen(true)}
+              className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+            >
+              <LayoutTemplate size={16} />
+              Browse Templates
+            </button>
             <button
               type="button"
               onClick={handleOpenFile}
@@ -173,27 +184,61 @@ export function StartScreen() {
             </div>
           </div>
 
-          {/* Templates Placeholder (1 col) */}
+          {/* Templates Section (1 col) */}
           <div>
-            <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-              <LayoutTemplate size={14} />
-              {t('start.templates')}
-            </h2>
-            <div className="rounded-xl border border-dashed border-neutral-300 bg-white/50 p-6 text-center dark:border-neutral-800 dark:bg-neutral-900/30">
-              <LayoutTemplate
-                size={36}
-                className="mx-auto mb-2 text-neutral-300 dark:text-neutral-600"
-              />
-              <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                {t('start.templatesComing')}
-              </p>
-              <p className="mt-1 text-[11px] text-neutral-400">
-                Standard templates for documents, budgets, and pitch decks in Phase 1.
-              </p>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                <LayoutTemplate size={14} />
+                {t('start.templates')}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setIsGalleryOpen(true)}
+                className="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
+              >
+                View all (23)
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-2.5">
+              {featuredTemplates.map((template) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  onClick={() => openTab(template.appId, template.title, null, template.content)}
+                  className="flex items-start gap-3 rounded-xl border border-neutral-200 bg-white p-3 text-left shadow-sm transition hover:border-blue-400 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-blue-500"
+                >
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                    <LayoutTemplate size={16} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="truncate text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                      {template.title}
+                    </h4>
+                    <p className="line-clamp-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                      {template.description}
+                    </p>
+                  </div>
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => setIsGalleryOpen(true)}
+                className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-300 py-2.5 text-xs font-medium text-neutral-600 transition hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800/50 dark:hover:text-neutral-200"
+              >
+                <Plus size={14} />
+                Browse all templates
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      <TemplatesGalleryModal
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+      />
     </div>
   )
 }

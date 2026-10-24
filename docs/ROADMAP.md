@@ -353,7 +353,16 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Authored comprehensive developer documentation in [`docs/plugins.md`](plugins.md).
   - Verified with 8 unit tests in `packages/core/src/__tests__/plugin-engine.test.js`.
 
-
-
-
-
+### Task 5: Templates Gallery
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Designed and authored 23 original, comprehensive templates across 5 categories in `@zoffice/core`:
+    - **Documents (ZWriter)**: Modern Chronological Resume, Professional Cover Letter, Project Proposal & Report, Consulting Invoice, Formal Meeting Minutes, Strategic Executive Summary.
+    - **Finance & Data (ZSheets)**: Annual Family Household Budget, Business Expense Tracker, Project Milestone & Gantt Tracker, Sales Invoice & Tax Calculator, Loan Amortization Schedule.
+    - **Presentations (ZSlides)**: Startup Investment Pitch Deck, Modern Project Showcase, Quarterly Business Review (QBR), Educational Workshop Lecture.
+    - **Productivity & Notes (ZNotes, ZForms, ZPlanner)**: Project Kickoff Notes & Checklist, Research Deep Dive, Customer Feedback & NPS Survey, Conference Registration & Intake, Agile Software Sprint Board, Marketing Launch Campaign.
+    - **Diagrams & Architecture (ZDraw)**: Cloud Infrastructure Diagram, Company Organization Hierarchy Chart.
+  - Built in-app `TemplatesGalleryModal.jsx` with category pills, app filters, real-time search, and 1-click template launching.
+  - Integrated interactive featured templates and "Browse Templates" launcher into `StartScreen.jsx`.
+  - Added seamless `initialContent` template loading across `ZSheets`, `ZSlides`, `ZForms`, `ZPlanner`, and `ZDraw`.
+  - Verified with 8 unit tests in `packages/core/src/__tests__/templates.test.js` (total 289 tests passing).

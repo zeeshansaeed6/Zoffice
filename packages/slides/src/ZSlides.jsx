@@ -43,10 +43,22 @@ import {
  * ZSlides Presentation Application Component.
  *
  * @param {Object} props
+ * @param {string} [props.initialContent]
  * @param {() => void} [props.onSave]
  */
-export function ZSlides({ onSave }) {
-  const [deck, setDeck] = useState(() => createPresentationDeck())
+export function ZSlides({ onSave, initialContent }) {
+  const [deck, setDeck] = useState(() => {
+    if (initialContent) {
+      try {
+        const parsed =
+          typeof initialContent === 'string' ? JSON.parse(initialContent) : initialContent
+        if (parsed?.slides) return parsed
+      } catch {
+        // Fallback to default blank deck
+      }
+    }
+    return createPresentationDeck()
+  })
   const [zoom, setZoom] = useState(100)
   const [selectedElementIds, setSelectedElementIds] = useState([])
   const [isLayoutPickerOpen, setIsLayoutPickerOpen] = useState(false)

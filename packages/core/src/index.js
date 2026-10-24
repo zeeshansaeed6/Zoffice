@@ -20,4 +20,12 @@ export {
   PLUGIN_PERMISSIONS,
   PERMISSION_DESCRIPTIONS,
 } from './plugins/index.js'
+export {
+  TEMPLATES,
+  CATEGORIES,
+  getTemplates,
+  getTemplateById,
+  getFeaturedTemplates,
+  getCategoriesWithCounts,
+} from './templates/index.js'
 

@@ -19,12 +19,24 @@ import { FormulaEngine } from './core/formula-engine.js'
  * @param {Object} props
  * @param {string} props.id - Active document tab ID
  * @param {string} [props.title='Untitled Spreadsheet']
+ * @param {string} [props.initialContent]
  * @param {(content?: string) => void} [props.onSave]
  */
-export function ZSheets({ onSave }) {
+export function ZSheets({ onSave, initialContent }) {
   const { mode: themeMode } = useTheme()
 
-  const [workbook, setWorkbook] = useState(() => createWorkbook('Sheet1'))
+  const [workbook, setWorkbook] = useState(() => {
+    if (initialContent) {
+      try {
+        const parsed =
+          typeof initialContent === 'string' ? JSON.parse(initialContent) : initialContent
+        if (parsed?.sheets) return parsed
+      } catch {
+        // Fallback to default blank workbook
+      }
+    }
+    return createWorkbook('Sheet1')
+  })
   const [activeCell, setActiveCell] = useState({ row: 0, col: 0 })
   const [selectedRange, setSelectedRange] = useState({
     startRow: 0,

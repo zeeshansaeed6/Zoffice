@@ -44,11 +44,27 @@ export function ZDraw({
     sendSelectedToBack,
     setIsCustomShapeModalOpen,
     setIsExportModalOpen,
+    setDiagram,
     undo,
     redo,
     history,
     future,
   } = useDrawStore()
+
+  // Initialize from template or file content if provided
+  useEffect(() => {
+    if (_initialContent) {
+      try {
+        const parsed =
+          typeof _initialContent === 'string' ? JSON.parse(_initialContent) : _initialContent
+        if (parsed?.shapes) {
+          setDiagram(parsed)
+        }
+      } catch {
+        // Keep default diagram
+      }
+    }
+  }, [_initialContent, setDiagram])
 
   // Sync state changes with parent document tab
   useEffect(() => {

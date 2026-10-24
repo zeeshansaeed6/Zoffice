@@ -47,7 +47,23 @@ export function ZPlanner({
     addColumn,
     setIsImportModalOpen,
     setActiveTaskId,
+    setBoard,
   } = usePlannerStore()
+
+  // Initialize from template or file content if provided
+  useEffect(() => {
+    if (_initialContent) {
+      try {
+        const parsed =
+          typeof _initialContent === 'string' ? JSON.parse(_initialContent) : _initialContent
+        if (parsed?.columns && parsed?.tasks) {
+          setBoard(parsed)
+        }
+      } catch {
+        // Keep default board
+      }
+    }
+  }, [_initialContent, setBoard])
 
   // Sync state changes with parent document tab
   useEffect(() => {
