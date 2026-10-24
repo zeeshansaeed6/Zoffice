@@ -84,6 +84,12 @@ export function setupApplicationMenu(win) {
         { role: 'copy' },
         { role: 'paste' },
         { role: 'selectAll' },
+        { type: 'separator' },
+        {
+          label: 'Preferences...',
+          accelerator: 'CmdOrCtrl+,',
+          click: () => sendAction('app:openSettings'),
+        },
       ],
     },
     {

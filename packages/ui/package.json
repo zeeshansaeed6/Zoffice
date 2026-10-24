@@ -12,6 +12,7 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
+    "@zoffice/core": "workspace:*",
     "lucide-react": "^0.460.0"
   },
   "devDependencies": {

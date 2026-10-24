@@ -15,6 +15,16 @@ export async function getSetting(key, defaultValue) {
       return defaultValue
     }
   }
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const raw = window.localStorage.getItem(`zoffice-setting-${key}`)
+    if (raw !== null) {
+      try {
+        return JSON.parse(raw)
+      } catch {
+        return raw
+      }
+    }
+  }
   return defaultValue
 }
 
@@ -25,14 +35,18 @@ export async function getSetting(key, defaultValue) {
  * @returns {Promise<boolean>}
  */
 export async function setSetting(key, value) {
+  let ok = false
   if (typeof window !== 'undefined' && window.zofficeAPI?.settings?.set) {
     try {
       await window.zofficeAPI.settings.set(key, value)
-      return true
+      ok = true
     } catch (err) {
       console.error(`[Settings] Failed to set ${key}:`, err)
-      return false
     }
   }
-  return false
+  if (typeof window !== 'undefined' && window.localStorage) {
+    window.localStorage.setItem(`zoffice-setting-${key}`, JSON.stringify(value))
+    ok = true
+  }
+  return ok
 }

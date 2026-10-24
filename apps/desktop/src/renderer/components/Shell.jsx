@@ -12,8 +12,7 @@ import {
   saveFileAs,
   t,
 } from '@zoffice/core'
-import { Dialog } from '@zoffice/ui'
-import { useTheme } from '@zoffice/ui'
+import { Dialog, useTheme, SettingsModal } from '@zoffice/ui'
 
 /**
  * Shell container hosting TabBar, active AppLoader, shortcuts, and autosave.
@@ -23,6 +22,7 @@ export function Shell() {
   const { toggleTheme } = useTheme()
   const [recoverableDocs, setRecoverableDocs] = useState([])
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
 
   // Crash recovery check on mount
   useEffect(() => {
@@ -110,6 +110,13 @@ export function Shell() {
       },
     })
 
+    registry.register({
+      id: 'settings',
+      keys: 'Ctrl+,',
+      description: 'Open Settings',
+      handler: () => setShowSettingsModal(true),
+    })
+
     const onKeyDown = (e) => registry.handleKeyDown(e)
     window.addEventListener('keydown', onKeyDown)
 
@@ -132,6 +139,9 @@ export function Shell() {
             break
           case 'view:toggleTheme':
             toggleTheme()
+            break
+          case 'app:openSettings':
+            setShowSettingsModal(true)
             break
           default:
             break
@@ -207,6 +217,12 @@ export function Shell() {
           </ul>
         </Dialog>
       )}
+
+      {/* Settings Center Modal */}
+      <SettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+      />
     </div>
   )
 }

@@ -23,6 +23,7 @@ export { getRecentFiles, addRecentFile, clearRecentFiles } from './recent-files.
 export { getSetting, setSetting } from './settings.js'
 export {
   createPluginEngine,
+  getSharedPluginEngine,
   createSandboxedApi,
   executeInSandbox,
   validatePluginManifest,

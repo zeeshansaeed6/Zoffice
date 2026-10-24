@@ -408,3 +408,16 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Configured GitHub Releases update provider (`nicholaszoffice/zoffice`) with release publication triggers.
   - Authored comprehensive code-signing, notarization, and verification documentation in [`docs/code-signing.md`](code-signing.md) covering Windows Authenticode, macOS Gatekeeper / notarytool, and Linux GPG package signatures.
 
+### Task 9: Settings Center & Privacy Statement
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Built comprehensive, modular `<SettingsModal />` with dedicated tabs in `@zoffice/ui/settings/`:
+    - **General & Appearance (`GeneralTab.jsx`)**: Theme selector (Light, Dark, High-Contrast, System), UI Scaling slider (100% to 200%), and interactive language switcher with instant RTL toggling for Urdu.
+    - **Typography & Formats (`TypographyFormatsTab.jsx`)**: Default font family selection (Inter, Carlito, Liberation Sans), point size selection (10–16 pt), and default file formats per app (ZWriter: `.docx`, ZSheets: `.xlsx`, ZSlides: `.pptx`).
+    - **Autosave & Spellcheck (`AutosaveSpellcheckTab.jsx`)**: Configurable SQLite autosave intervals (30s, 1m, 2m, 5m, 10m, or manual only), inline typo underlining toggle, and spellcheck dictionary selection (en-US, en-GB, es, fr, de, hi).
+    - **Plugin Manager (`PluginsTab.jsx`)**: List of installed sandboxed plugins with version, author, description, sandbox permissions badges, and real-time active/disabled state toggles.
+    - **Privacy & Sovereignty Statement (`PrivacyTab.jsx`)**: Detailed declaration affirming 100% offline-first architecture, zero telemetry, zero analytics tracking, no user accounts, local SQLite disk persistence, and complete independence from Microsoft Corporation.
+  - Wired settings modal to Start Screen header, application Edit menu (`Preferences...`), and `Ctrl+,` (Cmd+,) shortcut in Shell.
+  - Added unit test suite in `packages/ui/src/__tests__/SettingsModal.test.jsx` (total 304 unit tests passing, 0 ESLint warnings).
+
+

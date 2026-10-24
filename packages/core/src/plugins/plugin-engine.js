@@ -212,3 +212,51 @@ export function createPluginEngine() {
     getOrInitInstance,
   }
 }
+
+let sharedPluginEngine = null
+
+/**
+ * Returns the singleton PluginEngine instance, pre-registering bundled reference plugins.
+ * @returns {ReturnType<typeof createPluginEngine>}
+ */
+export function getSharedPluginEngine() {
+  if (!sharedPluginEngine) {
+    sharedPluginEngine = createPluginEngine()
+    sharedPluginEngine.registerPlugin(
+      {
+        id: 'zoffice-word-counter',
+        name: 'Word Frequency Counter',
+        version: '1.0.0',
+        description:
+          'Analyzes word frequency, vocabulary diversity, and reading time in ZWriter documents.',
+        author: 'Zoffice Community',
+        targetApps: ['writer'],
+        main: 'index.js',
+        permissions: ['active-document:read', 'ui:ribbon', 'ui:sidebar'],
+      },
+      'module.exports = { openStats() {}, renderSidebar() {} }',
+      ['active-document:read', 'ui:ribbon', 'ui:sidebar'],
+    )
+    sharedPluginEngine.registerPlugin(
+      {
+        id: 'zoffice-csv-cleaner',
+        name: 'CSV Data Cleaner',
+        version: '1.0.0',
+        description:
+          'Cleans, trims whitespace, normalizes delimiters, and removes duplicates from CSV datasets in ZSheets.',
+        author: 'Zoffice Community',
+        targetApps: ['sheets'],
+        main: 'index.js',
+        permissions: [
+          'active-document:read',
+          'active-document:write',
+          'ui:ribbon',
+          'file-format:handler',
+        ],
+      },
+      'module.exports = { cleanCsvData() {}, cleanAndParseCsv() {} }',
+      ['active-document:read', 'active-document:write', 'ui:ribbon', 'file-format:handler'],
+    )
+  }
+  return sharedPluginEngine
+}

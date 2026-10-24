@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { FolderOpen, Plus, Clock, LayoutTemplate, Trash2, File } from 'lucide-react'
+import { FolderOpen, Plus, Clock, LayoutTemplate, Trash2, File, Settings } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t, getFeaturedTemplates } from '@zoffice/core'
+import { SettingsModal } from '@zoffice/ui'
 import { APP_TILES, getRecentAppIcon } from './start-screen-tiles.jsx'
 import { TemplatesGalleryModal } from '../components/TemplatesGalleryModal.jsx'
 
@@ -13,6 +14,7 @@ export function StartScreen() {
   const [recent, setRecent] = useState([])
   const [loading, setLoading] = useState(true)
   const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const featuredTemplates = getFeaturedTemplates()
 
   const loadRecent = async () => {
@@ -66,6 +68,14 @@ export function StartScreen() {
           </div>
 
           <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+            >
+              <Settings size={16} />
+              Settings
+            </button>
             <button
               type="button"
               onClick={() => setIsGalleryOpen(true)}
@@ -238,6 +248,11 @@ export function StartScreen() {
       <TemplatesGalleryModal
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
+      />
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
     </div>
   )
