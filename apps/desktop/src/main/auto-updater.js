@@ -1,11 +1,14 @@
 import { app, ipcMain } from 'electron'
-import { autoUpdater } from 'electron-updater'
+import electronUpdater from 'electron-updater'
 
 /**
  * Initializes autoUpdater and registers IPC handlers for renderer communication.
  * @param {import('electron').BrowserWindow} mainWindow
  */
 export function setupAutoUpdater(mainWindow) {
+  const autoUpdater = electronUpdater.autoUpdater || electronUpdater.default?.autoUpdater
+  if (!autoUpdater) return
+
   // Respect user sovereignty: do not automatically download in background
   autoUpdater.autoDownload = false
   autoUpdater.autoInstallOnAppQuit = true
