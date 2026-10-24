@@ -38,17 +38,19 @@ import { IconButton } from '../common/IconButton.jsx'
  * @param {React.ReactNode} [props.extraHeaderContent]
  */
 export function Ribbon({
-  config,
+  config: passedConfig,
   activeTabId,
   onTabChange,
   defaultCollapsed = false,
   extraHeaderContent,
+  ...rest
 }) {
-  const [internalActiveTab, setInternalActiveTab] = useState(() => config.tabs[0]?.id || 'home')
+  const config = passedConfig || (rest.tabs ? rest : { tabs: [] })
+  const [internalActiveTab, setInternalActiveTab] = useState(() => config.tabs?.[0]?.id || 'home')
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
 
   const activeId = activeTabId || internalActiveTab
-  const currentTab = config.tabs.find((t) => t.id === activeId) || config.tabs[0]
+  const currentTab = config.tabs?.find((t) => t.id === activeId) || config.tabs?.[0] || { groups: [] }
 
   const handleTabClick = (tabId) => {
     if (onTabChange) {

@@ -305,3 +305,20 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
 6. ✅ **ZBase** (`packages/base`) — Relational database with 11 field types, formula/lookup/rollup engines, Grid/Kanban/Calendar/Gallery/Form views, and in-memory SQL console.
 7. ✅ **ZDrive** (`packages/drive`) — Offline local cloud drive, breadcrumb navigation, dual grid/list views, revision history snapshots with rollback, and storage quota analytics.
 
+---
+
+## Phase 5: Polish, Extensibility & Public Release (v1.0.0)
+
+**Status:** In Progress ⏳
+
+### Task 1: Cross-App Consistency & Design System
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Audited all 10 applications (ZWriter, ZSheets, ZSlides, ZNotes, ZMail/ZCalendar, ZForms, ZPlanner, ZDraw, ZBase, ZDrive) for layout, spacing, icon sizing, and modal behavior.
+  - Standardized Ribbon component invocation across apps (`<Ribbon config={...} />` and added spread fallback).
+  - Standardized StatusBar left slot behavior with direct children fallback.
+  - Standardized Dialog and Modal interactions: added Escape key listeners, backdrop dismissal, `role="dialog"`, and `aria-modal="true"`.
+  - Added extended Dialog sizes (`sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `4xl`, `full`).
+  - Created comprehensive design system documentation in [`docs/design-system.md`](design-system.md).
+
+

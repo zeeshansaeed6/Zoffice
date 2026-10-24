@@ -3,7 +3,7 @@
  * @module RecordDetailModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Trash2, Check } from 'lucide-react'
 import { FIELD_TYPES } from '../core/constants.js'
 
@@ -26,6 +26,16 @@ export function RecordDetailModal({
 }) {
   const [fieldValues, setFieldValues] = useState(record ? { ...record.fields } : {})
 
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen || !record) return null
 
   const handleValueChange = (fieldId, val) => {
@@ -39,7 +49,14 @@ export function RecordDetailModal({
   }
 
   return (
-    <div className="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    >
       <div className="flex max-h-[85vh] w-full max-w-lg flex-col rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5 dark:border-slate-800">

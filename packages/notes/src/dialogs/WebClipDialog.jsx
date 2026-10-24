@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Paperclip, X, Check } from 'lucide-react'
 
 /**
@@ -11,6 +11,16 @@ import { Paperclip, X, Check } from 'lucide-react'
  */
 export function WebClipDialog({ isOpen, onClose, onClip }) {
   const [content, setContent] = useState('')
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -26,6 +36,9 @@ export function WebClipDialog({ isOpen, onClose, onClip }) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="web-clip-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 pt-20 backdrop-blur-sm"
     >
       <div className="flex w-full max-w-lg flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">

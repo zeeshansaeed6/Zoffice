@@ -142,7 +142,7 @@ export function ZBase({
       data-testid="zbase-app"
       className="flex h-full w-full flex-col bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100"
     >
-      <Ribbon {...ribbonConfig} />
+      <Ribbon config={ribbonConfig} />
 
       <TableNavTabs
         tables={base.tables}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Search, X, FileText, ChevronRight } from 'lucide-react'
 import { searchAllNotes } from '../core/search-engine.js'
 
@@ -13,6 +13,16 @@ import { searchAllNotes } from '../core/search-engine.js'
  */
 export function SearchDialog({ isOpen, onClose, notebooks, onNavigate }) {
   const [query, setQuery] = useState('')
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   const results = useMemo(() => {
     if (!query.trim()) return []
@@ -31,6 +41,9 @@ export function SearchDialog({ isOpen, onClose, notebooks, onNavigate }) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="search-dialog-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 pt-20 backdrop-blur-sm"
     >
       <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">

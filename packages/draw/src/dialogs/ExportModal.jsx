@@ -3,7 +3,7 @@
  * @module ExportModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Download, FileImage, FileCode, CheckCircle } from 'lucide-react'
 import { useDrawStore } from '../core/draw-store.js'
 import { exportDiagramToSvg } from '../core/svg-exporter.js'
@@ -11,6 +11,16 @@ import { exportDiagramToSvg } from '../core/svg-exporter.js'
 export function ExportModal() {
   const { diagram, isExportModalOpen, setIsExportModalOpen } = useDrawStore()
   const [success, setSuccess] = useState('')
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isExportModalOpen) {
+        setIsExportModalOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isExportModalOpen, setIsExportModalOpen])
 
   if (!isExportModalOpen) return null
 
@@ -71,7 +81,14 @@ export function ExportModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setIsExportModalOpen(false)
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+    >
       <div className="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-800">

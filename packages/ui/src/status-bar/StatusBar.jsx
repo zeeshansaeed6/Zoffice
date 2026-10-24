@@ -19,13 +19,16 @@ export function StatusBar({
   zoom = 100,
   onZoomChange,
   className = '',
+  children,
 }) {
+  const content = leftContent || children
+
   return (
     <footer
       data-testid="status-bar"
       className={`flex h-6 w-full select-none items-center justify-between border-t border-neutral-200 bg-neutral-100 px-3 py-0.5 text-xs text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 ${className}`}
     >
-      <div className="flex items-center gap-2 overflow-hidden">{leftContent}</div>
+      <div className="flex items-center gap-2 overflow-hidden">{content}</div>
 
       <div className="flex items-center truncate text-[11px] text-neutral-500">{centerContent}</div>
 

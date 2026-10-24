@@ -3,7 +3,7 @@
  * @module VersionHistoryModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, History, Plus, RotateCcw, CheckCircle2 } from 'lucide-react'
 import { formatFileSize } from '../core/drive-model.js'
 import { FileIcon } from '../components/FileIcon.jsx'
@@ -18,6 +18,16 @@ import { FileIcon } from '../components/FileIcon.jsx'
 export function VersionHistoryModal({ isOpen, file, onAddVersion, onClose }) {
   const [comment, setComment] = useState('')
   const [restoredVersionId, setRestoredVersionId] = useState(null)
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen || !file) return null
 
@@ -35,7 +45,14 @@ export function VersionHistoryModal({ isOpen, file, onAddVersion, onClose }) {
   const versions = file.versions || []
 
   return (
-    <div className="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    >
       <div className="flex h-[80vh] w-full max-w-xl flex-col rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5 dark:border-slate-800">

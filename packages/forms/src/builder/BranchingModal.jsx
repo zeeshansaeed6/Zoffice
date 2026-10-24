@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { X, GitBranch } from 'lucide-react'
 import { BRANCHING_ACTIONS } from '../core/constants.js'
 import { useFormStore } from '../core/form-store.js'
@@ -9,6 +9,16 @@ import { useFormStore } from '../core/form-store.js'
 export function BranchingModal() {
   const { form, isBranchingModalOpen, branchingQuestionId, setBranchingModalOpen, updateChoice } =
     useFormStore()
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isBranchingModalOpen) {
+        setBranchingModalOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isBranchingModalOpen, setBranchingModalOpen])
 
   if (!isBranchingModalOpen || !branchingQuestionId) return null
 
@@ -22,6 +32,9 @@ export function BranchingModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="branching-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setBranchingModalOpen(false)
+      }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
     >
       <div className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">

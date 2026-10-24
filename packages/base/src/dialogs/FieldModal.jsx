@@ -3,7 +3,7 @@
  * @module FieldModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Plus, Trash2 } from 'lucide-react'
 import { FIELD_TYPES, SELECT_COLORS } from '../core/constants.js'
 
@@ -31,6 +31,16 @@ export function FieldModal({ isOpen, field, activeTable, tables, onSave, onClose
         ],
   )
   const [newOptionLabel, setNewOptionLabel] = useState('')
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -61,7 +71,14 @@ export function FieldModal({ isOpen, field, activeTable, tables, onSave, onClose
   }
 
   return (
-    <div className="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    >
       <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-xl dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">

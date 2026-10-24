@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Server, Lock, Check } from 'lucide-react'
 import { useMailStore } from '../core/mail-store.js'
 import { PROVIDER_PRESETS } from '../core/constants.js'
@@ -19,6 +19,16 @@ export function AccountSetupModal() {
   const [smtpHost, setSmtpHost] = useState('smtp.gmail.com')
   const [smtpPort, setSmtpPort] = useState(465)
   const [smtpSecure, setSmtpSecure] = useState(true)
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isAccountModalOpen) {
+        setAccountModalOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isAccountModalOpen, setAccountModalOpen])
 
   if (!isAccountModalOpen) return null
 
@@ -61,6 +71,9 @@ export function AccountSetupModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="account-setup-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setAccountModalOpen(false)
+      }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
     >
       <div className="flex w-full max-w-lg flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">

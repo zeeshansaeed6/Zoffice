@@ -3,7 +3,7 @@
  * @module SqlQueryConsoleModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Play, Terminal, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { executeSqlQuery } from '../core/sql-console-engine.js'
 
@@ -17,6 +17,16 @@ export function SqlQueryConsoleModal({ isOpen, tables, onClose }) {
   const defaultQuery = tables[0] ? `SELECT * FROM ${tables[0].name}` : 'SELECT * FROM Projects'
   const [query, setQuery] = useState(defaultQuery)
   const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -32,7 +42,14 @@ export function SqlQueryConsoleModal({ isOpen, tables, onClose }) {
   ]
 
   return (
-    <div className="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
       <div className="flex h-[80vh] w-full max-w-3xl flex-col rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3 dark:border-slate-800">

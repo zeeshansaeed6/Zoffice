@@ -3,7 +3,7 @@
  * @module TaskDetailModal
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { X, Trash2, Calendar, User, Flag } from 'lucide-react'
 import { usePlannerStore } from '../core/planner-store.js'
 import { PRIORITY, PRIORITY_CONFIG } from '../core/constants.js'
@@ -24,6 +24,16 @@ export function TaskDetailModal() {
     removeDependency,
   } = usePlannerStore()
 
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && activeTaskId) {
+        setActiveTaskId(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeTaskId, setActiveTaskId])
+
   if (!activeTaskId) return null
   const task = board.tasks.find((t) => t.id === activeTaskId)
   if (!task) return null
@@ -32,7 +42,14 @@ export function TaskDetailModal() {
   const fromInputDate = (val) => (val ? new Date(val).toISOString() : '')
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setActiveTaskId(null)
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+    >
       <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-900/50">

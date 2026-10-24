@@ -3,7 +3,7 @@
  * @module CustomShapeModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Code2, AlertCircle } from 'lucide-react'
 import { useDrawStore } from '../core/draw-store.js'
 
@@ -12,6 +12,16 @@ export function CustomShapeModal() {
   const [name, setName] = useState('Custom Path')
   const [svgPath, setSvgPath] = useState('M 10 80 Q 52.5 10, 95 80 T 180 80')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isCustomShapeModalOpen) {
+        setIsCustomShapeModalOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isCustomShapeModalOpen, setIsCustomShapeModalOpen])
 
   if (!isCustomShapeModalOpen) return null
 
@@ -35,7 +45,14 @@ export function CustomShapeModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setIsCustomShapeModalOpen(false)
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+    >
       <div className="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-800">

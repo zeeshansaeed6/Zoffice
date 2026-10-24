@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { X, Send, Paperclip, Trash2 } from 'lucide-react'
 import { useMailStore } from '../core/mail-store.js'
 import { createAttachment } from '../core/mail-model.js'
@@ -12,6 +12,16 @@ export function ComposeModal() {
   const [showCc, setShowCc] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const fileInputRef = useRef(null)
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isComposeOpen) {
+        closeCompose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isComposeOpen, closeCompose])
 
   if (!isComposeOpen || !composeDraft) return null
 
@@ -54,6 +64,9 @@ export function ComposeModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="compose-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) closeCompose()
+      }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
     >
       <div className="flex h-[580px] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">

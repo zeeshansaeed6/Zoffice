@@ -3,7 +3,7 @@
  * @module TrelloImportModal
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Upload, FileCode, CheckCircle, AlertCircle } from 'lucide-react'
 import { usePlannerStore } from '../core/planner-store.js'
 import { importTrelloBoard } from '../core/trello-importer.js'
@@ -13,6 +13,16 @@ export function TrelloImportModal() {
   const [jsonText, setJsonText] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isImportModalOpen) {
+        setIsImportModalOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isImportModalOpen, setIsImportModalOpen])
 
   if (!isImportModalOpen) return null
 
@@ -52,7 +62,14 @@ export function TrelloImportModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setIsImportModalOpen(false)
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+    >
       <div className="flex w-full max-w-lg flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-800">

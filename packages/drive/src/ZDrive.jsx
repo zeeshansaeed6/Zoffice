@@ -172,7 +172,7 @@ export function ZDrive({
       data-testid="zdrive-app"
       className="flex h-full w-full flex-col bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100"
     >
-      <Ribbon {...ribbonConfig} />
+      <Ribbon config={ribbonConfig} />
 
       <div className="flex flex-1 overflow-hidden">
         <DriveSidebar
