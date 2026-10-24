@@ -1,0 +1,22 @@
+{
+  "name": "@zoffice/mail",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@zoffice/core": "workspace:*",
+    "@zoffice/ui": "workspace:*",
+    "lucide-react": "^0.460.0",
+    "zustand": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  }
+}
