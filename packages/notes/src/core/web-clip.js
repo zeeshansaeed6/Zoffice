@@ -8,9 +8,35 @@ import { createBlock } from './notebook-model.js'
 
 /** Tags allowed in sanitized HTML */
 const ALLOWED_TAGS = new Set([
-  'p', 'br', 'b', 'strong', 'i', 'em', 'u', 'a', 'ul', 'ol', 'li',
-  'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre',
-  'span', 'div', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'img',
+  'p',
+  'br',
+  'b',
+  'strong',
+  'i',
+  'em',
+  'u',
+  'a',
+  'ul',
+  'ol',
+  'li',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'blockquote',
+  'code',
+  'pre',
+  'span',
+  'div',
+  'table',
+  'tr',
+  'td',
+  'th',
+  'thead',
+  'tbody',
+  'img',
 ])
 
 /** Attributes allowed per tag */
@@ -32,7 +58,9 @@ export function sanitizeHtml(html) {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
   const clean = sanitizeNode(doc.body)
-  return clean.innerHTML
+  const wrapper = document.createElement('div')
+  wrapper.appendChild(clean)
+  return wrapper.innerHTML
 }
 
 /**
@@ -101,7 +129,10 @@ export function htmlToBlocks(html, pageId, startY = 40) {
       blocks.push(
         createBlock(pageId, BLOCK_TYPES.TABLE, {
           content: JSON.stringify({ rows: tableData }),
-          x: 40, y, width: 500, height: Math.max(60, tableData.length * 30),
+          x: 40,
+          y,
+          width: 500,
+          height: Math.max(60, tableData.length * 30),
         }),
       )
       y += Math.max(80, tableData.length * 30) + 20
@@ -112,7 +143,10 @@ export function htmlToBlocks(html, pageId, startY = 40) {
             src: child.getAttribute('src') || '',
             alt: child.getAttribute('alt') || '',
           }),
-          x: 40, y, width: 400, height: 300,
+          x: 40,
+          y,
+          width: 400,
+          height: 300,
         }),
       )
       y += 320
@@ -122,7 +156,10 @@ export function htmlToBlocks(html, pageId, startY = 40) {
         blocks.push(
           createBlock(pageId, BLOCK_TYPES.TEXT, {
             content: text,
-            x: 40, y, width: 500, height: Math.max(30, Math.ceil(text.length / 60) * 22),
+            x: 40,
+            y,
+            width: 500,
+            height: Math.max(30, Math.ceil(text.length / 60) * 22),
           }),
         )
         y += Math.max(50, Math.ceil(text.length / 60) * 22) + 10
@@ -147,5 +184,10 @@ function extractTable(table) {
     }
     if (cells.length > 0) rows.push(cells)
   }
-  return rows.length > 0 ? rows : [['', ''], ['', '']]
+  return rows.length > 0
+    ? rows
+    : [
+        ['', ''],
+        ['', ''],
+      ]
 }

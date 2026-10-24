@@ -12,57 +12,67 @@ import { Plus } from 'lucide-react'
  * Free-form note canvas where blocks can be placed anywhere.
  */
 export function NoteCanvas() {
-  const {
-    getActivePage, activeBlockId, selectBlock,
-    addBlock, updateBlock, deleteBlock,
-  } = useNoteStore()
+  const { getActivePage, activeBlockId, selectBlock, addBlock, updateBlock, deleteBlock } =
+    useNoteStore()
   const canvasRef = useRef(null)
   const [dragState, setDragState] = useState(null)
 
   const page = getActivePage()
 
-  const handleCanvasClick = useCallback((e) => {
-    if (e.target === canvasRef.current || e.target.dataset?.canvas) {
-      selectBlock(null)
-    }
-  }, [selectBlock])
+  const handleCanvasClick = useCallback(
+    (e) => {
+      if (e.target === canvasRef.current || e.target.dataset?.canvas) {
+        selectBlock(null)
+      }
+    },
+    [selectBlock],
+  )
 
-  const handleBlockMouseDown = useCallback((e, blockId) => {
-    e.stopPropagation()
-    selectBlock(blockId)
+  const handleBlockMouseDown = useCallback(
+    (e, blockId) => {
+      e.stopPropagation()
+      selectBlock(blockId)
 
-    const page = useNoteStore.getState().getActivePage()
-    const block = page?.blocks.find((b) => b.id === blockId)
-    if (!block) return
+      const page = useNoteStore.getState().getActivePage()
+      const block = page?.blocks.find((b) => b.id === blockId)
+      if (!block) return
 
-    const startX = e.clientX
-    const startY = e.clientY
-    const origX = block.x
-    const origY = block.y
+      const startX = e.clientX
+      const startY = e.clientY
+      const origX = block.x
+      const origY = block.y
 
-    setDragState({ blockId, startX, startY, origX, origY })
-  }, [selectBlock])
+      setDragState({ blockId, startX, startY, origX, origY })
+    },
+    [selectBlock],
+  )
 
-  const handleMouseMove = useCallback((e) => {
-    if (!dragState) return
-    const dx = e.clientX - dragState.startX
-    const dy = e.clientY - dragState.startY
-    updateBlock(dragState.blockId, {
-      x: Math.max(0, dragState.origX + dx),
-      y: Math.max(0, dragState.origY + dy),
-    })
-  }, [dragState, updateBlock])
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!dragState) return
+      const dx = e.clientX - dragState.startX
+      const dy = e.clientY - dragState.startY
+      updateBlock(dragState.blockId, {
+        x: Math.max(0, dragState.origX + dx),
+        y: Math.max(0, dragState.origY + dy),
+      })
+    },
+    [dragState, updateBlock],
+  )
 
   const handleMouseUp = useCallback(() => {
     setDragState(null)
   }, [])
 
-  const handleAddBlock = useCallback((type) => {
-    const page = useNoteStore.getState().getActivePage()
-    const blocks = page?.blocks || []
-    const maxY = blocks.reduce((max, b) => Math.max(max, b.y + b.height), 0)
-    addBlock(type, { x: 40, y: maxY + 20 })
-  }, [addBlock])
+  const handleAddBlock = useCallback(
+    (type) => {
+      const page = useNoteStore.getState().getActivePage()
+      const blocks = page?.blocks || []
+      const maxY = blocks.reduce((max, b) => Math.max(max, b.y + b.height), 0)
+      addBlock(type, { x: 40, y: maxY + 20 })
+    },
+    [addBlock],
+  )
 
   if (!page) {
     return (

@@ -2,7 +2,7 @@
  * ZNotes checklist block — interactive to-do list with checkboxes.
  */
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Plus, X } from 'lucide-react'
 
 /**
@@ -22,31 +22,41 @@ export function ChecklistBlock({ block, isActive, onUpdate }) {
     }
   }, [block.content])
 
-  const updateItems = useCallback((newItems) => {
-    onUpdate({ content: JSON.stringify({ items: newItems }) })
-  }, [onUpdate])
+  const updateItems = useCallback(
+    (newItems) => {
+      onUpdate({ content: JSON.stringify({ items: newItems }) })
+    },
+    [onUpdate],
+  )
 
-  const toggleItem = useCallback((index) => {
-    const next = items.map((item, i) =>
-      i === index ? { ...item, checked: !item.checked } : item,
-    )
-    updateItems(next)
-  }, [items, updateItems])
+  const toggleItem = useCallback(
+    (index) => {
+      const next = items.map((item, i) =>
+        i === index ? { ...item, checked: !item.checked } : item,
+      )
+      updateItems(next)
+    },
+    [items, updateItems],
+  )
 
-  const updateItemText = useCallback((index, text) => {
-    const next = items.map((item, i) =>
-      i === index ? { ...item, text } : item,
-    )
-    updateItems(next)
-  }, [items, updateItems])
+  const updateItemText = useCallback(
+    (index, text) => {
+      const next = items.map((item, i) => (i === index ? { ...item, text } : item))
+      updateItems(next)
+    },
+    [items, updateItems],
+  )
 
   const addItem = useCallback(() => {
     updateItems([...items, { text: '', checked: false }])
   }, [items, updateItems])
 
-  const removeItem = useCallback((index) => {
-    updateItems(items.filter((_, i) => i !== index))
-  }, [items, updateItems])
+  const removeItem = useCallback(
+    (index) => {
+      updateItems(items.filter((_, i) => i !== index))
+    },
+    [items, updateItems],
+  )
 
   const completed = items.filter((i) => i.checked).length
   const total = items.length

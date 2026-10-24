@@ -29,7 +29,7 @@ export function BlockRenderer({ block, isActive, isDragging, onMouseDown, onUpda
     <div
       className={`group absolute transition-shadow ${
         isActive
-          ? 'z-10 ring-2 ring-violet-400/60 shadow-lg'
+          ? 'z-10 shadow-lg ring-2 ring-violet-400/60'
           : 'hover:ring-1 hover:ring-neutral-300 dark:hover:ring-neutral-600'
       } ${isDragging ? 'cursor-grabbing opacity-80' : ''}`}
       style={{
@@ -59,12 +59,8 @@ export function BlockRenderer({ block, isActive, isDragging, onMouseDown, onUpda
       )}
 
       {/* Block content */}
-      <div className="rounded-md bg-white shadow-sm dark:bg-neutral-850 dark:bg-neutral-800">
-        <BlockComponent
-          block={block}
-          isActive={isActive}
-          onUpdate={onUpdate}
-        />
+      <div className="dark:bg-neutral-850 rounded-md bg-white shadow-sm dark:bg-neutral-800">
+        <BlockComponent block={block} isActive={isActive} onUpdate={onUpdate} />
       </div>
     </div>
   )
@@ -77,12 +73,19 @@ export function BlockRenderer({ block, isActive, isDragging, onMouseDown, onUpda
  */
 function getBlockComponent(type) {
   switch (type) {
-    case BLOCK_TYPES.TEXT: return TextBlock
-    case BLOCK_TYPES.CHECKLIST: return ChecklistBlock
-    case BLOCK_TYPES.TABLE: return TableBlock
-    case BLOCK_TYPES.IMAGE: return ImageBlock
-    case BLOCK_TYPES.INK: return InkBlock
-    case BLOCK_TYPES.AUDIO: return AudioBlock
-    default: return TextBlock
+    case BLOCK_TYPES.TEXT:
+      return TextBlock
+    case BLOCK_TYPES.CHECKLIST:
+      return ChecklistBlock
+    case BLOCK_TYPES.TABLE:
+      return TableBlock
+    case BLOCK_TYPES.IMAGE:
+      return ImageBlock
+    case BLOCK_TYPES.INK:
+      return InkBlock
+    case BLOCK_TYPES.AUDIO:
+      return AudioBlock
+    default:
+      return TextBlock
   }
 }

@@ -4,6 +4,7 @@ import { StartScreen } from '../pages/StartScreen.jsx'
 import { ZWriter } from '@zoffice/writer'
 import { ZSheets } from '@zoffice/sheets'
 import { ZSlides } from '@zoffice/slides'
+import { ZNotes } from '@zoffice/notes'
 import { saveFile, saveFileAs } from '@zoffice/core'
 
 /**
@@ -28,7 +29,13 @@ export function AppLoader() {
       markClean(activeTab.id, activeTab.filePath)
     } else {
       const ext =
-        activeTab.appId === 'sheets' ? 'xlsx' : activeTab.appId === 'slides' ? 'pptx' : 'docx'
+        activeTab.appId === 'sheets'
+          ? 'xlsx'
+          : activeTab.appId === 'slides'
+            ? 'pptx'
+            : activeTab.appId === 'notes'
+              ? 'json'
+              : 'docx'
       const res = await saveFileAs(activeTab.title, contentToSave, ext)
       if (!res.cancelled && res.filePath) {
         markClean(activeTab.id, res.filePath)
@@ -48,6 +55,17 @@ export function AppLoader() {
     case 'slides':
       return (
         <ZSlides key={activeTab.id} id={activeTab.id} title={activeTab.title} onSave={handleSave} />
+      )
+    case 'notes':
+      return (
+        <ZNotes
+          key={activeTab.id}
+          id={activeTab.id}
+          title={activeTab.title}
+          initialContent={activeTab.content}
+          onChange={handleContentChange}
+          onSave={handleSave}
+        />
       )
     case 'writer':
     default:

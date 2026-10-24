@@ -7,6 +7,7 @@ export default {
     '../../packages/writer/src/**/*.{js,jsx}',
     '../../packages/sheets/src/**/*.{js,jsx}',
     '../../packages/slides/src/**/*.{js,jsx}',
+    '../../packages/notes/src/**/*.{js,jsx}',
   ],
   darkMode: 'class',
   theme: {

@@ -32,7 +32,10 @@ export function WebClipDialog({ isOpen, onClose, onClip }) {
         <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
           <div className="flex items-center gap-2">
             <Paperclip size={16} className="text-violet-600 dark:text-violet-400" />
-            <h2 id="web-clip-title" className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+            <h2
+              id="web-clip-title"
+              className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
+            >
               Web Clipper — Paste HTML or Rich Text
             </h2>
           </div>
@@ -48,7 +51,8 @@ export function WebClipDialog({ isOpen, onClose, onClip }) {
 
         <div className="p-4">
           <p className="mb-2 text-xs text-neutral-500 dark:text-neutral-400">
-            Paste HTML, tables, articles, or text copied from web pages. Dangerous scripts and styles will be stripped.
+            Paste HTML, tables, articles, or text copied from web pages. Dangerous scripts and
+            styles will be stripped.
           </p>
           <textarea
             value={content}

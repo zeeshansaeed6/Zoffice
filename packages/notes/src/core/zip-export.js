@@ -36,16 +36,23 @@ export async function exportNotebookToZip(notebook) {
   }
 
   // Add metadata
-  zip.file('metadata.json', JSON.stringify({
-    name: notebook.name,
-    color: notebook.color,
-    exportedAt: new Date().toISOString(),
-    exportedFrom: 'ZNotes (Zoffice)',
-    sections: notebook.sections.map((s) => ({
-      name: s.name,
-      pageCount: s.pages.length,
-    })),
-  }, null, 2))
+  zip.file(
+    'metadata.json',
+    JSON.stringify(
+      {
+        name: notebook.name,
+        color: notebook.color,
+        exportedAt: new Date().toISOString(),
+        exportedFrom: 'ZNotes (Zoffice)',
+        sections: notebook.sections.map((s) => ({
+          name: s.name,
+          pageCount: s.pages.length,
+        })),
+      },
+      null,
+      2,
+    ),
+  )
 
   return zip.generateAsync({ type: 'blob' })
 }
@@ -161,11 +168,13 @@ function blockToMarkdown(block, images) {
  * @returns {string}
  */
 export function sanitizeFilename(name) {
-  return name
-    .replace(/[<>:"/\\|?*]/g, '_')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 100) || 'untitled'
+  return (
+    name
+      .replace(/[<>:"/\\|?*]/g, '_')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 100) || 'untitled'
+  )
 }
 
 /**

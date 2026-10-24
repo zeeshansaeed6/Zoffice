@@ -4,8 +4,14 @@
 
 import React, { useState } from 'react'
 import {
-  Book, ChevronDown, ChevronRight, Plus, Trash2, Edit3, Search,
-  FileText, MoreHorizontal,
+  Book,
+  ChevronDown,
+  ChevronRight,
+  Plus,
+  Trash2,
+  Edit3,
+  Search,
+  FileText,
 } from 'lucide-react'
 import { useNoteStore } from '../core/note-store.js'
 import { TAG_META } from '../core/constants.js'
@@ -17,11 +23,21 @@ import { TAG_META } from '../core/constants.js'
  */
 export function NotebookSidebar({ onSearchOpen }) {
   const {
-    notebooks, activeNotebookId, activeSectionId, activePageId,
-    selectNotebook, selectSection, selectPage,
-    addNotebook, deleteNotebook, renameNotebook,
-    addSection, deleteSection,
-    addPage, deletePage, renamePage,
+    notebooks,
+    activeNotebookId,
+    activeSectionId,
+    activePageId,
+    selectNotebook,
+    selectSection,
+    selectPage,
+    addNotebook,
+    deleteNotebook,
+    renameNotebook,
+    addSection,
+    deleteSection,
+    addPage,
+    deletePage,
+    renamePage,
   } = useNoteStore()
 
   const [expandedNbs, setExpandedNbs] = useState(new Set(notebooks.map((n) => n.id)))
@@ -84,7 +100,7 @@ export function NotebookSidebar({ onSearchOpen }) {
           <div key={nb.id} className="mb-1">
             {/* Notebook row */}
             <div
-              className={`group flex items-center gap-1 rounded px-2 py-1.5 text-xs cursor-pointer ${
+              className={`group flex cursor-pointer items-center gap-1 rounded px-2 py-1.5 text-xs ${
                 activeNotebookId === nb.id
                   ? 'bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300'
                   : 'text-neutral-700 hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-800/50'
@@ -93,7 +109,10 @@ export function NotebookSidebar({ onSearchOpen }) {
               <button type="button" onClick={() => toggleExpand(nb.id)} className="shrink-0">
                 {expandedNbs.has(nb.id) ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
               </button>
-              <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ backgroundColor: nb.color }} />
+              <span
+                className="h-2.5 w-2.5 shrink-0 rounded-sm"
+                style={{ backgroundColor: nb.color }}
+              />
               {editingId === nb.id ? (
                 <input
                   value={editValue}
@@ -110,7 +129,10 @@ export function NotebookSidebar({ onSearchOpen }) {
               )}
               <div className="hidden gap-0.5 group-hover:flex">
                 <button type="button" onClick={() => startRename(nb.id, nb.name)} title="Rename">
-                  <Edit3 size={11} className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300" />
+                  <Edit3
+                    size={11}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                  />
                 </button>
                 <button type="button" onClick={() => deleteNotebook(nb.id)} title="Delete">
                   <Trash2 size={11} className="text-neutral-400 hover:text-red-500" />
@@ -127,7 +149,10 @@ export function NotebookSidebar({ onSearchOpen }) {
                     section={sec}
                     isActive={activeSectionId === sec.id}
                     activePageId={activePageId}
-                    onSelectSection={() => { selectNotebook(nb.id); selectSection(sec.id) }}
+                    onSelectSection={() => {
+                      selectNotebook(nb.id)
+                      selectSection(sec.id)
+                    }}
                     onSelectPage={selectPage}
                     onAddPage={addPage}
                     onDeletePage={deletePage}
@@ -157,29 +182,53 @@ export function NotebookSidebar({ onSearchOpen }) {
 
 /** Individual section item with its pages */
 function SectionItem({
-  section, isActive, activePageId, onSelectSection, onSelectPage,
-  onAddPage, onDeletePage, onDeleteSection,
-  editingId, editValue, setEditValue, onStartRename, onCommitRename,
+  section,
+  isActive,
+  activePageId,
+  onSelectSection,
+  onSelectPage,
+  onAddPage,
+  onDeletePage,
+  onDeleteSection,
+  editingId,
+  editValue,
+  setEditValue,
+  onStartRename,
+  onCommitRename,
 }) {
   const [expanded, setExpanded] = useState(true)
 
   return (
     <div className="mb-0.5">
       <div
-        className={`group flex items-center gap-1 rounded px-1.5 py-1 text-[11px] cursor-pointer ${
+        className={`group flex cursor-pointer items-center gap-1 rounded px-1.5 py-1 text-[11px] ${
           isActive
             ? 'bg-violet-50/60 font-medium text-violet-600 dark:bg-violet-950/30 dark:text-violet-400'
             : 'text-neutral-600 hover:bg-neutral-50 dark:text-neutral-400 dark:hover:bg-neutral-800/40'
         }`}
         onClick={onSelectSection}
       >
-        <button type="button" onClick={(e) => { e.stopPropagation(); setExpanded(!expanded) }} className="shrink-0">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            setExpanded(!expanded)
+          }}
+          className="shrink-0"
+        >
           {expanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
         </button>
         <Book size={11} style={{ color: section.color }} className="shrink-0" />
         <span className="flex-1 truncate">{section.name}</span>
         <div className="hidden gap-0.5 group-hover:flex">
-          <button type="button" onClick={(e) => { e.stopPropagation(); onDeleteSection(section.id) }} title="Delete section">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onDeleteSection(section.id)
+            }}
+            title="Delete section"
+          >
             <Trash2 size={10} className="text-neutral-400 hover:text-red-500" />
           </button>
         </div>
@@ -190,7 +239,7 @@ function SectionItem({
           {section.pages.map((pg) => (
             <div
               key={pg.id}
-              className={`group flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] cursor-pointer ${
+              className={`group flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[11px] ${
                 activePageId === pg.id
                   ? 'bg-violet-100/80 font-medium text-violet-700 dark:bg-violet-900/30 dark:text-violet-300'
                   : 'text-neutral-500 hover:bg-neutral-50 dark:text-neutral-500 dark:hover:bg-neutral-800/30'
@@ -214,15 +263,34 @@ function SectionItem({
               {pg.tags.length > 0 && (
                 <div className="flex gap-0.5">
                   {pg.tags.slice(0, 2).map((t) => (
-                    <span key={t} className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: TAG_META[t]?.color || '#6b7280' }} />
+                    <span
+                      key={t}
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: TAG_META[t]?.color || '#6b7280' }}
+                    />
                   ))}
                 </div>
               )}
               <div className="hidden gap-0.5 group-hover:flex">
-                <button type="button" onClick={(e) => { e.stopPropagation(); onStartRename(pg.id, pg.title) }}>
-                  <Edit3 size={9} className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300" />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onStartRename(pg.id, pg.title)
+                  }}
+                >
+                  <Edit3
+                    size={9}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                  />
                 </button>
-                <button type="button" onClick={(e) => { e.stopPropagation(); onDeletePage(pg.id) }}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDeletePage(pg.id)
+                  }}
+                >
                   <Trash2 size={9} className="text-neutral-400 hover:text-red-500" />
                 </button>
               </div>

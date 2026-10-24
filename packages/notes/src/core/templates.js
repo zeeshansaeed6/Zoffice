@@ -34,15 +34,24 @@ export const PAGE_TEMPLATES = [
       pg.blocks = [
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: '📅 Meeting Notes — ' + new Date().toLocaleDateString(),
-          x: 40, y: 20, width: 500, height: 36,
+          x: 40,
+          y: 20,
+          width: 500,
+          height: 36,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Attendees: ',
-          x: 40, y: 70, width: 500, height: 30,
+          x: 40,
+          y: 70,
+          width: 500,
+          height: 30,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Agenda:',
-          x: 40, y: 120, width: 500, height: 30,
+          x: 40,
+          y: 120,
+          width: 500,
+          height: 30,
         }),
         createBlock(pg.id, BLOCK_TYPES.CHECKLIST, {
           content: JSON.stringify({
@@ -51,11 +60,17 @@ export const PAGE_TEMPLATES = [
               { text: 'Action item 2', checked: false },
             ],
           }),
-          x: 40, y: 170, width: 400, height: 80,
+          x: 40,
+          y: 170,
+          width: 400,
+          height: 80,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Notes:',
-          x: 40, y: 270, width: 500, height: 30,
+          x: 40,
+          y: 270,
+          width: 500,
+          height: 30,
         }),
       ]
       return pg
@@ -71,7 +86,10 @@ export const PAGE_TEMPLATES = [
       pg.blocks = [
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: '✅ To-Do List',
-          x: 40, y: 20, width: 400, height: 36,
+          x: 40,
+          y: 20,
+          width: 400,
+          height: 36,
         }),
         createBlock(pg.id, BLOCK_TYPES.CHECKLIST, {
           content: JSON.stringify({
@@ -81,7 +99,10 @@ export const PAGE_TEMPLATES = [
               { text: 'Low priority task', checked: false },
             ],
           }),
-          x: 40, y: 70, width: 400, height: 120,
+          x: 40,
+          y: 70,
+          width: 400,
+          height: 120,
         }),
       ]
       return pg
@@ -97,11 +118,17 @@ export const PAGE_TEMPLATES = [
       pg.blocks = [
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: '🎯 Project Plan',
-          x: 40, y: 20, width: 500, height: 36,
+          x: 40,
+          y: 20,
+          width: 500,
+          height: 36,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Goal:',
-          x: 40, y: 70, width: 500, height: 30,
+          x: 40,
+          y: 70,
+          width: 500,
+          height: 30,
         }),
         createBlock(pg.id, BLOCK_TYPES.TABLE, {
           content: JSON.stringify({
@@ -111,7 +138,10 @@ export const PAGE_TEMPLATES = [
               ['Phase 2', '', 'Not Started'],
             ],
           }),
-          x: 40, y: 120, width: 500, height: 120,
+          x: 40,
+          y: 120,
+          width: 500,
+          height: 120,
         }),
       ]
       return pg
@@ -127,19 +157,32 @@ export const PAGE_TEMPLATES = [
       pg.blocks = [
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: '📖 Lecture Notes — ' + new Date().toLocaleDateString(),
-          x: 40, y: 20, width: 500, height: 36,
+          x: 40,
+          y: 20,
+          width: 500,
+          height: 36,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Topic:',
-          x: 40, y: 70, width: 500, height: 30,
+          x: 40,
+          y: 70,
+          width: 500,
+          height: 30,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Key Concepts:',
-          x: 40, y: 120, width: 500, height: 30,
+          x: 40,
+          y: 120,
+          width: 500,
+          height: 30,
         }),
         createBlock(pg.id, BLOCK_TYPES.TEXT, {
           content: 'Questions:',
-          x: 40, y: 280, width: 500, height: 30, order: 4,
+          x: 40,
+          y: 280,
+          width: 500,
+          height: 30,
+          order: 4,
         }),
       ]
       pg.tags = ['question']

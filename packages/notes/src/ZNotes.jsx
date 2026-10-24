@@ -224,21 +224,13 @@ export function ZNotes({
       <StatusBar
         leftContent={
           <>
-            <StatusBarSlot>
-              {activeNotebook ? activeNotebook.name : 'No Notebook'}
-            </StatusBarSlot>
+            <StatusBarSlot>{activeNotebook ? activeNotebook.name : 'No Notebook'}</StatusBarSlot>
             {activeSection && <StatusBarSlot>{activeSection.name}</StatusBarSlot>}
             {activePage && <StatusBarSlot>{activePage.title}</StatusBarSlot>}
-            {activePage && (
-              <StatusBarSlot>{activePage.blocks.length} blocks</StatusBarSlot>
-            )}
+            {activePage && <StatusBarSlot>{activePage.blocks.length} blocks</StatusBarSlot>}
           </>
         }
-        centerContent={
-          activePage?.tags?.length
-            ? `Tags: ${activePage.tags.join(', ')}`
-            : 'Ready'
-        }
+        centerContent={activePage?.tags?.length ? `Tags: ${activePage.tags.join(', ')}` : 'Ready'}
         zoom={zoom}
         onZoomChange={setZoom}
       />

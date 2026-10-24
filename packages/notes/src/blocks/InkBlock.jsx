@@ -63,30 +63,36 @@ export function InkBlock({ block, isActive, onUpdate }) {
     }
   }, [])
 
-  const handleMouseDown = useCallback((e) => {
-    if (!isActive) return
-    setIsDrawing(true)
-    currentPath.current = [getCanvasPoint(e)]
-  }, [isActive, getCanvasPoint])
+  const handleMouseDown = useCallback(
+    (e) => {
+      if (!isActive) return
+      setIsDrawing(true)
+      currentPath.current = [getCanvasPoint(e)]
+    },
+    [isActive, getCanvasPoint],
+  )
 
-  const handleMouseMove = useCallback((e) => {
-    if (!isDrawing || !isActive) return
-    const point = getCanvasPoint(e)
-    currentPath.current.push(point)
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!isDrawing || !isActive) return
+      const point = getCanvasPoint(e)
+      currentPath.current.push(point)
 
-    // Draw live
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    const pts = currentPath.current
-    if (pts.length < 2) return
-    ctx.beginPath()
-    ctx.strokeStyle = penColor
-    ctx.lineWidth = penSize
-    ctx.lineCap = 'round'
-    ctx.moveTo(pts[pts.length - 2].x, pts[pts.length - 2].y)
-    ctx.lineTo(point.x, point.y)
-    ctx.stroke()
-  }, [isDrawing, isActive, penColor, penSize, getCanvasPoint])
+      // Draw live
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      const pts = currentPath.current
+      if (pts.length < 2) return
+      ctx.beginPath()
+      ctx.strokeStyle = penColor
+      ctx.lineWidth = penSize
+      ctx.lineCap = 'round'
+      ctx.moveTo(pts[pts.length - 2].x, pts[pts.length - 2].y)
+      ctx.lineTo(point.x, point.y)
+      ctx.stroke()
+    },
+    [isDrawing, isActive, penColor, penSize, getCanvasPoint],
+  )
 
   const handleMouseUp = useCallback(() => {
     if (!isDrawing) return
@@ -118,7 +124,7 @@ export function InkBlock({ block, isActive, onUpdate }) {
               type="button"
               onClick={() => setPenColor(color)}
               className={`h-4 w-4 rounded-full border-2 ${
-                penColor === color ? 'border-violet-500 scale-110' : 'border-transparent'
+                penColor === color ? 'scale-110 border-violet-500' : 'border-transparent'
               }`}
               style={{ backgroundColor: color }}
             />
@@ -132,10 +138,20 @@ export function InkBlock({ block, isActive, onUpdate }) {
             <option value={2}>Medium</option>
             <option value={4}>Thick</option>
           </select>
-          <button type="button" onClick={handleUndo} title="Undo" className="text-neutral-400 hover:text-neutral-600">
+          <button
+            type="button"
+            onClick={handleUndo}
+            title="Undo"
+            className="text-neutral-400 hover:text-neutral-600"
+          >
             <Undo2 size={12} />
           </button>
-          <button type="button" onClick={handleClear} title="Clear" className="text-neutral-400 hover:text-red-500">
+          <button
+            type="button"
+            onClick={handleClear}
+            title="Clear"
+            className="text-neutral-400 hover:text-red-500"
+          >
             <Eraser size={12} />
           </button>
         </div>

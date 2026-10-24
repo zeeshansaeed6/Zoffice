@@ -34,15 +34,30 @@ export const TAG_META = {
 
 /** Default notebook colors */
 export const NOTEBOOK_COLORS = [
-  '#3b82f6', '#ef4444', '#10b981', '#f59e0b',
-  '#8b5cf6', '#ec4899', '#14b8a6', '#f97316',
-  '#6366f1', '#84cc16', '#06b6d4', '#d946ef',
+  '#3b82f6',
+  '#ef4444',
+  '#10b981',
+  '#f59e0b',
+  '#8b5cf6',
+  '#ec4899',
+  '#14b8a6',
+  '#f97316',
+  '#6366f1',
+  '#84cc16',
+  '#06b6d4',
+  '#d946ef',
 ]
 
 /** Default section colors */
 export const SECTION_COLORS = [
-  '#dbeafe', '#fee2e2', '#d1fae5', '#fef3c7',
-  '#ede9fe', '#fce7f3', '#ccfbf1', '#ffedd5',
+  '#dbeafe',
+  '#fee2e2',
+  '#d1fae5',
+  '#fef3c7',
+  '#ede9fe',
+  '#fce7f3',
+  '#ccfbf1',
+  '#ffedd5',
 ]
 
 /** Default block dimensions */

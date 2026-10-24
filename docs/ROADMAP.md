@@ -182,3 +182,24 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
 10. **Test Coverage & Zero Warnings**:
     - Comprehensive Vitest unit test suite (10 test suites, 46 tests passing in `@zoffice/slides`).
     - Zero ESLint errors or warnings across the monorepo.
+
+---
+
+## Phase 4: Companion Apps
+
+**Status:** In Progress ⏳
+
+### App 1: ZNotes (Notebook & Free-Form Canvas)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **Hierarchy Tree & Navigation** (`packages/notes/src/sidebar` & `core`): 4-level hierarchy (Notebooks > Sections > Pages > Blocks) with inline rename, add/delete, and tag indicators.
+  - **Infinite Free-Form Canvas** (`packages/notes/src/canvas`): Absolute 2D block positioning, drag repositioning, and dynamic canvas auto-expansion.
+  - **6 Rich Block Types** (`packages/notes/src/blocks`): Text (rich contentEditable), Checklist (interactive checkboxes + progress bar), Table (grid with dynamic rows/columns), Image (base64 storage with alt text), Ink/Drawing (HTML5 canvas sketching with pen colors, stroke weights, undo stack), and Audio (Web Audio API voice note recording + playback).
+  - **Tagging System & Search Engine** (`packages/notes/src/core/search-engine.js` & `dialogs/SearchDialog.jsx`): Real-time full-text search across titles, block content, and tags with contextual match snippets and one-click navigation.
+  - **Page Templates** (`packages/notes/src/core/templates.js`): Blank Page, Meeting Notes, To-Do List, Project Plan, and Lecture Notes.
+  - **Page Linking** (`packages/notes/src/core/page-link.js` & `dialogs/PageLinkDialog.jsx`): Internal wiki-style linking (`[[PageTitle|pageId]]`) with resolution and preview.
+  - **Web Clipper** (`packages/notes/src/core/web-clip.js` & `dialogs/WebClipDialog.jsx`): HTML sanitization and conversion of external web snippets into native note blocks.
+  - **Storage & Portable ZIP Export** (`packages/notes/src/core/zip-export.js` & `apps/desktop/src/main/notes-db.js`): SQLite tables in main process with typed preload IPC bridge, plus full portable `.zip` export containing GFM Markdown per page, `assets/` subfolder, and `metadata.json`.
+  - **Desktop Shell Integration**: Registered in Start Screen, `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
+  - **Test Coverage**: 27 passing unit tests across 4 test suites in `@zoffice/notes`.

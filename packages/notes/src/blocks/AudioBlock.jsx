@@ -13,7 +13,7 @@ import { formatDuration } from '../core/audio-recorder.js'
  * @param {boolean} props.isActive
  * @param {(updates: Object) => void} props.onUpdate
  */
-export function AudioBlock({ block, isActive, onUpdate }) {
+export function AudioBlock({ block, isActive: _isActive, onUpdate }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [elapsed, setElapsed] = useState(0)
@@ -95,9 +95,7 @@ export function AudioBlock({ block, isActive, onUpdate }) {
         {isRecording ? (
           <>
             <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-            <span className="text-xs font-medium text-red-500">
-              {formatDuration(elapsed)}
-            </span>
+            <span className="text-xs font-medium text-red-500">{formatDuration(elapsed)}</span>
             <button
               type="button"
               onClick={stopRecording}
@@ -128,14 +126,8 @@ export function AudioBlock({ block, isActive, onUpdate }) {
       >
         {isPlaying ? <Pause size={12} /> : <Play size={12} />}
       </button>
-      <span className="text-xs text-neutral-500">
-        🎙️ {formatDuration(data.duration || 0)}
-      </span>
-      <audio
-        ref={audioRef}
-        src={data.dataUrl}
-        onEnded={() => setIsPlaying(false)}
-      />
+      <span className="text-xs text-neutral-500">🎙️ {formatDuration(data.duration || 0)}</span>
+      <audio ref={audioRef} src={data.dataUrl} onEnded={() => setIsPlaying(false)} />
     </div>
   )
 }

@@ -9,6 +9,7 @@ import {
   LayoutTemplate,
   Trash2,
   File,
+  Book,
 } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
@@ -74,6 +75,14 @@ export function StartScreen() {
       accent: 'border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/20',
       icon: <Presentation size={32} className="text-amber-600 dark:text-amber-400" />,
     },
+    {
+      id: 'notes',
+      name: 'ZNotes',
+      tagline: 'Notebooks, notes and sketches',
+      color: 'bg-violet-600 hover:bg-violet-700 text-white',
+      accent: 'border-violet-500/20 bg-violet-50/50 dark:bg-violet-950/20',
+      icon: <Book size={32} className="text-violet-600 dark:text-violet-400" />,
+    },
   ]
 
   return (
@@ -113,7 +122,7 @@ export function StartScreen() {
           <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             {t('start.newDocument')}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {appTiles.map((app) => (
               <button
                 key={app.id}
@@ -188,6 +197,8 @@ export function StartScreen() {
                             <Sheet size={18} className="text-emerald-600" />
                           ) : item.appId === 'slides' ? (
                             <Presentation size={18} className="text-amber-600" />
+                          ) : item.appId === 'notes' ? (
+                            <Book size={18} className="text-violet-600" />
                           ) : (
                             <FileText size={18} className="text-blue-600" />
                           )}

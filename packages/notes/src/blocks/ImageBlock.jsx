@@ -23,27 +23,33 @@ export function ImageBlock({ block, isActive, onUpdate }) {
     }
   }, [block.content])
 
-  const handleFileSelect = useCallback((e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const handleFileSelect = useCallback(
+    (e) => {
+      const file = e.target.files?.[0]
+      if (!file) return
 
-    const reader = new FileReader()
-    reader.onload = (ev) => {
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        onUpdate({
+          content: JSON.stringify({
+            src: ev.target.result,
+            alt: file.name,
+          }),
+        })
+      }
+      reader.readAsDataURL(file)
+    },
+    [onUpdate],
+  )
+
+  const handleAltChange = useCallback(
+    (e) => {
       onUpdate({
-        content: JSON.stringify({
-          src: ev.target.result,
-          alt: file.name,
-        }),
+        content: JSON.stringify({ ...data, alt: e.target.value }),
       })
-    }
-    reader.readAsDataURL(file)
-  }, [onUpdate])
-
-  const handleAltChange = useCallback((e) => {
-    onUpdate({
-      content: JSON.stringify({ ...data, alt: e.target.value }),
-    })
-  }, [data, onUpdate])
+    },
+    [data, onUpdate],
+  )
 
   if (!data.src) {
     return (
@@ -73,12 +79,7 @@ export function ImageBlock({ block, isActive, onUpdate }) {
 
   return (
     <div className="p-1" data-testid="image-block">
-      <img
-        src={data.src}
-        alt={data.alt}
-        className="max-w-full rounded"
-        draggable={false}
-      />
+      <img src={data.src} alt={data.alt} className="max-w-full rounded" draggable={false} />
       {isActive && (
         <input
           type="text"

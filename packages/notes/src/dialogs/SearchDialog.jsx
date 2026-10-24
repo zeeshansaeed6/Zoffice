@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Search, X, Book, FileText, ChevronRight } from 'lucide-react'
+import { Search, X, FileText, ChevronRight } from 'lucide-react'
 import { searchAllNotes } from '../core/search-engine.js'
 
 /**
@@ -38,7 +38,10 @@ export function SearchDialog({ isOpen, onClose, notebooks, onNavigate }) {
         <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
           <div className="flex items-center gap-2">
             <Search size={16} className="text-violet-600 dark:text-violet-400" />
-            <h2 id="search-dialog-title" className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+            <h2
+              id="search-dialog-title"
+              className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
+            >
               Search All Notes
             </h2>
           </div>
@@ -83,7 +86,10 @@ export function SearchDialog({ isOpen, onClose, notebooks, onNavigate }) {
                   onClick={() => handleSelectResult(res)}
                   className="flex w-full items-start gap-2.5 rounded-lg p-2.5 text-left transition-colors hover:bg-violet-50 dark:hover:bg-violet-950/40"
                 >
-                  <FileText size={16} className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-400" />
+                  <FileText
+                    size={16}
+                    className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-400"
+                  />
                   <div className="flex-1 truncate">
                     <div className="flex items-center gap-1.5 text-xs font-medium text-neutral-900 dark:text-neutral-100">
                       <span>{res.pageTitle}</span>

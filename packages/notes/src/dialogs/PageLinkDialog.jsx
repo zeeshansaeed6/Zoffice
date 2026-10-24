@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, X, BookOpen, FileText } from 'lucide-react'
+import { Link, X, FileText } from 'lucide-react'
 import { getAllLinkablePages, createPageLink } from '../core/page-link.js'
 
 /**
@@ -17,9 +17,10 @@ export function PageLinkDialog({ isOpen, onClose, notebooks, onInsertLink }) {
 
   if (!isOpen) return null
 
-  const filteredPages = pages.filter((p) =>
-    p.title.toLowerCase().includes(filter.toLowerCase()) ||
-    p.notebookName.toLowerCase().includes(filter.toLowerCase()),
+  const filteredPages = pages.filter(
+    (p) =>
+      p.title.toLowerCase().includes(filter.toLowerCase()) ||
+      p.notebookName.toLowerCase().includes(filter.toLowerCase()),
   )
 
   const handleSelectPage = (page) => {
@@ -39,7 +40,10 @@ export function PageLinkDialog({ isOpen, onClose, notebooks, onInsertLink }) {
         <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
           <div className="flex items-center gap-2">
             <Link size={16} className="text-violet-600 dark:text-violet-400" />
-            <h2 id="page-link-title" className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+            <h2
+              id="page-link-title"
+              className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
+            >
               Insert Link to Page
             </h2>
           </div>

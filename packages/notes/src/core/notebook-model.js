@@ -54,9 +54,14 @@ import { BLOCK_TYPES, DEFAULT_BLOCK, NOTEBOOK_COLORS, SECTION_COLORS } from './c
  * @property {number} updatedAt
  */
 
-/** Generate a unique ID */
-export function generateId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+/**
+ * Generate a unique ID with optional entity prefix.
+ * @param {string} [prefix='']
+ * @returns {string}
+ */
+export function generateId(prefix = '') {
+  const p = prefix ? `${prefix}-` : ''
+  return `${p}${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 }
 
 /**
@@ -67,7 +72,7 @@ export function generateId() {
 export function createNotebook(overrides = {}) {
   const now = Date.now()
   return {
-    id: generateId(),
+    id: generateId('nb'),
     name: overrides.name || 'New Notebook',
     color: overrides.color || NOTEBOOK_COLORS[Math.floor(Math.random() * NOTEBOOK_COLORS.length)],
     sections: overrides.sections || [],
@@ -85,7 +90,7 @@ export function createNotebook(overrides = {}) {
 export function createSection(notebookId, overrides = {}) {
   const now = Date.now()
   return {
-    id: generateId(),
+    id: generateId('sec'),
     notebookId,
     name: overrides.name || 'New Section',
     color: overrides.color || SECTION_COLORS[Math.floor(Math.random() * SECTION_COLORS.length)],
@@ -105,7 +110,7 @@ export function createSection(notebookId, overrides = {}) {
 export function createPage(sectionId, overrides = {}) {
   const now = Date.now()
   return {
-    id: generateId(),
+    id: generateId('page'),
     sectionId,
     title: overrides.title || 'Untitled Page',
     tags: overrides.tags || [],
@@ -126,7 +131,7 @@ export function createPage(sectionId, overrides = {}) {
 export function createBlock(pageId, type = BLOCK_TYPES.TEXT, overrides = {}) {
   const now = Date.now()
   return {
-    id: generateId(),
+    id: generateId('block'),
     pageId,
     type,
     content: overrides.content || getDefaultContent(type),
@@ -152,7 +157,12 @@ export function getDefaultContent(type) {
     case BLOCK_TYPES.IMAGE:
       return JSON.stringify({ src: '', alt: '' })
     case BLOCK_TYPES.TABLE:
-      return JSON.stringify({ rows: [['', ''], ['', '']] })
+      return JSON.stringify({
+        rows: [
+          ['', ''],
+          ['', ''],
+        ],
+      })
     case BLOCK_TYPES.CHECKLIST:
       return JSON.stringify({ items: [{ text: '', checked: false }] })
     case BLOCK_TYPES.INK:

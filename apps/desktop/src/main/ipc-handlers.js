@@ -3,6 +3,7 @@ import { showOpenDialog, saveToFile, showSaveAsDialog, isValidExtension } from '
 import { getRecentFiles, addRecentFile, clearRecentFiles } from './recent-files.js'
 import { getSetting, setSetting } from './settings.js'
 import { saveAutosaveDocument, listAutosaveDocuments, removeAutosaveDocument } from './autosave.js'
+import * as notesDb from './notes-db.js'
 
 /**
  * Registers all validated IPC handlers for main process.
@@ -123,4 +124,18 @@ export function registerIpcHandlers(win) {
     })
     return result.response
   })
+
+  // Notes SQLite persistence
+  ipcMain.handle('notes:listNotebooks', async () => notesDb.listNotebooks())
+  ipcMain.handle('notes:saveNotebook', async (_event, nb) => notesDb.saveNotebook(nb))
+  ipcMain.handle('notes:deleteNotebook', async (_event, id) => notesDb.deleteNotebook(id))
+  ipcMain.handle('notes:listSections', async (_event, nbId) => notesDb.listSections(nbId))
+  ipcMain.handle('notes:saveSection', async (_event, sec) => notesDb.saveSection(sec))
+  ipcMain.handle('notes:deleteSection', async (_event, id) => notesDb.deleteSection(id))
+  ipcMain.handle('notes:listPages', async (_event, secId) => notesDb.listPages(secId))
+  ipcMain.handle('notes:savePage', async (_event, pg) => notesDb.savePage(pg))
+  ipcMain.handle('notes:deletePage', async (_event, id) => notesDb.deletePage(id))
+  ipcMain.handle('notes:listBlocks', async (_event, pgId) => notesDb.listBlocks(pgId))
+  ipcMain.handle('notes:saveBlock', async (_event, b) => notesDb.saveBlock(b))
+  ipcMain.handle('notes:deleteBlock', async (_event, id) => notesDb.deleteBlock(id))
 }

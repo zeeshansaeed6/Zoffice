@@ -4,12 +4,7 @@
  */
 
 import { create } from 'zustand'
-import {
-  createNotebook,
-  createSection,
-  createPage,
-  createBlock,
-} from './notebook-model.js'
+import { createNotebook, createSection, createPage, createBlock } from './notebook-model.js'
 import { BLOCK_TYPES } from './constants.js'
 
 /**
@@ -76,13 +71,13 @@ export const useNoteStore = create((set, get) => ({
   deleteNotebook: (id) => {
     set((s) => {
       const filtered = s.notebooks.filter((n) => n.id !== id)
-      const newActive = s.activeNotebookId === id
-        ? (filtered[0]?.id || null)
-        : s.activeNotebookId
+      const newActive = s.activeNotebookId === id ? filtered[0]?.id || null : s.activeNotebookId
       return {
         notebooks: filtered,
         activeNotebookId: newActive,
-        activeSectionId: newActive ? filtered.find((n) => n.id === newActive)?.sections[0]?.id || null : null,
+        activeSectionId: newActive
+          ? filtered.find((n) => n.id === newActive)?.sections[0]?.id || null
+          : null,
         activePageId: null,
       }
     })
@@ -91,9 +86,7 @@ export const useNoteStore = create((set, get) => ({
   /** Rename a notebook */
   renameNotebook: (id, name) => {
     set((s) => ({
-      notebooks: s.notebooks.map((n) =>
-        n.id === id ? { ...n, name, updatedAt: Date.now() } : n,
-      ),
+      notebooks: s.notebooks.map((n) => (n.id === id ? { ...n, name, updatedAt: Date.now() } : n)),
     }))
   },
 
@@ -198,9 +191,7 @@ export const useNoteStore = create((set, get) => ({
         ...n,
         sections: n.sections.map((sec) => ({
           ...sec,
-          pages: sec.pages.map((p) =>
-            p.id === id ? { ...p, title, updatedAt: Date.now() } : p,
-          ),
+          pages: sec.pages.map((p) => (p.id === id ? { ...p, title, updatedAt: Date.now() } : p)),
         })),
       })),
     }))
@@ -294,9 +285,7 @@ export const useNoteStore = create((set, get) => ({
           ...sec,
           pages: sec.pages.map((p) => {
             if (p.id !== pageId) return p
-            const tags = p.tags.includes(tag)
-              ? p.tags.filter((t) => t !== tag)
-              : [...p.tags, tag]
+            const tags = p.tags.includes(tag) ? p.tags.filter((t) => t !== tag) : [...p.tags, tag]
             return { ...p, tags, updatedAt: Date.now() }
           }),
         })),
