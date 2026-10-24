@@ -366,3 +366,19 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Integrated interactive featured templates and "Browse Templates" launcher into `StartScreen.jsx`.
   - Added seamless `initialContent` template loading across `ZSheets`, `ZSlides`, `ZForms`, `ZPlanner`, and `ZDraw`.
   - Verified with 8 unit tests in `packages/core/src/__tests__/templates.test.js` (total 289 tests passing).
+
+### Task 6: Optional Privacy-Preserving AI Assistant
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Architected zero-telemetry AI service (`ai-constants.js`, `ai-client.js`, `ai-service.js`) disabled by default with strict opt-in semantics.
+  - Multi-provider support:
+    - **Local Ollama**: Fully offline (`http://localhost:11434`, llama3/mistral) with zero external network connectivity.
+    - **OpenAI-Compatible**: Custom endpoints (Groq, Together, LM Studio, vLLM) with user-provided API key.
+    - **Anthropic Claude**: Official messages API (`claude-3-5-haiku-20241022`) with user-provided API key.
+  - Built unified `<AiAssistantSidebar />` component in `@zoffice/ui` with settings toggle, privacy guarantee badge, and 1-click "Insert into Document" action.
+  - Domain-specific tools integrated into primary editors:
+    - **ZWriter**: Text rewriting (formal, concise, casual, expanded), multi-format summarization (bullets, executive, brief), and language translation (Spanish, French, German, Hindi, Urdu).
+    - **ZSheets**: Natural language formula assistant generating Excel/ZSheets formulas with argument explanations.
+    - **ZSlides**: Topic-to-slide outline generation with automatic multi-slide insertion.
+  - Added Ribbon buttons and StatusBar slots in ZWriter, ZSheets, and ZSlides.
+  - Verified with 10 unit tests in `packages/core/src/__tests__/ai-service.test.js` (total 299 tests passing).

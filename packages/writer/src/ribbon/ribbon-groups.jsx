@@ -18,6 +18,7 @@ import {
   Quote,
   Code,
   CheckSquare,
+  Sparkles,
 } from 'lucide-react'
 import { LINE_SPACINGS } from './ribbon-options.js'
 import { getFontRibbonGroup } from './ribbon-font-group.jsx'
@@ -219,6 +220,20 @@ export function getHomeRibbonGroups(actions, marks) {
           size: 'large',
           icon: <CheckSquare size={18} />,
           onClick: actions.onSelectAll,
+        },
+      ],
+    },
+    {
+      id: 'ai-tools',
+      label: 'AI Tools',
+      controls: [
+        {
+          id: 'ai-assistant',
+          type: 'button',
+          label: 'AI Assistant',
+          size: 'large',
+          icon: <Sparkles size={18} className="text-purple-600" />,
+          onClick: actions.onToggleAi,
         },
       ],
     },

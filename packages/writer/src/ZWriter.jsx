@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
+import { Ribbon, StatusBar, StatusBarSlot, AiAssistantSidebar } from '@zoffice/ui'
 import { getWriterRibbonConfig } from './ribbon/ribbon-config.jsx'
 import { PaperCanvas } from './page-layout/PaperCanvas.jsx'
 import { useWriterEditor } from './core/use-writer-editor.js'
@@ -40,6 +40,18 @@ export function ZWriter({
   const [showBookmarkDialog, setShowBookmarkDialog] = useState(false)
   const [showEquationDialog, setShowEquationDialog] = useState(false)
   const [showSymbolDialog, setShowSymbolDialog] = useState(false)
+  const [showAiSidebar, setShowAiSidebar] = useState(false)
+
+  const handleAiInsert = useCallback(
+    (result) => {
+      if (editor && result) {
+        const textToInsert =
+          typeof result === 'string' ? result : result.content || result.formula || ''
+        editor.commands.insertContent(textToInsert)
+      }
+    },
+    [editor],
+  )
 
   const handleEditorChange = useCallback(
     async (html) => {
@@ -158,6 +170,7 @@ export function ZWriter({
     // Editing
     onFindReplace: () => setShowFindReplace(true),
     onSelectAll: () => actions.selectAll(editor),
+    onToggleAi: () => setShowAiSidebar((prev) => !prev),
 
     // Insert
     onInsertPageBreak: () => insertActions.insertPageBreak(editor),
@@ -180,6 +193,10 @@ export function ZWriter({
     onOpenSymbolDialog: () => setShowSymbolDialog(true),
   })
 
+  const selectedText = editor?.state?.doc
+    ? editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, ' ')
+    : ''
+
   return (
     <div
       data-testid="zwriter-app"
@@ -187,20 +204,29 @@ export function ZWriter({
     >
       <Ribbon config={ribbonConfig} />
 
-      {/* Paper-style document canvas */}
-      <PaperCanvas
-        editor={editor}
-        zoom={zoom}
-        pageSize={pageSetup.pageSize || 'a4'}
-        margins={
-          typeof pageSetup.margins === 'string'
-            ? pageSetup.margins
-            : pageSetup.margins?.top <= 48
-              ? 'narrow'
-              : 'normal'
-        }
-        onPageCountChange={setPageCount}
-      />
+      {/* Main Workspace with PaperCanvas and AiAssistantSidebar */}
+      <div className="flex flex-1 overflow-hidden">
+        <PaperCanvas
+          editor={editor}
+          zoom={zoom}
+          pageSize={pageSetup.pageSize || 'a4'}
+          margins={
+            typeof pageSetup.margins === 'string'
+              ? pageSetup.margins
+              : pageSetup.margins?.top <= 48
+                ? 'narrow'
+                : 'normal'
+          }
+          onPageCountChange={setPageCount}
+        />
+        <AiAssistantSidebar
+          isOpen={showAiSidebar}
+          onClose={() => setShowAiSidebar(false)}
+          appId="writer"
+          selectedText={selectedText}
+          onInsert={handleAiInsert}
+        />
+      </div>
 
       {/* Status Bar */}
       <StatusBar
@@ -212,6 +238,15 @@ export function ZWriter({
             <StatusBarSlot>{wordCount} words</StatusBarSlot>
             <StatusBarSlot>{characterCount} characters</StatusBarSlot>
             <StatusBarSlot>English (US)</StatusBarSlot>
+            <StatusBarSlot>
+              <button
+                type="button"
+                onClick={() => setShowAiSidebar((p) => !p)}
+                className="font-medium hover:text-purple-600 dark:hover:text-purple-400"
+              >
+                AI Assistant
+              </button>
+            </StatusBarSlot>
           </>
         }
         centerContent="Ready"

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { Ribbon, StatusBar, StatusBarSlot, useTheme } from '@zoffice/ui'
+import { Ribbon, StatusBar, StatusBarSlot, useTheme, AiAssistantSidebar } from '@zoffice/ui'
 import { getSheetsRibbonConfig } from './ribbon-config.jsx'
 import { CanvasGrid } from './grid/CanvasGrid.jsx'
 import { FormulaBar } from './formula-bar/FormulaBar.jsx'
@@ -47,6 +47,17 @@ export function ZSheets({ onSave, initialContent }) {
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState('')
   const [zoom, setZoom] = useState(100)
+  const [showAiSidebar, setShowAiSidebar] = useState(false)
+
+  const handleAiInsert = useCallback(
+    (result) => {
+      if (result) {
+        const formulaToInsert = result.formula || result.content || ''
+        handleCommitEdit(formulaToInsert)
+      }
+    },
+    [handleCommitEdit],
+  )
 
   // Formula engine instance
   const formulaEngine = useMemo(() => {
@@ -198,6 +209,7 @@ export function ZSheets({ onSave, initialContent }) {
   const ribbonConfig = getSheetsRibbonConfig({
     onSave,
     canSave: true,
+    onToggleAi: () => setShowAiSidebar((p) => !p),
   })
 
   return (
@@ -220,23 +232,31 @@ export function ZSheets({ onSave, initialContent }) {
         onFxClick={handleStartEdit}
       />
 
-      {/* High-Performance Canvas Virtual Grid */}
-      <CanvasGrid
-        sheet={activeSheet}
-        activeCell={activeCell}
-        selectedRange={selectedRange}
-        themeMode={themeMode}
-        onSelectionChange={handleSelectionChange}
-        onColResize={handleColResize}
-        onRowResize={handleRowResize}
-        isEditing={isEditing}
-        editValue={editValue}
-        onEditValueChange={setEditValue}
-        onStartEdit={handleStartEdit}
-        onCommitEdit={handleCommitEdit}
-        onCancelEdit={handleCancelEdit}
-        onClearRange={handleClearRange}
-      />
+      {/* Workspace Grid & AI Sidebar */}
+      <div className="flex flex-1 overflow-hidden">
+        <CanvasGrid
+          sheet={activeSheet}
+          activeCell={activeCell}
+          selectedRange={selectedRange}
+          themeMode={themeMode}
+          onSelectionChange={handleSelectionChange}
+          onColResize={handleColResize}
+          onRowResize={handleRowResize}
+          isEditing={isEditing}
+          editValue={editValue}
+          onEditValueChange={setEditValue}
+          onStartEdit={handleStartEdit}
+          onCommitEdit={handleCommitEdit}
+          onCancelEdit={handleCancelEdit}
+          onClearRange={handleClearRange}
+        />
+        <AiAssistantSidebar
+          isOpen={showAiSidebar}
+          onClose={() => setShowAiSidebar(false)}
+          appId="sheets"
+          onInsert={handleAiInsert}
+        />
+      </div>
 
       {/* Multi-Sheet Bottom Tabs */}
       <SheetTabBar
@@ -254,6 +274,15 @@ export function ZSheets({ onSave, initialContent }) {
             <StatusBarSlot>{coordsToCellId(activeCell.row, activeCell.col)}</StatusBarSlot>
             <StatusBarSlot>{activeSheet.name}</StatusBarSlot>
             <StatusBarSlot>Ready</StatusBarSlot>
+            <StatusBarSlot>
+              <button
+                type="button"
+                onClick={() => setShowAiSidebar((p) => !p)}
+                className="font-medium hover:text-purple-600 dark:hover:text-purple-400"
+              >
+                AI Assistant
+              </button>
+            </StatusBarSlot>
           </>
         }
         centerContent={selectionStats}

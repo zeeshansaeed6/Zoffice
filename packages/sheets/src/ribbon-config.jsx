@@ -11,6 +11,7 @@ import {
   Filter,
   Grid,
   Table,
+  Sparkles,
 } from 'lucide-react'
 
 /**
@@ -149,6 +150,20 @@ export function getSheetsRibbonConfig(actions = {}) {
                 size: 'large',
                 icon: <Sigma size={18} />,
                 onClick: actions.onAutoSum,
+              },
+            ],
+          },
+          {
+            id: 'ai-tools',
+            label: 'AI Assistance',
+            controls: [
+              {
+                id: 'ai-formula',
+                type: 'button',
+                label: 'Formula AI',
+                size: 'large',
+                icon: <Sparkles size={18} className="text-purple-600" />,
+                onClick: actions.onToggleAi,
               },
             ],
           },

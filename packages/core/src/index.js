@@ -28,4 +28,19 @@ export {
   getFeaturedTemplates,
   getCategoriesWithCounts,
 } from './templates/index.js'
+export {
+  AI_PROVIDERS,
+  PROVIDER_OPTIONS,
+  DEFAULT_AI_CONFIG,
+  REWRITE_TONES,
+  TRANSLATE_LANGUAGES,
+  sendAiPrompt,
+  loadAiConfig,
+  saveAiConfig,
+  rewriteText,
+  summarizeText,
+  translateText,
+  generateFormulaHelp,
+  generateSlideOutline,
+} from './ai/index.js'
 

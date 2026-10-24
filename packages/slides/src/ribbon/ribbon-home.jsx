@@ -17,6 +17,7 @@ import {
   SendToBack,
   AlignHorizontalDistributeCenter,
   AlignVerticalDistributeCenter,
+  Sparkles,
 } from 'lucide-react'
 import { SHAPE_TYPES } from '../core/slide-constants.js'
 
@@ -211,6 +212,20 @@ export function getHomeTab(actions = {}) {
               onClick: () => actions.onAlignElements?.('middle'),
             },
           ],
+        ],
+      },
+      {
+        id: 'ai-tools',
+        label: 'AI Tools',
+        controls: [
+          {
+            id: 'ai-slides-assistant',
+            type: 'button',
+            label: 'AI Outline',
+            size: 'large',
+            icon: <Sparkles size={18} className="text-purple-600" />,
+            onClick: actions.onToggleAi,
+          },
         ],
       },
     ],

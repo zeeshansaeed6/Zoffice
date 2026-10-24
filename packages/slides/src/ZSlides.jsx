@@ -1,14 +1,10 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
+import { Ribbon, StatusBar, StatusBarSlot, AiAssistantSidebar } from '@zoffice/ui'
 import { getSlidesRibbonConfig } from './ribbon-config.jsx'
 import { SlideCanvas } from './canvas/SlideCanvas.jsx'
 import { ThumbnailPanel } from './thumbnails/ThumbnailPanel.jsx'
-import { LayoutPickerDialog } from './dialogs/LayoutPickerDialog.jsx'
-import { ThemeGalleryDialog } from './dialogs/ThemeGalleryDialog.jsx'
-import { ExportDialog } from './dialogs/ExportDialog.jsx'
 import { AnimationPane } from './animations/AnimationPane.jsx'
-import { SlideShowView } from './presenter/SlideShowView.jsx'
-import { PresenterView } from './presenter/PresenterView.jsx'
+import { SlideDialogsOverlay } from './dialogs/SlideDialogsOverlay.jsx'
 import { createPresentationDeck, createSlide } from './core/slide-model.js'
 import { SHAPE_TYPES } from './core/slide-constants.js'
 import { createElementsForLayout, LAYOUT_TYPES } from './core/slide-layouts.js'
@@ -67,6 +63,25 @@ export function ZSlides({ onSave, initialContent }) {
   const [isAnimationPaneOpen, setIsAnimationPaneOpen] = useState(false)
   const [showMode, setShowMode] = useState(null) // 'slideshow' | 'presenter' | null
   const [showStartIndex, setShowStartIndex] = useState(0)
+  const [showAiSidebar, setShowAiSidebar] = useState(false)
+
+  const handleAiInsert = useCallback((result) => {
+    if (result?.slides && Array.isArray(result.slides)) {
+      const newSlides = result.slides.map((s, idx) => {
+        const slide = createSlide({ layout: s.layout || 'title_and_content' })
+        const elements = createElementsForLayout(s.layout || 'title_and_content', {
+          title: s.title || `Slide ${idx + 1}`,
+          body: s.bullets?.join('\n') || '',
+        })
+        return { ...slide, elements }
+      })
+      setDeck((prev) => ({
+        ...prev,
+        slides: [...prev.slides, ...newSlides],
+        activeSlideId: newSlides[0]?.id || prev.activeSlideId,
+      }))
+    }
+  }, [])
 
   const activeSlideIndex = useMemo(() => {
     const idx = deck.slides.findIndex((s) => s.id === deck.activeSlideId)
@@ -182,6 +197,7 @@ export function ZSlides({ onSave, initialContent }) {
     onAlignElements: (alignment) =>
       selectedElementIds.length > 0 &&
       setDeck((p) => alignDeckElements(p, selectedElementIds, alignment)),
+    onToggleAi: () => setShowAiSidebar((p) => !p),
     onSave,
   })
 
@@ -229,6 +245,12 @@ export function ZSlides({ onSave, initialContent }) {
             onClose={() => setIsAnimationPaneOpen(false)}
           />
         )}
+        <AiAssistantSidebar
+          isOpen={showAiSidebar}
+          onClose={() => setShowAiSidebar(false)}
+          appId="slides"
+          onInsert={handleAiInsert}
+        />
       </div>
       <StatusBar
         leftContent={
@@ -237,48 +259,39 @@ export function ZSlides({ onSave, initialContent }) {
               Slide {activeSlideIndex + 1} of {deck.slides.length}
             </StatusBarSlot>
             <StatusBarSlot>Theme: {deck.themeId}</StatusBarSlot>
+            <StatusBarSlot>
+              <button
+                type="button"
+                onClick={() => setShowAiSidebar((p) => !p)}
+                className="font-medium hover:text-purple-600 dark:hover:text-purple-400"
+              >
+                AI Assistant
+              </button>
+            </StatusBarSlot>
           </>
         }
         centerContent="Ready"
         zoom={zoom}
         onZoomChange={setZoom}
       />
-      <LayoutPickerDialog
-        isOpen={isLayoutPickerOpen}
-        onClose={() => setIsLayoutPickerOpen(false)}
-        onSelectLayout={(lt) => {
+      <SlideDialogsOverlay
+        isLayoutPickerOpen={isLayoutPickerOpen}
+        setIsLayoutPickerOpen={setIsLayoutPickerOpen}
+        isThemeGalleryOpen={isThemeGalleryOpen}
+        setIsThemeGalleryOpen={setIsThemeGalleryOpen}
+        isExportDialogOpen={isExportDialogOpen}
+        setIsExportDialogOpen={setIsExportDialogOpen}
+        showMode={showMode}
+        setShowMode={setShowMode}
+        showStartIndex={showStartIndex}
+        deck={deck}
+        handleExportPptx={handleExportPptx}
+        onApplyLayout={(lt) => {
           setDeck((p) => applySlideLayout(p, p.activeSlideId, lt))
           setSelectedElementIds([])
         }}
+        onApplyTheme={(t) => setDeck((p) => applyThemeToDeck(p, t))}
       />
-      <ThemeGalleryDialog
-        isOpen={isThemeGalleryOpen}
-        currentThemeId={deck.themeId}
-        onClose={() => setIsThemeGalleryOpen(false)}
-        onSelectTheme={(t) => setDeck((p) => applyThemeToDeck(p, t))}
-      />
-      <ExportDialog
-        isOpen={isExportDialogOpen}
-        onClose={() => setIsExportDialogOpen(false)}
-        slides={deck.slides}
-        onExportPptx={handleExportPptx}
-      />
-      {showMode === 'slideshow' && (
-        <SlideShowView
-          slides={deck.slides}
-          initialIndex={showStartIndex}
-          dimensions={deck.dimensions}
-          onExit={() => setShowMode(null)}
-        />
-      )}
-      {showMode === 'presenter' && (
-        <PresenterView
-          slides={deck.slides}
-          initialIndex={showStartIndex}
-          dimensions={deck.dimensions}
-          onExit={() => setShowMode(null)}
-        />
-      )}
     </div>
   )
 }
