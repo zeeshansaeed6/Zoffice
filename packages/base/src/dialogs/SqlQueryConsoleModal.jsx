@@ -14,11 +14,11 @@ import { executeSqlQuery } from '../core/sql-console-engine.js'
  * @param {() => void} props.onClose
  */
 export function SqlQueryConsoleModal({ isOpen, tables, onClose }) {
-  if (!isOpen) return null
-
   const defaultQuery = tables[0] ? `SELECT * FROM ${tables[0].name}` : 'SELECT * FROM Projects'
   const [query, setQuery] = useState(defaultQuery)
   const [result, setResult] = useState(null)
+
+  if (!isOpen) return null
 
   const handleRunQuery = () => {
     const res = executeSqlQuery(query, tables)
@@ -32,7 +32,7 @@ export function SqlQueryConsoleModal({ isOpen, tables, onClose }) {
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs">
+    <div className="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="flex h-[80vh] w-full max-w-3xl flex-col rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3 dark:border-slate-800">
@@ -79,7 +79,7 @@ export function SqlQueryConsoleModal({ isOpen, tables, onClose }) {
           <div className="flex justify-end">
             <button
               onClick={handleRunQuery}
-              className="flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-blue-700"
+              className="shadow-xs flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
             >
               <Play size={13} /> Run Query
             </button>

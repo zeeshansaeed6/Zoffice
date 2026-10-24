@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  FolderOpen,
-  Plus,
-  Clock,
-  LayoutTemplate,
-  Trash2,
-  File,
-} from 'lucide-react'
+import { FolderOpen, Plus, Clock, LayoutTemplate, Trash2, File } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
 import { APP_TILES, getRecentAppIcon } from './start-screen-tiles.jsx'
@@ -107,7 +100,9 @@ export function StartScreen() {
                   <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
                     {app.name}
                   </h3>
-                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{app.tagline}</p>
+                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                    {app.tagline}
+                  </p>
                 </div>
 
                 <div className="mt-4 flex items-center gap-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-300">
@@ -160,9 +155,7 @@ export function StartScreen() {
                       className="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
                     >
                       <div className="flex items-center gap-3 truncate">
-                        <span className="text-neutral-400">
-                          {getRecentAppIcon(item.appId)}
-                        </span>
+                        <span className="text-neutral-400">{getRecentAppIcon(item.appId)}</span>
                         <div className="truncate">
                           <p className="truncate text-xs font-medium text-neutral-800 dark:text-neutral-200">
                             {item.title}

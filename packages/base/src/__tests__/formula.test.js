@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {
-  evaluateFormula,
-  resolveLookupValue,
-  computeRollupValue,
-} from '../core/formula-engine.js'
+import { evaluateFormula, resolveLookupValue, computeRollupValue } from '../core/formula-engine.js'
 import { createField, createRecord, createTable } from '../core/base-model.js'
 import { FIELD_TYPES, ROLLUP_OPERATIONS } from '../core/constants.js'
 

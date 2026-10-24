@@ -68,9 +68,7 @@ export function FormView({ table, onAddRecord }) {
           <h2 className="text-base font-bold text-slate-800 dark:text-slate-100">
             {table.name} Form
           </h2>
-          <p className="mt-1 text-xs text-slate-500">
-            Submit a new record offline to this table.
-          </p>
+          <p className="mt-1 text-xs text-slate-500">Submit a new record offline to this table.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -137,7 +135,7 @@ export function FormView({ table, onAddRecord }) {
             </button>
             <button
               type="submit"
-              className="flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-blue-700"
+              className="shadow-xs flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
             >
               <Send size={13} /> Submit Record
             </button>

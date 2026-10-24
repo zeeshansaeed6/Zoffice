@@ -14,12 +14,7 @@ import { FIELD_TYPES } from '../core/constants.js'
  * @param {(tableId: string, fields?: Record<string, any>) => void} props.onAddRecord
  * @param {(record: any) => void} props.onOpenRecordModal
  */
-export function KanbanView({
-  table,
-  searchQuery,
-  onAddRecord,
-  onOpenRecordModal,
-}) {
+export function KanbanView({ table, searchQuery, onAddRecord, onOpenRecordModal }) {
   // Find group-by select field
   const selectField = useMemo(() => {
     return (
@@ -48,9 +43,7 @@ export function KanbanView({
     if (!searchQuery) return table.records
     const query = searchQuery.toLowerCase()
     return table.records.filter((rec) =>
-      Object.values(rec.fields).some((val) =>
-        String(val).toLowerCase().includes(query),
-      ),
+      Object.values(rec.fields).some((val) => String(val).toLowerCase().includes(query)),
     )
   }, [table.records, searchQuery])
 
@@ -126,11 +119,9 @@ export function KanbanView({
                 <div
                   key={record.id}
                   onClick={() => onOpenRecordModal(record)}
-                  className="cursor-pointer rounded border border-slate-200 bg-white p-3 shadow-xs transition hover:border-blue-400 hover:shadow dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-500"
+                  className="shadow-xs cursor-pointer rounded border border-slate-200 bg-white p-3 transition hover:border-blue-400 hover:shadow dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-500"
                 >
-                  <p className="text-xs font-medium text-slate-900 dark:text-slate-100">
-                    {title}
-                  </p>
+                  <p className="text-xs font-medium text-slate-900 dark:text-slate-100">{title}</p>
 
                   {/* Meta items */}
                   {metaFields.length > 0 && (

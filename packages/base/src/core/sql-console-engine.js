@@ -35,7 +35,8 @@ export function executeSqlQuery(query = '', tables = []) {
   if (!selectMatch) {
     return {
       success: false,
-      error: 'Syntax error: Only "SELECT ... FROM ... [WHERE ...] [ORDER BY ...] [LIMIT ...]" is supported.',
+      error:
+        'Syntax error: Only "SELECT ... FROM ... [WHERE ...] [ORDER BY ...] [LIMIT ...]" is supported.',
     }
   }
 
@@ -166,9 +167,7 @@ function splitSqlIdentifiers(str) {
  */
 function evaluateWhereCondition(whereClause, record, fieldByName, fieldById) {
   // Support basic binary operators: =, !=, <>, >=, <=, >, <, LIKE
-  const match = whereClause.match(
-    /^\s*(.+?)\s*(=|!=|<>|>=|<=|>|<|LIKE|like)\s*(.+?)\s*$/i,
-  )
+  const match = whereClause.match(/^\s*(.+?)\s*(=|!=|<>|>=|<=|>|<|LIKE|like)\s*(.+?)\s*$/i)
 
   if (!match) {
     throw new Error(`Unsupported WHERE clause syntax: "${whereClause}"`)
@@ -246,9 +245,11 @@ function parseSqlLiteral(token) {
  * @returns {import('./base-model.js').TableRecord[]}
  */
 function applyOrderBy(orderByClause, records, fieldByName, fieldById) {
-  const parts = orderByClause.trim().split(/\s+/)
-  const colName = parts[0].replace(/^["'`]|["'`]$/g, '')
-  const direction = (parts[1] || 'ASC').toUpperCase() === 'DESC' ? -1 : 1
+  const match = orderByClause.trim().match(/^(.+?)(?:\s+(ASC|DESC))?$/i)
+  if (!match) return records
+
+  const colName = match[1].trim().replace(/^["'`]|["'`]$/g, '')
+  const direction = (match[2] || 'ASC').toUpperCase() === 'DESC' ? -1 : 1
 
   const field = fieldByName.get(colName.toLowerCase()) || fieldById.get(colName)
   if (!field) return records

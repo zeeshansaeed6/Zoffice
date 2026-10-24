@@ -4,13 +4,7 @@
  */
 
 import { create } from 'zustand'
-import {
-  createBase,
-  createTable,
-  createField,
-  createRecord,
-  createView,
-} from './base-model.js'
+import { createBase, createTable, createField, createRecord, createView } from './base-model.js'
 import { saveBaseToStorage, loadBaseFromStorage } from './base-storage.js'
 import { VIEW_TYPES } from './constants.js'
 

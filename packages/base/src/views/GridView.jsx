@@ -18,7 +18,7 @@ import {
   Edit2,
 } from 'lucide-react'
 import { FIELD_TYPES } from '../core/constants.js'
-import { evaluateFormula, resolveLookupValue, computeRollupValue } from '../core/formula-engine.js'
+import { evaluateFormula, resolveLookupValue } from '../core/formula-engine.js'
 
 /**
  * Get Lucide icon for field type.
@@ -76,9 +76,7 @@ export function GridView({
   const filteredRecords = table.records.filter((rec) => {
     if (!searchQuery) return true
     const query = searchQuery.toLowerCase()
-    return Object.values(rec.fields).some((val) =>
-      String(val).toLowerCase().includes(query),
-    )
+    return Object.values(rec.fields).some((val) => String(val).toLowerCase().includes(query))
   })
 
   /**
@@ -227,7 +225,7 @@ export function GridView({
               key={record.id}
               className="group border-b border-slate-100 hover:bg-slate-50/70 dark:border-slate-800/60 dark:hover:bg-slate-800/30"
             >
-              <td className="border-r border-slate-150 px-2 py-1.5 text-center text-slate-400 dark:border-slate-800">
+              <td className="border-slate-150 border-r px-2 py-1.5 text-center text-slate-400 dark:border-slate-800">
                 <div className="flex items-center justify-center gap-1">
                   <span className="group-hover:hidden">{index + 1}</span>
                   <button
@@ -242,7 +240,7 @@ export function GridView({
               {table.fields.map((field) => (
                 <td
                   key={field.id}
-                  className="border-r border-slate-150 px-3 py-1.5 dark:border-slate-800"
+                  className="border-slate-150 border-r px-3 py-1.5 dark:border-slate-800"
                 >
                   {renderCellContent(record, field)}
                 </td>

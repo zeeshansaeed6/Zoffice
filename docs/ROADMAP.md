@@ -258,3 +258,22 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
   - **Multi-Format Export Engine** (`svg-exporter.js` & `ExportModal.jsx`): Pure offline export to standalone scalable vector graphic (`.svg`), lossless raster image (`.png`), and print-to-PDF (`.pdf`).
   - **SQLite Database & Desktop Shell Integration**: Stored locally in `draw_diagrams` table via `draw-db.js`, typed preload IPC bridge, Start Screen launcher tile with icon, `AppLoader` mount, and `tab-store` persistence.
   - **Test Coverage**: 18 passing unit tests across 5 test suites in `@zoffice/draw` plus Playwright E2E test in `apps/desktop/e2e/draw.spec.js`.
+
+### App 6: ZBase (Relational Database & Offline Structured Data)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **Relational Tables & Fields** (`packages/base/src/core/base-model.js` & `constants.js`): Multi-table architecture with 11 field types (text, number, date, select, multiselect, checkbox, attachment, formula, lookup, rollup, link).
+  - **Formula, Lookup & Rollup Engine** (`formula-engine.js`): Arithmetic calculations (`+`, `-`, `*`, `/`), string concatenation (`&`), field reference tokens (`{Field Name}`), relational lookups from linked tables, and aggregations (`sum`, `average`, `count`, `min`, `max`).
+  - **Interactive Multi-View Layouts**:
+    - **Grid View** (`GridView.jsx`): Interactive spreadsheet grid with inline cell editing, calculated formula displays with `fx` badge, column menus, and quick record addition.
+    - **Kanban View** (`KanbanView.jsx`): Status board grouped by select field options with card counts, color chips, and quick card creation.
+    - **Calendar View** (`CalendarView.jsx`): Monthly calendar mapping records to date fields with month navigation.
+    - **Gallery View** (`GalleryView.jsx`): Responsive card grid showcasing record attributes, tags, and update timestamps.
+    - **Form View** (`FormView.jsx`): Clean offline form submission interface directly recording new entries into database tables.
+  - **In-Memory SQL Console** (`sql-console-engine.js` & `SqlQueryConsoleModal.jsx`): Safe query execution supporting `SELECT`, `WHERE` (`=`, `!=`, `<`, `>`, `<=`, `>=`, `LIKE`), `ORDER BY` (including quoted multi-word columns), and `LIMIT`.
+  - **Portability & CSV Export**: One-click RFC 4180 compliant CSV export and import.
+  - **Main Process Backend & Storage** (`base-db.js`, `ipc-handlers.js`, `preload/base-api.js`): SQLite tables (`base_databases`) with typed preload bridge.
+  - **Desktop Shell Integration**: Registered in Start Screen (`ZBase` launcher tile with purple accent and Database icon), `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
+  - **Test Coverage**: 30 passing unit tests across 4 test suites in `@zoffice/base` plus Playwright E2E test in `apps/desktop/e2e/base.spec.js`.
+

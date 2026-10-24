@@ -16,16 +16,7 @@ import { FIELD_TYPES, SELECT_COLORS } from '../core/constants.js'
  * @param {(fieldData: any) => void} props.onSave
  * @param {() => void} props.onClose
  */
-export function FieldModal({
-  isOpen,
-  field,
-  activeTable,
-  tables,
-  onSave,
-  onClose,
-}) {
-  if (!isOpen) return null
-
+export function FieldModal({ isOpen, field, activeTable, tables, onSave, onClose }) {
   const isEditing = Boolean(field)
   const [name, setName] = useState(field?.name || 'New Field')
   const [type, setType] = useState(field?.type || FIELD_TYPES.TEXT)
@@ -40,6 +31,8 @@ export function FieldModal({
         ],
   )
   const [newOptionLabel, setNewOptionLabel] = useState('')
+
+  if (!isOpen) return null
 
   const handleAddOption = () => {
     if (!newOptionLabel.trim()) return
@@ -68,13 +61,16 @@ export function FieldModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
+    <div className="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-xl dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">
             {isEditing ? 'Edit Field' : 'Add New Field'}
           </h3>
-          <button onClick={onClose} className="rounded p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <button
+            onClick={onClose}
+            className="rounded p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
             <X size={16} />
           </button>
         </div>
@@ -120,9 +116,15 @@ export function FieldModal({
               </label>
               <div className="flex max-h-36 flex-col gap-1.5 overflow-y-auto">
                 {options.map((opt) => (
-                  <div key={opt.id} className="flex items-center justify-between rounded bg-white px-2 py-1 text-xs dark:bg-slate-900">
+                  <div
+                    key={opt.id}
+                    className="flex items-center justify-between rounded bg-white px-2 py-1 text-xs dark:bg-slate-900"
+                  >
                     <div className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: opt.color }} />
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ backgroundColor: opt.color }}
+                      />
                       <span className="text-slate-800 dark:text-slate-200">{opt.label}</span>
                     </div>
                     <button
@@ -165,10 +167,11 @@ export function FieldModal({
                 placeholder="{Budget ($)} * 0.1"
                 value={formula}
                 onChange={(e) => setFormula(e.target.value)}
-                className="mt-1 w-full font-mono text-xs rounded-md border border-slate-300 px-3 py-1.5 text-slate-800 focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
+                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-1.5 font-mono text-xs text-slate-800 focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
               />
               <p className="mt-1 text-[11px] text-slate-400">
-                Reference columns using {'{Field Name}'}. Supports arithmetic (+, -, *, /) and text (&).
+                Reference columns using {'{Field Name}'}. Supports arithmetic (+, -, *, /) and text
+                (&).
               </p>
             </div>
           )}

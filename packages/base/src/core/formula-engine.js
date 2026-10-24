@@ -26,7 +26,7 @@ export function evaluateFormula(formula = '', record, fields = []) {
   }
 
   // Replace {FieldName} tokens
-  let expr = formula.replace(/\{([^}]+)\}/g, (_match, token) => {
+  const expr = formula.replace(/\{([^}]+)\}/g, (_match, token) => {
     const raw = nameMap.get(token.trim().toLowerCase()) ?? ''
     if (typeof raw === 'number') return String(raw)
     if (typeof raw === 'string') {
@@ -67,7 +67,6 @@ export function evaluateFormula(formula = '', record, fields = []) {
 function safeEvalArithmetic(expr) {
   const sanitized = expr.replace(/\s+/g, '')
   if (/^[-+/*0-9.()]+$/.test(sanitized)) {
-    // eslint-disable-next-line no-new-func
     const result = Function(`'use strict'; return (${sanitized})`)()
     return typeof result === 'number' && !isNaN(result) ? Math.round(result * 100) / 100 : result
   }
@@ -109,9 +108,7 @@ export function computeRollupValue(
 ) {
   if (!linkedRecords.length || !targetFieldId) return 0
 
-  const values = linkedRecords
-    .map((r) => Number(r.fields[targetFieldId]))
-    .filter((n) => !isNaN(n))
+  const values = linkedRecords.map((r) => Number(r.fields[targetFieldId])).filter((n) => !isNaN(n))
 
   if (operation === ROLLUP_OPERATIONS.COUNT) {
     return values.length

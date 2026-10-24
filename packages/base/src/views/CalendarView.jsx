@@ -14,12 +14,7 @@ import { FIELD_TYPES } from '../core/constants.js'
  * @param {(field?: any) => void} props.onOpenFieldModal
  * @param {(record: any) => void} props.onOpenRecordModal
  */
-export function CalendarView({
-  table,
-  searchQuery,
-  onOpenFieldModal,
-  onOpenRecordModal,
-}) {
+export function CalendarView({ table, searchQuery, onOpenFieldModal, onOpenRecordModal }) {
   const [currentDate, setCurrentDate] = useState(new Date())
 
   // Find primary date field
@@ -59,7 +54,7 @@ export function CalendarView({
 
   if (!dateField) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-8 text-center bg-white dark:bg-slate-900">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-white p-8 text-center dark:bg-slate-900">
         <CalendarIcon size={36} className="text-slate-400" />
         <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
           No Date Field Found
@@ -131,7 +126,7 @@ export function CalendarView({
       </div>
 
       {/* Month Days Grid */}
-      <div className="grid flex-1 grid-cols-7 auto-rows-fr overflow-y-auto">
+      <div className="grid flex-1 auto-rows-fr grid-cols-7 overflow-y-auto">
         {cells.map((day, idx) => {
           if (!day) {
             return (
@@ -150,8 +145,7 @@ export function CalendarView({
             )
           })
 
-          const isToday =
-            new Date().toDateString() === new Date(year, month, day).toDateString()
+          const isToday = new Date().toDateString() === new Date(year, month, day).toDateString()
 
           return (
             <div
@@ -161,9 +155,7 @@ export function CalendarView({
               <div className="flex items-center justify-between">
                 <span
                   className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ${
-                    isToday
-                      ? 'bg-blue-600 text-white'
-                      : 'text-slate-700 dark:text-slate-300'
+                    isToday ? 'bg-blue-600 text-white' : 'text-slate-700 dark:text-slate-300'
                   }`}
                 >
                   {day}

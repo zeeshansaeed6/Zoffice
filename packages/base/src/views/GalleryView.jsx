@@ -14,12 +14,7 @@ import { FIELD_TYPES } from '../core/constants.js'
  * @param {(tableId: string, fields?: Record<string, any>) => void} props.onAddRecord
  * @param {(record: any) => void} props.onOpenRecordModal
  */
-export function GalleryView({
-  table,
-  searchQuery,
-  onAddRecord,
-  onOpenRecordModal,
-}) {
+export function GalleryView({ table, searchQuery, onAddRecord, onOpenRecordModal }) {
   const primaryField = useMemo(() => {
     return table.fields.find((f) => f.type === FIELD_TYPES.TEXT) || table.fields[0]
   }, [table.fields])
@@ -33,9 +28,7 @@ export function GalleryView({
     if (!searchQuery) return table.records
     const query = searchQuery.toLowerCase()
     return table.records.filter((rec) =>
-      Object.values(rec.fields).some((val) =>
-        String(val).toLowerCase().includes(query),
-      ),
+      Object.values(rec.fields).some((val) => String(val).toLowerCase().includes(query)),
     )
   }, [table.records, searchQuery])
 
@@ -48,7 +41,7 @@ export function GalleryView({
             <div
               key={record.id}
               onClick={() => onOpenRecordModal(record)}
-              className="group flex flex-col justify-between rounded-lg border border-slate-200 bg-white p-4 shadow-xs transition hover:border-blue-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-500 cursor-pointer"
+              className="shadow-xs group flex cursor-pointer flex-col justify-between rounded-lg border border-slate-200 bg-white p-4 transition hover:border-blue-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-500"
             >
               <div>
                 <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
@@ -62,10 +55,15 @@ export function GalleryView({
 
                     if (field.type === FIELD_TYPES.CHECKBOX) {
                       return (
-                        <div key={field.id} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+                        <div
+                          key={field.id}
+                          className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"
+                        >
                           <CheckCircle2
                             size={13}
-                            className={val ? 'text-green-500' : 'text-slate-300 dark:text-slate-600'}
+                            className={
+                              val ? 'text-green-500' : 'text-slate-300 dark:text-slate-600'
+                            }
                           />
                           <span>{field.name}</span>
                         </div>

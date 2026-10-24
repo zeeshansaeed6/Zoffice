@@ -52,7 +52,9 @@ describe('ZBase Zustand Store', () => {
 
     updateField(activeTableId, field.id, { name: 'Urgency' })
     state = useBaseStore.getState()
-    const updated = state.base.tables.find((t) => t.id === activeTableId).fields.find((f) => f.id === field.id)
+    const updated = state.base.tables
+      .find((t) => t.id === activeTableId)
+      .fields.find((f) => f.id === field.id)
     expect(updated.name).toBe('Urgency')
   })
 
@@ -69,7 +71,9 @@ describe('ZBase Zustand Store', () => {
     updateRecord(activeTableId, record.id, firstField.id, 'Updated Task')
     state = useBaseStore.getState()
     currentTable = state.base.tables.find((t) => t.id === activeTableId)
-    expect(currentTable.records.find((r) => r.id === record.id).fields[firstField.id]).toBe('Updated Task')
+    expect(currentTable.records.find((r) => r.id === record.id).fields[firstField.id]).toBe(
+      'Updated Task',
+    )
 
     deleteRecord(activeTableId, record.id)
     state = useBaseStore.getState()

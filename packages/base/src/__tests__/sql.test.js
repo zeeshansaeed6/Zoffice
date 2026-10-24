@@ -53,7 +53,10 @@ describe('ZBase SQL Console Engine', () => {
   })
 
   it('filters with LIKE operator in WHERE clause', () => {
-    const res = executeSqlQuery("SELECT * FROM Projects WHERE \"Project Name\" LIKE '%SQLite%'", tables)
+    const res = executeSqlQuery(
+      'SELECT * FROM Projects WHERE "Project Name" LIKE \'%SQLite%\'',
+      tables,
+    )
     expect(res.success).toBe(true)
     expect(res.rowCount).toBe(1)
     expect(res.rows[0]['Project Name']).toContain('Offline SQLite')

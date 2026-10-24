@@ -4,7 +4,7 @@
  * @module ZBase
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { Database, Columns, Hash } from 'lucide-react'
 import { getBaseRibbonConfig } from './ribbon-config.jsx'
@@ -74,7 +74,7 @@ export function ZBase({
     return activeTable.views.find((v) => v.id === activeViewId) || activeTable.views[0]
   }, [activeTable, activeViewId])
 
-  const handleExportCsv = () => {
+  const handleExportCsv = useCallback(() => {
     if (!activeTable) return
     const headers = activeTable.fields.map((f) => `"${f.name.replace(/"/g, '""')}"`).join(',')
     const rows = activeTable.records.map((rec) =>
@@ -93,24 +93,27 @@ export function ZBase({
     link.download = `${activeTable.name.toLowerCase().replace(/\s+/g, '_')}_export.csv`
     link.click()
     URL.revokeObjectURL(url)
-  }
+  }, [activeTable])
 
-  const handleSwitchViewType = (viewType) => {
-    if (!activeTable) return
-    const existing = activeTable.views.find((v) => v.type === viewType)
-    if (existing) {
-      setActiveView(existing.id)
-    } else {
-      const typeLabels = {
-        [VIEW_TYPES.GRID]: 'Grid',
-        [VIEW_TYPES.KANBAN]: 'Kanban',
-        [VIEW_TYPES.CALENDAR]: 'Calendar',
-        [VIEW_TYPES.GALLERY]: 'Gallery',
-        [VIEW_TYPES.FORM]: 'Form',
+  const handleSwitchViewType = useCallback(
+    (viewType) => {
+      if (!activeTable) return
+      const existing = activeTable.views.find((v) => v.type === viewType)
+      if (existing) {
+        setActiveView(existing.id)
+      } else {
+        const typeLabels = {
+          [VIEW_TYPES.GRID]: 'Grid',
+          [VIEW_TYPES.KANBAN]: 'Kanban',
+          [VIEW_TYPES.CALENDAR]: 'Calendar',
+          [VIEW_TYPES.GALLERY]: 'Gallery',
+          [VIEW_TYPES.FORM]: 'Form',
+        }
+        addView(activeTable.id, `${typeLabels[viewType]} view`, viewType)
       }
-      addView(activeTable.id, `${typeLabels[viewType]} view`, viewType)
-    }
-  }
+    },
+    [activeTable, setActiveView, addView],
+  )
 
   const ribbonActions = useMemo(() => {
     return {
@@ -121,7 +124,14 @@ export function ZBase({
       onSwitchViewType: handleSwitchViewType,
       onSave: () => {},
     }
-  }, [activeTable.id, addRecord, openFieldModal, openSqlConsole])
+  }, [
+    activeTable.id,
+    addRecord,
+    openFieldModal,
+    openSqlConsole,
+    handleExportCsv,
+    handleSwitchViewType,
+  ])
 
   const ribbonConfig = useMemo(() => {
     return getBaseRibbonConfig(ribbonActions, activeView?.type || VIEW_TYPES.GRID)
@@ -195,15 +205,15 @@ export function ZBase({
 
       <StatusBar>
         <StatusBarSlot>
-          <Database size={12} className="inline mr-1 text-blue-500" />
+          <Database size={12} className="mr-1 inline text-blue-500" />
           {base.title} &bull; {activeTable?.name}
         </StatusBarSlot>
         <StatusBarSlot>
-          <Hash size={12} className="inline mr-1 text-slate-400" />
+          <Hash size={12} className="mr-1 inline text-slate-400" />
           {activeTable?.records.length || 0} Records
         </StatusBarSlot>
         <StatusBarSlot>
-          <Columns size={12} className="inline mr-1 text-slate-400" />
+          <Columns size={12} className="mr-1 inline text-slate-400" />
           {activeTable?.fields.length || 0} Fields
         </StatusBarSlot>
         <StatusBarSlot>Offline Ready</StatusBarSlot>
