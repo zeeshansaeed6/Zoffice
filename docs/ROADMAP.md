@@ -428,6 +428,17 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Authored official [`SECURITY.md`](../SECURITY.md) detailing supported versions, confidential vulnerability disclosure SLA, process isolation, Electron sandboxing, and OS credential encryption (`safeStorage`).
   - Published detailed roadmap for v1.1, v1.2, and v2.0 below.
 
+### Task 11: Open-Source Readiness, Public Release & Documentation
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Modernized root [`README.md`](../README.md) with status badges (CI, license, version, zero-telemetry), screenshots & GIF previews, full 10-app suite matrix, "Why Zoffice" sovereignty pillars, multi-OS install guides, FAQ asserting independence from Microsoft, and community links.
+  - Upgraded [`CONTRIBUTING.md`](../CONTRIBUTING.md) with non-negotiable coding rules, good-first-issue labels guide, conventional commit conventions, and PR review workflow.
+  - Authored GitHub Discussions setup and moderation guide ([`docs/github-discussions.md`](github-discussions.md)) and issue/discussion templates (`.github/DISCUSSION_TEMPLATE/ideas.yml`).
+  - Built responsive, modern static project website in [`docs/site`](site/index.html) (`index.html`, `style.css`, `app.js`) ready for deployment to GitHub Pages.
+  - Formulated official release verification checklist in [`RELEASE_CHECKLIST.md`](../RELEASE_CHECKLIST.md).
+  - Drafted v1.0.0 public launch release notes in [`RELEASE_NOTES_v1.0.0.md`](../RELEASE_NOTES_v1.0.0.md).
+
+
 ---
 
 ## Post-v1.0 Roadmap: v1.1+ Vision & Future Architecture

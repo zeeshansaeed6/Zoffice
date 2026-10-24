@@ -1,78 +1,104 @@
 # Contributing to Zoffice
 
-Thank you for your interest in contributing to Zoffice! This guide will help you
-get started.
+Thank you for your interest in contributing to Zoffice! We are a community of open-source enthusiasts building a sovereign, offline-first productivity suite.
 
-## Development Setup
+---
+
+## 🧭 Non-Negotiable Rules (From AGENTS.md)
+
+Every pull request must strictly comply with these core rules:
+
+1. **Plain JavaScript Only:** ES2022+ modules only. **Zero TypeScript anywhere in the repository.** Use rich JSDoc (`@param`, `@returns`, `@typedef`) for editor autocompletion and static analysis.
+2. **Small Files:** Every file must remain **strictly under 300 lines**. Split components, stores, and helpers into focused modules.
+3. **No Microsoft Assets or Branding:** Never use Microsoft product names, icons, or proprietary fonts (such as Calibri or Segoe). Use open fonts (**Inter**, **Carlito**, **Liberation Sans**) and **Lucide** icons.
+4. **100% Offline-First:** No accounts, no user telemetry, no cloud phone-homes. Fonts and icons must be bundled locally, never loaded from CDNs.
+5. **Zero Lint Errors & Warnings:** ESLint (flat config) and Prettier must pass with **0 errors and 0 warnings** (`pnpm lint`).
+6. **Electron Isolation:** Context isolation enabled, node integration disabled, sandbox enabled, validated preload IPC boundary.
+
+---
+
+## 🚀 Development Setup
 
 ### Prerequisites
-
 - **Node.js** >= 20.0.0
 - **pnpm** >= 9.0.0
 - **Git**
+- C++ / Python build tools (for native `better-sqlite3` rebuilds)
 
-### Getting Started
-
+### Clone & Run
 ```bash
-# Clone the repository
+# Clone repository
 git clone https://github.com/nicholaszoffice/zoffice.git
 cd zoffice
 
-# Install dependencies (also rebuilds native modules for Electron)
+# Install dependencies (automatically rebuilds native modules for Electron)
 pnpm install
 
-# Start the development server with hot reload
+# Start in development mode with hot-reload
 pnpm dev
 
-# Run linting
-pnpm lint
-
-# Run unit tests
+# Run unit test suite
 pnpm test
 
-# Run end-to-end tests (builds first)
-pnpm test:e2e
+# Run linter
+pnpm lint
+
+# Check code formatting
+pnpm format:check
 ```
 
-## Project Structure
+---
 
-See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for a detailed overview of the
-monorepo layout and data flow.
+## 🏷️ Finding "Good First Issues"
 
-## Code Standards
+If you are new to the codebase, look for issues labeled:
 
-1. **Read [AGENTS.md](AGENTS.md)** — these are non-negotiable rules.
-2. **Plain JavaScript only** — no TypeScript. Use JSDoc for type hints.
-3. **ESLint + Prettier** — run `pnpm lint` before pushing. Zero warnings allowed.
-4. **Small files** — keep files under 300 lines.
-5. **Meaningful names** — descriptive variable, function, and file names.
+- `good first issue` — bite-sized tasks perfect for first-time contributors.
+- `help wanted` — well-scoped features and bug fixes looking for an owner.
+- `docs` — improvements to documentation, tutorials, or architecture guides.
+- `localization` — translating strings into new languages in `@zoffice/core/i18n/dictionaries/`.
+- `plugin` — creating and sharing new capability-sandboxed plugins in `plugins/`.
+- `template` — creating original templates in `packages/core/src/templates/`.
 
-## Commit Messages
+### Recommended First Tasks
+1. **Add a New Localization**:
+   Add a new dictionary file (e.g. `it.json`, `pt.json`, `ar.json`) in `packages/core/src/i18n/dictionaries/` and register it in `i18n.js`.
+2. **Build a Sandboxed Plugin**:
+   Create a new plugin under `plugins/my-plugin/` with a `manifest.json` and `index.js`.
+3. **Contribute Document Templates**:
+   Add an original resume, budget, or presentation template to `@zoffice/core/templates/`.
+4. **Formula Engine Extensions**:
+   Implement additional Excel/Spreadsheet formula functions with tests in `packages/sheets/`.
 
-Use [Conventional Commits](https://www.conventionalcommits.org/):
+---
+
+## 📝 Commit Conventions
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 feat(writer): add paragraph formatting toolbar
 fix(core): prevent autosave race condition
+perf(sheets): optimize virtualized canvas scrolling
 docs: update ARCHITECTURE.md with IPC diagram
 chore: upgrade electron to v34
 test(ui): add ribbon collapse test
 ```
 
-## Pull Request Process
+---
 
-1. Fork the repo and create a feature branch from `main`.
-2. Make your changes in small, focused commits.
-3. Ensure `pnpm lint` and `pnpm test` pass.
-4. Fill out the PR template completely.
-5. Request review from a maintainer.
+## 🔍 Pull Request Process
 
-## Reporting Bugs
+1. Fork the repo and create a topic branch from `main` (`git checkout -b feat/my-feature`).
+2. Implement your changes keeping all files under 300 lines.
+3. Add unit tests for new functionality in `__tests__/`.
+4. Ensure `pnpm lint` and `pnpm test` pass with 100% green status.
+5. Commit using conventional commit format.
+6. Submit a Pull Request targeting `main`. Fill in the PR template completely. Maintainers will review within 48 hours.
 
-Use the [Bug Report](https://github.com/nicholaszoffice/zoffice/issues/new?template=bug_report.md)
-template. Include steps to reproduce, expected vs actual behavior, and your OS/Electron version.
+---
 
-## Code of Conduct
+## 💬 Community & Questions
 
-This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). Be kind,
-be respectful, be constructive.
+- **GitHub Discussions:** Join our community forum at [github.com/nicholaszoffice/zoffice/discussions](https://github.com/nicholaszoffice/zoffice/discussions).
+- **Code of Conduct:** Please review our [Code of Conduct](CODE_OF_CONDUCT.md). Be respectful, welcoming, and collaborative.

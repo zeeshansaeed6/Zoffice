@@ -1,0 +1,28 @@
+title: "[Idea]: "
+labels: ["enhancement", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a new idea for Zoffice! Please fill out the sections below.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: What challenge or user workflow does this proposal address?
+      placeholder: Currently, when working with large spreadsheets...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed feature or workflow improvement in detail.
+      placeholder: Introduce a quick-filter bar on column headers...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative designs or solutions you considered?
