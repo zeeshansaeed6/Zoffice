@@ -13,6 +13,7 @@ export default {
     '../../packages/planner/src/**/*.{js,jsx}',
     '../../packages/draw/src/**/*.{js,jsx}',
     '../../packages/base/src/**/*.{js,jsx}',
+    '../../packages/drive/src/**/*.{js,jsx}',
   ],
   darkMode: 'class',
   theme: {

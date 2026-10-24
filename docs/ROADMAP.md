@@ -277,3 +277,31 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
   - **Desktop Shell Integration**: Registered in Start Screen (`ZBase` launcher tile with purple accent and Database icon), `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
   - **Test Coverage**: 30 passing unit tests across 4 test suites in `@zoffice/base` plus Playwright E2E test in `apps/desktop/e2e/base.spec.js`.
 
+### App 7: ZDrive (Offline Local Cloud Drive & Version Control)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **Folder Hierarchy & Navigation** (`packages/drive/src/core/drive-model.js` & `DriveSidebar.jsx`): Nested folder tree, breadcrumb trail navigation (`My Drive / ...`), color tagging (Red, Orange, Yellow, Green, Blue, Purple), Starred favorites, and Trash management.
+  - **Dual View Layouts**:
+    - **Grid View** (`DriveGridView.jsx`): Card layout with color-coded document icons for Writer, Sheets, Slides, Notes, Base, Draw, Forms, and Planner.
+    - **List View** (`DriveListView.jsx`): Tabular attribute view displaying file kind, last modified date, size, color tags, star toggling, and quick actions.
+  - **Version History & Rollback** (`VersionHistoryModal.jsx`): Automated file revision snapshotting, custom revision comments, and one-click rollback restoring any past snapshot.
+  - **Storage & Quota Analytics** (`storage-calculator.js` & `StorageAnalyticsView.jsx`): Real-time workspace disk meter, multi-color storage distribution progress bar, breakdown table by document type, and largest files leaderboard.
+  - **Main Process Backend & Storage** (`drive-db.js`, `ipc-handlers.js`, `preload/drive-api.js`): SQLite tables (`drive_items`) with transaction-safe item and version persistence.
+  - **Desktop Shell Integration**: Registered in Start Screen (`ZDrive` tile with sky accent and HardDrive icon), `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
+  - **Test Coverage**: 16 passing unit tests across 3 test suites in `@zoffice/drive` plus Playwright E2E test in `apps/desktop/e2e/drive.spec.js`.
+
+---
+
+## Phase 4 Completion Summary
+
+All 7 companion applications of the Zoffice suite have been built strictly following `AGENTS.md` rules (100% plain JavaScript ES2022+, zero TypeScript, offline-first SQLite storage, no telemetry, no Microsoft branding, Lucide icons, files strictly < 300 lines, 0 ESLint errors/warnings, Prettier formatted, with full unit test coverage and Playwright E2E tests):
+
+1. ✅ **ZNotes** (`packages/notes`) — OneNote-style freeform canvas, notebooks/sections/pages, rich blocks, tags, web clipper, audio, and portable ZIP export.
+2. ✅ **ZMail + ZCalendar** (`packages/mail`) — 3-pane email client, IMAP/SMTP accounts, recurrence calendar engine, and vCard address book.
+3. ✅ **ZForms** (`packages/forms`) — Form/survey builder with 9 question types, branching logic, live preview, offline submissions, and visual SVG analytics.
+4. ✅ **ZPlanner** (`packages/planner`) — Kanban board with custom columns, interactive checklists, Gantt timeline with SVG dependency routing, and Trello importer.
+5. ✅ **ZDraw** (`packages/draw`) — Visio-style vector diagramming suite with infinite SVG canvas, 28 shape presets across 5 categories, orthogonal/curved routing connectors, and SVG/PNG/PDF export.
+6. ✅ **ZBase** (`packages/base`) — Relational database with 11 field types, formula/lookup/rollup engines, Grid/Kanban/Calendar/Gallery/Form views, and in-memory SQL console.
+7. ✅ **ZDrive** (`packages/drive`) — Offline local cloud drive, breadcrumb navigation, dual grid/list views, revision history snapshots with rollback, and storage quota analytics.
+

@@ -19,6 +19,7 @@
     "@zoffice/base": "workspace:*",
     "@zoffice/core": "workspace:*",
     "@zoffice/draw": "workspace:*",
+    "@zoffice/drive": "workspace:*",
     "@zoffice/forms": "workspace:*",
     "@zoffice/mail": "workspace:*",
     "@zoffice/notes": "workspace:*",

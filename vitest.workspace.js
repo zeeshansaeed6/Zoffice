@@ -12,4 +12,5 @@ export default defineWorkspace([
   'packages/planner',
   'packages/draw',
   'packages/base',
+  'packages/drive',
 ])

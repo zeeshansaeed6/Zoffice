@@ -9,6 +9,7 @@ import {
   Kanban,
   PenTool,
   Database,
+  HardDrive,
 } from 'lucide-react'
 
 /**
@@ -87,6 +88,14 @@ export const APP_TILES = [
     accent: 'border-purple-500/20 bg-purple-50/50 dark:bg-purple-950/20',
     icon: <Database size={32} className="text-purple-600 dark:text-purple-400" />,
   },
+  {
+    id: 'drive',
+    name: 'ZDrive',
+    tagline: 'Offline files, storage & versions',
+    color: 'bg-sky-600 hover:bg-sky-700 text-white',
+    accent: 'border-sky-500/20 bg-sky-50/50 dark:bg-sky-950/20',
+    icon: <HardDrive size={32} className="text-sky-600 dark:text-sky-400" />,
+  },
 ]
 
 /**
@@ -112,6 +121,8 @@ export function getRecentAppIcon(appId) {
       return <PenTool size={18} className="text-cyan-600" />
     case 'base':
       return <Database size={18} className="text-purple-600" />
+    case 'drive':
+      return <HardDrive size={18} className="text-sky-600" />
     default:
       return <FileText size={18} className="text-blue-600" />
   }

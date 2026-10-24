@@ -10,6 +10,7 @@ import { ZForms } from '@zoffice/forms'
 import { ZPlanner } from '@zoffice/planner'
 import { ZDraw } from '@zoffice/draw'
 import { ZBase } from '@zoffice/base'
+import { ZDrive } from '@zoffice/drive'
 import { saveFile, saveFileAs } from '@zoffice/core'
 
 /**
@@ -119,6 +120,17 @@ export function AppLoader() {
     case 'base':
       return (
         <ZBase
+          key={activeTab.id}
+          id={activeTab.id}
+          title={activeTab.title}
+          initialContent={activeTab.content}
+          onChange={handleContentChange}
+          onSave={handleSave}
+        />
+      )
+    case 'drive':
+      return (
+        <ZDrive
           key={activeTab.id}
           id={activeTab.id}
           title={activeTab.title}

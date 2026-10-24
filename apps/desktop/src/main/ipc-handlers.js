@@ -9,6 +9,7 @@ import * as formsDb from './forms-db.js'
 import * as plannerDb from './planner-db.js'
 import * as drawDb from './draw-db.js'
 import * as baseDb from './base-db.js'
+import * as driveDb from './drive-db.js'
 
 /**
  * Registers all validated IPC handlers for main process.
@@ -195,4 +196,10 @@ export function registerIpcHandlers(win) {
   ipcMain.handle('base:getBase', async (_event, id) => baseDb.getBaseById(id))
   ipcMain.handle('base:saveBase', async (_event, base) => baseDb.saveBase(base))
   ipcMain.handle('base:deleteBase', async (_event, id) => baseDb.deleteBase(id))
+
+  // Drive SQLite persistence
+  ipcMain.handle('drive:getItems', async () => driveDb.getAllDriveItems())
+  ipcMain.handle('drive:getItem', async (_event, id) => driveDb.getDriveItemById(id))
+  ipcMain.handle('drive:saveItems', async (_event, items) => driveDb.saveDriveItems(items))
+  ipcMain.handle('drive:deleteItem', async (_event, id) => driveDb.deleteDriveItem(id))
 }

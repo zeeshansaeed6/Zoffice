@@ -10,6 +10,7 @@ import {
   Kanban,
   PenTool,
   Database,
+  HardDrive,
 } from 'lucide-react'
 
 /**
@@ -62,6 +63,8 @@ export function Tab({ tab, isActive, index, onSelect, onClose, onMove }) {
         return <PenTool size={14} className="text-cyan-600 dark:text-cyan-400" />
       case 'base':
         return <Database size={14} className="text-purple-600 dark:text-purple-400" />
+      case 'drive':
+        return <HardDrive size={14} className="text-sky-600 dark:text-sky-400" />
       default:
         return <FileText size={14} className="text-blue-600 dark:text-blue-400" />
     }

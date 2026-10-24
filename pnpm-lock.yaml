@@ -65,6 +65,9 @@ importers:
       '@zoffice/draw':
         specifier: workspace:*
         version: link:../../packages/draw
+      '@zoffice/drive':
+        specifier: workspace:*
+        version: link:../../packages/drive
       '@zoffice/forms':
         specifier: workspace:*
         version: link:../../packages/forms
@@ -172,6 +175,21 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@26.6.5)(jsdom@25.0.1)
+
+  packages/drive:
+    dependencies:
+      '@zoffice/core':
+        specifier: workspace:*
+        version: link:../core
+      '@zoffice/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lucide-react:
+        specifier: ^0.460.0
+        version: 0.460.0(react@19.3.1)
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.16(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
 
   packages/forms:
     dependencies:
