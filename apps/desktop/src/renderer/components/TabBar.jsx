@@ -45,6 +45,20 @@ export function TabBar() {
     }
   }
 
+  const handleTabListKeyDown = (e) => {
+    if (tabs.length === 0) return
+    const currentIdx = tabs.findIndex((t) => t.id === activeTabId)
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      const nextIdx = currentIdx === -1 ? 0 : (currentIdx + 1) % tabs.length
+      if (tabs[nextIdx]) setActiveTab(tabs[nextIdx].id)
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      const prevIdx = currentIdx === -1 ? tabs.length - 1 : (currentIdx - 1 + tabs.length) % tabs.length
+      if (tabs[prevIdx]) setActiveTab(tabs[prevIdx].id)
+    }
+  }
+
   return (
     <>
       <div
@@ -56,7 +70,7 @@ export function TabBar() {
           type="button"
           aria-label="Start Screen"
           onClick={() => setActiveTab(null)}
-          className={`flex h-9 items-center gap-1.5 border-r border-neutral-300 px-3 text-xs font-semibold transition-colors dark:border-neutral-800 ${
+          className={`flex h-9 items-center gap-1.5 border-r border-neutral-300 px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-neutral-800 ${
             activeTabId === null
               ? 'border-t-2 border-t-blue-600 bg-white text-blue-600 dark:border-t-blue-400 dark:bg-neutral-900 dark:text-blue-400'
               : 'text-neutral-700 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900'
@@ -67,7 +81,12 @@ export function TabBar() {
         </button>
 
         {/* Document Tabs */}
-        <div className="flex h-full flex-1 items-center overflow-x-auto">
+        <div
+          role="tablist"
+          aria-label="Document Tabs"
+          onKeyDown={handleTabListKeyDown}
+          className="flex h-full flex-1 items-center overflow-x-auto"
+        >
           {tabs.map((tab, idx) => (
             <Tab
               key={tab.id}

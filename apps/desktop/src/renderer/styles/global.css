@@ -23,6 +23,27 @@
   --zoffice-accent: #3b82f6;
 }
 
+.high-contrast {
+  --zoffice-bg: #000000;
+  --zoffice-surface: #0a0a0a;
+  --zoffice-border: #ffffff;
+  --zoffice-text: #ffffff;
+  --zoffice-text-muted: #e2e8f0;
+  --zoffice-accent: #facc15;
+}
+
+.high-contrast * {
+  border-color: #ffffff !important;
+}
+
+.high-contrast button:focus-visible,
+.high-contrast input:focus-visible,
+.high-contrast [role="button"]:focus-visible,
+.high-contrast [role="tab"]:focus-visible {
+  outline: 3px solid #facc15 !important;
+  outline-offset: 2px !important;
+}
+
 body {
   font-family:
     'Inter',

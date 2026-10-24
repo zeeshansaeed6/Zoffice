@@ -74,13 +74,24 @@ export function Tab({ tab, isActive, index, onSelect, onClose, onMove }) {
     <div
       role="tab"
       draggable
+      tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
+      aria-label={`${tab.title} tab`}
       onDragStart={handleDragStart}
       onDragEnd={() => setIsDragging(false)}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onClick={onSelect}
-      className={`group relative flex h-9 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center gap-2 border-r border-neutral-200 px-3 text-xs font-medium transition-colors dark:border-neutral-800 ${
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect()
+        } else if (e.key === 'Delete') {
+          e.preventDefault()
+          onClose()
+        }
+      }}
+      className={`group relative flex h-9 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center gap-2 border-r border-neutral-200 px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-neutral-800 ${
         isDragging ? 'opacity-40' : ''
       } ${
         isActive

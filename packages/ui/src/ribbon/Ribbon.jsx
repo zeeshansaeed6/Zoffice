@@ -82,12 +82,12 @@ export function Ribbon({
 
       {/* Tab Strip */}
       <div className="flex items-center justify-between border-b border-neutral-200 px-2 dark:border-neutral-800">
-        <div className="flex items-center gap-0.5 overflow-x-auto">
+        <div role="tablist" aria-label="Ribbon Tabs" className="flex items-center gap-0.5 overflow-x-auto">
           {config.fileMenuLabel && (
             <button
               type="button"
               onClick={config.onFileMenuClick}
-              className="mr-1 rounded bg-blue-600 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
+              className="mr-1 rounded bg-blue-600 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500"
             >
               {config.fileMenuLabel}
             </button>
@@ -100,11 +100,14 @@ export function Ribbon({
             return (
               <button
                 key={tab.id}
+                id={`ribbon-tab-${tab.id}`}
                 type="button"
                 role="tab"
+                tabIndex={isActive ? 0 : -1}
                 aria-selected={isActive}
+                aria-controls={`ribbon-panel-${tab.id}`}
                 onClick={() => handleTabClick(tab.id)}
-                className={`relative border-b-2 px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`relative border-b-2 px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   isActive
                     ? 'border-blue-600 font-semibold text-blue-600 dark:border-blue-400 dark:text-blue-400'
                     : 'border-transparent text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
@@ -133,7 +136,12 @@ export function Ribbon({
 
       {/* Tab Content Panel */}
       {!collapsed && currentTab && (
-        <div className="min-h-[88px] bg-neutral-50/70 dark:bg-neutral-900/60">
+        <div
+          role="tabpanel"
+          id={`ribbon-panel-${currentTab.id}`}
+          aria-labelledby={`ribbon-tab-${currentTab.id}`}
+          className="min-h-[88px] bg-neutral-50/70 dark:bg-neutral-900/60"
+        >
           <RibbonTab groups={currentTab.groups} />
         </div>
       )}
