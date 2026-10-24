@@ -203,3 +203,18 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
   - **Storage & Portable ZIP Export** (`packages/notes/src/core/zip-export.js` & `apps/desktop/src/main/notes-db.js`): SQLite tables in main process with typed preload IPC bridge, plus full portable `.zip` export containing GFM Markdown per page, `assets/` subfolder, and `metadata.json`.
   - **Desktop Shell Integration**: Registered in Start Screen, `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
   - **Test Coverage**: 27 passing unit tests across 4 test suites in `@zoffice/notes`.
+
+### App 2: ZMail + ZCalendar (Email, Calendar & Address Book)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **3-Pane Desktop Layout** (`packages/mail/src/mail`): Folder tree with account selector, middle conversation/message list with filter pills and search, and right reading pane with recipient chips and attachment cards.
+  - **Account Configuration & Credentials** (`AccountSetupModal.jsx` & `mail-db.js`): IMAP/SMTP host configuration with presets (Gmail, Custom), secure ports (993/465/587), and encrypted password cache via Electron `safeStorage`.
+  - **Conversation Threading & Search** (`threading.js` & `mail-search.js`): Normalized subject threading (`Re:`, `Fwd:`) and real-time full-text search across subject, body, recipients, attachments, unread, and flagged states.
+  - **Rich Compose & Attachments** (`ComposeModal.jsx`): To/Cc/Bcc address chips, subject, rich content area, file attachment picker with base64 data URL persistence.
+  - **Interactive Multi-View Calendar** (`packages/mail/src/calendar`): Month grid (7x5/6), 7-day/5-day hourly week view, and 24-hour day schedule with timed event slot creation and color presets.
+  - **Recurrence Engine** (`rrule.js`): Daily, weekly, monthly, and yearly recurring event expansion across visible date windows.
+  - **RFC 5545 iCalendar Support** (`ics.js`): Complete `.ics` export and import engine.
+  - **Address Book & Contacts** (`packages/mail/src/contacts`): Contact management with initials avatars, one-click "Send Email" action, and RFC 6350 vCard (`.vcf`) import/export.
+  - **Modular Ribbon & Shell Integration**: Dynamic ribbon switching across Mail, Calendar, and Contacts modes (`ribbon-config.jsx`), Start Screen launcher tile, `AppLoader` mount, and SQLite persistence.
+  - **Test Coverage**: 30 passing unit tests across 6 test suites in `@zoffice/mail`.

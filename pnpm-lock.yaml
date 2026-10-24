@@ -59,6 +59,9 @@ importers:
       '@zoffice/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@zoffice/mail':
+        specifier: workspace:*
+        version: link:../../packages/mail
       '@zoffice/notes':
         specifier: workspace:*
         version: link:../../packages/notes
@@ -119,6 +122,24 @@ importers:
         version: 6.4.5(@types/node@26.6.5)(jiti@1.21.7)
 
   packages/core: {}
+
+  packages/mail:
+    dependencies:
+      '@zoffice/core':
+        specifier: workspace:*
+        version: link:../core
+      '@zoffice/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lucide-react:
+        specifier: ^0.460.0
+        version: 0.460.0(react@19.3.1)
+      react:
+        specifier: '>=18.0.0'
+        version: 19.3.1
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.16(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
 
   packages/notes:
     dependencies:

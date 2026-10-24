@@ -5,6 +5,7 @@ import { ZWriter } from '@zoffice/writer'
 import { ZSheets } from '@zoffice/sheets'
 import { ZSlides } from '@zoffice/slides'
 import { ZNotes } from '@zoffice/notes'
+import { ZMail } from '@zoffice/mail'
 import { saveFile, saveFileAs } from '@zoffice/core'
 
 /**
@@ -59,6 +60,17 @@ export function AppLoader() {
     case 'notes':
       return (
         <ZNotes
+          key={activeTab.id}
+          id={activeTab.id}
+          title={activeTab.title}
+          initialContent={activeTab.content}
+          onChange={handleContentChange}
+          onSave={handleSave}
+        />
+      )
+    case 'mail':
+      return (
+        <ZMail
           key={activeTab.id}
           id={activeTab.id}
           title={activeTab.title}

@@ -7,4 +7,5 @@ export default defineWorkspace([
   'packages/sheets',
   'packages/slides',
   'packages/notes',
+  'packages/mail',
 ])

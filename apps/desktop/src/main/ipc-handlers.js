@@ -4,6 +4,7 @@ import { getRecentFiles, addRecentFile, clearRecentFiles } from './recent-files.
 import { getSetting, setSetting } from './settings.js'
 import { saveAutosaveDocument, listAutosaveDocuments, removeAutosaveDocument } from './autosave.js'
 import * as notesDb from './notes-db.js'
+import * as mailDb from './mail-db.js'
 
 /**
  * Registers all validated IPC handlers for main process.
@@ -138,4 +139,26 @@ export function registerIpcHandlers(win) {
   ipcMain.handle('notes:listBlocks', async (_event, pgId) => notesDb.listBlocks(pgId))
   ipcMain.handle('notes:saveBlock', async (_event, b) => notesDb.saveBlock(b))
   ipcMain.handle('notes:deleteBlock', async (_event, id) => notesDb.deleteBlock(id))
+
+  // Mail & Credentials SQLite persistence
+  ipcMain.handle('mail:getAccounts', async () => mailDb.getAccounts())
+  ipcMain.handle('mail:saveAccount', async (_event, acc, pwd) => mailDb.saveAccount(acc, pwd))
+  ipcMain.handle('mail:deleteAccount', async (_event, id) => mailDb.deleteAccount(id))
+  ipcMain.handle('mail:getMessages', async (_event, accId, fldId) =>
+    mailDb.getMessages(accId, fldId),
+  )
+  ipcMain.handle('mail:saveMessage', async (_event, msg) => mailDb.saveMessage(msg))
+  ipcMain.handle('mail:deleteMessage', async (_event, id) => mailDb.deleteMessage(id))
+  ipcMain.handle('mail:markRead', async (_event, id, unread) => mailDb.setMessageRead(id, unread))
+  ipcMain.handle('mail:setFlag', async (_event, id, flagged) => mailDb.setMessageFlag(id, flagged))
+
+  // Calendar persistence
+  ipcMain.handle('calendar:getEvents', async () => mailDb.getEvents())
+  ipcMain.handle('calendar:saveEvent', async (_event, ev) => mailDb.saveEvent(ev))
+  ipcMain.handle('calendar:deleteEvent', async (_event, id) => mailDb.deleteEvent(id))
+
+  // Contacts persistence
+  ipcMain.handle('contacts:getContacts', async () => mailDb.getContacts())
+  ipcMain.handle('contacts:saveContact', async (_event, c) => mailDb.saveContact(c))
+  ipcMain.handle('contacts:deleteContact', async (_event, id) => mailDb.deleteContact(id))
 }

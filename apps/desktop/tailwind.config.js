@@ -8,6 +8,7 @@ export default {
     '../../packages/sheets/src/**/*.{js,jsx}',
     '../../packages/slides/src/**/*.{js,jsx}',
     '../../packages/notes/src/**/*.{js,jsx}',
+    '../../packages/mail/src/**/*.{js,jsx}',
   ],
   darkMode: 'class',
   theme: {

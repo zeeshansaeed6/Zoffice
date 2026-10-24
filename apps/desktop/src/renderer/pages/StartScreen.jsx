@@ -10,6 +10,7 @@ import {
   Trash2,
   File,
   Book,
+  Mail,
 } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
@@ -82,6 +83,14 @@ export function StartScreen() {
       color: 'bg-violet-600 hover:bg-violet-700 text-white',
       accent: 'border-violet-500/20 bg-violet-50/50 dark:bg-violet-950/20',
       icon: <Book size={32} className="text-violet-600 dark:text-violet-400" />,
+    },
+    {
+      id: 'mail',
+      name: 'ZMail',
+      tagline: 'Email, calendar and contacts',
+      color: 'bg-indigo-600 hover:bg-indigo-700 text-white',
+      accent: 'border-indigo-500/20 bg-indigo-50/50 dark:bg-indigo-950/20',
+      icon: <Mail size={32} className="text-indigo-600 dark:text-indigo-400" />,
     },
   ]
 
@@ -199,6 +208,8 @@ export function StartScreen() {
                             <Presentation size={18} className="text-amber-600" />
                           ) : item.appId === 'notes' ? (
                             <Book size={18} className="text-violet-600" />
+                          ) : item.appId === 'mail' ? (
+                            <Mail size={18} className="text-indigo-600" />
                           ) : (
                             <FileText size={18} className="text-blue-600" />
                           )}

@@ -38,7 +38,7 @@ export function generateId(prefix = '') {
  */
 export function createAccount(overrides = {}) {
   return {
-    id: generateId('acc'),
+    id: overrides.id || generateId('acc'),
     name: overrides.name || 'Personal Account',
     email: overrides.email || 'user@example.com',
     imapHost: overrides.imapHost || 'imap.example.com',
@@ -69,7 +69,7 @@ export function createAccount(overrides = {}) {
  */
 export function createAttachment(overrides = {}) {
   return {
-    id: generateId('att'),
+    id: overrides.id || generateId('att'),
     filename: overrides.filename || 'attachment.bin',
     size: overrides.size || 0,
     mimeType: overrides.mimeType || 'application/octet-stream',
@@ -106,8 +106,8 @@ export function createAttachment(overrides = {}) {
  */
 export function createMessage(overrides = {}) {
   const now = Date.now()
-  const id = generateId('msg')
-  const threadId = overrides.threadId || id
+  const id = overrides.id || generateId('msg')
+  const threadId = overrides.threadId !== undefined ? overrides.threadId : id
 
   return {
     id,
@@ -149,7 +149,7 @@ export function createMessage(overrides = {}) {
  */
 export function createFolder(accountId, type = FOLDER_TYPES.INBOX, overrides = {}) {
   return {
-    id: generateId('fld'),
+    id: overrides.id || generateId('fld'),
     accountId,
     name: overrides.name || type.charAt(0).toUpperCase() + type.slice(1),
     type,
