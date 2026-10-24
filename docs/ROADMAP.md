@@ -382,3 +382,18 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
     - **ZSlides**: Topic-to-slide outline generation with automatic multi-slide insertion.
   - Added Ribbon buttons and StatusBar slots in ZWriter, ZSheets, and ZSlides.
   - Verified with 10 unit tests in `packages/core/src/__tests__/ai-service.test.js` (total 299 tests passing).
+
+### Task 7: Localization & Bidirectional (RTL) Support
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Expanded `@zoffice/core` i18n engine with 6 official language dictionaries:
+    - **English (`en`)**: Primary reference dictionary covering all 10 apps, ribbon tabs, dialogs, AI, and settings.
+    - **Hindi (`hi`)**: Full Devanagari localization (हिन्दी).
+    - **Urdu (`ur`)**: Full Nastaliq/Arabic-script localization (اردو) with Right-to-Left bidirectional layout support.
+    - **Spanish (`es`)**: Complete Latin American and European Spanish localization (Español).
+    - **French (`fr`)**: Complete Francophone localization (Français).
+    - **German (`de`)**: Complete German localization (Deutsch).
+  - Implemented automatic HTML `lang` and `dir="rtl"` attribute updates on `document.documentElement` when switching to RTL languages (`ur`).
+  - Added RTL layout support to `PaperCanvas` and text alignment in ZWriter.
+  - Added locale subscriber hook (`subscribeLocale`) and English fallback for missing keys.
+  - Verified with 7 unit tests in `packages/core/src/__tests__/i18n.test.js` (total 301 tests passing).

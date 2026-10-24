@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Zoffice",
+    "tagline": "Votre suite bureautique libre, hors-ligne et open-source",
+    "version": "Version {version}"
+  },
+  "start": {
+    "title": "Accueil",
+    "welcome": "Créez des documents, analysez vos feuilles de calcul, concevez des présentations et organisez vos projets — 100% hors-ligne.",
+    "newDocument": "Nouveau",
+    "openExisting": "Ouvrir un fichier",
+    "openFile": "Ouvrir",
+    "recentFiles": "Fichiers récents",
+    "templates": "Modèles",
+    "noRecent": "Aucun document récent",
+    "clearRecent": "Effacer l'historique",
+    "templatesComing": "Modèles bientôt disponibles",
+    "browseTemplates": "Parcourir les modèles"
+  },
+  "apps": {
+    "writer": { "name": "ZWriter", "description": "Traitement de texte et rédaction" },
+    "sheets": { "name": "ZSheets", "description": "Tableur et feuilles de calcul" },
+    "slides": { "name": "ZSlides", "description": "Présentations et diapositives" },
+    "notes": { "name": "ZNotes", "description": "Bloc-notes et canevas libre" },
+    "mail": { "name": "ZMail", "description": "Messagerie et calendriers" },
+    "forms": { "name": "ZForms", "description": "Générateur de formulaires" },
+    "planner": { "name": "ZPlanner", "description": "Tableaux Kanban et gestion de projet" },
+    "draw": { "name": "ZDraw", "description": "Schémas vectoriels et diagrammes" },
+    "base": { "name": "ZBase", "description": "Bases de données locales SQLite" },
+    "drive": { "name": "ZDrive", "description": "Gestionnaire de fichiers local" }
+  },
+  "ribbon": {
+    "home": "Accueil",
+    "insert": "Insertion",
+    "layout": "Mise en page",
+    "view": "Affichage",
+    "formulas": "Formules",
+    "data": "Données",
+    "design": "Conception",
+    "transitions": "Transitions",
+    "animations": "Animations",
+    "slideshow": "Diaporama",
+    "collapse": "Réduire le ruban",
+    "expand": "Agrandir le ruban"
+  },
+  "toolbar": {
+    "save": "Enregistrer",
+    "undo": "Annuler",
+    "redo": "Rétablir",
+    "print": "Imprimer"
+  },
+  "tabs": {
+    "close": "Fermer",
+    "closeConfirm": "Voulez-vous enregistrer les modifications apportées à \"{title}\" ?",
+    "unsavedChanges": "Modifications non enregistrées"
+  },
+  "file": {
+    "new": "Nouveau",
+    "open": "Ouvrir",
+    "save": "Enregistrer",
+    "saveAs": "Enregistrer sous",
+    "untitled": "Sans titre"
+  },
+  "dialog": {
+    "save": "Enregistrer",
+    "dontSave": "Ne pas enregistrer",
+    "cancel": "Annuler",
+    "ok": "OK",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "statusBar": {
+    "words": "{count} mots",
+    "pages": "Page {current} sur {total}",
+    "zoom": "Zoom",
+    "ready": "Prêt"
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "highContrast": "Contraste élevé",
+    "system": "Système",
+    "settings": "Paramètres du thème"
+  },
+  "ai": {
+    "title": "Assistant IA",
+    "enable": "Activer l'assistant",
+    "disabledNotice": "L'IA est actuellement désactivée",
+    "offlineNotice": "Désactivée par défaut &bull; Zéro télémétrie",
+    "generate": "Générer avec l'IA",
+    "insert": "Insérer dans le document"
+  },
+  "templates": {
+    "galleryTitle": "Galerie de modèles",
+    "useTemplate": "Utiliser le modèle",
+    "search": "Rechercher parmi 20+ modèles..."
+  },
+  "settings": {
+    "title": "Centre de configuration",
+    "appearance": "Apparence",
+    "typography": "Typographie",
+    "language": "Langue et région",
+    "plugins": "Extensions et modules",
+    "privacy": "Confidentialité et sécurité"
+  },
+  "recovery": {
+    "title": "Récupérer le travail non enregistré",
+    "message": "Zoffice a détecté des documents non enregistrés d'une session précédente. Souhaitez-vous les récupérer ?",
+    "recover": "Récupérer",
+    "discard": "Ignorer"
+  },
+  "errors": {
+    "fileNotFound": "Fichier introuvable : {path}",
+    "saveFailed": "Échec de l'enregistrement : {reason}",
+    "invalidFileType": "Type de fichier non supporté : {ext}"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Zoffice",
+    "tagline": "आपका मुफ़्त, ऑफ़लाइन-प्रथम, ओपन-सोर्स ऑफ़िस सूट",
+    "version": "संस्करण {version}"
+  },
+  "start": {
+    "title": "आरंभ",
+    "welcome": "दस्तावेज़ बनाएं, स्प्रेडशीट का विश्लेषण करें, प्रस्तुतियां डिज़ाइन करें और अपने कार्य को व्यवस्थित करें — 100% ऑफ़लाइन।",
+    "newDocument": "नया",
+    "openExisting": "मौजूदा फ़ाइल खोलें",
+    "openFile": "फ़ाइल खोलें",
+    "recentFiles": "हाल की फ़ाइलें",
+    "templates": "टेम्पलेट्स",
+    "noRecent": "अभी कोई हालिया दस्तावेज़ नहीं हैं",
+    "clearRecent": "हाल का इतिहास साफ़ करें",
+    "templatesComing": "टेम्पलेट्स शीघ्र आ रहे हैं",
+    "browseTemplates": "टेम्पलेट्स ब्राउज़ करें"
+  },
+  "apps": {
+    "writer": { "name": "ZWriter", "description": "दस्तावेज़ और शब्द संसाधन" },
+    "sheets": { "name": "ZSheets", "description": "स्प्रेडशीट और गणनाएं" },
+    "slides": { "name": "ZSlides", "description": "प्रस्तुतियां और स्लाइड शो" },
+    "notes": { "name": "ZNotes", "description": "मुक्त कैनवास और नोटबुक" },
+    "mail": { "name": "ZMail", "description": "ईमेल और कैलेंडर" },
+    "forms": { "name": "ZForms", "description": "फ़ॉर्म निर्माता और सर्वेक्षण" },
+    "planner": { "name": "ZPlanner", "description": "कान्बान और परियोजना बोर्ड" },
+    "draw": { "name": "ZDraw", "description": "वेक्टर आरेख और वास्तुकला" },
+    "base": { "name": "ZBase", "description": "स्थानीय SQLite डेटाबेस" },
+    "drive": { "name": "ZDrive", "description": "फ़ाइल प्रबंधक" }
+  },
+  "ribbon": {
+    "home": "होम",
+    "insert": "सम्मिलित करें",
+    "layout": "लेआउट",
+    "view": "देखें",
+    "formulas": "सूत्र",
+    "data": "डेटा",
+    "design": "डिज़ाइन",
+    "transitions": "संक्रमण",
+    "animations": "एनीमेशन",
+    "slideshow": "स्लाइड शो",
+    "collapse": "रिबन समेटें",
+    "expand": "रिबन फैलाएं"
+  },
+  "toolbar": {
+    "save": "सहेजें",
+    "undo": "पूर्ववत करें",
+    "redo": "पुनः करें",
+    "print": "प्रिंट"
+  },
+  "tabs": {
+    "close": "बंद करें",
+    "closeConfirm": "क्या आप \"{title}\" में किए गए परिवर्तनों को सहेजना चाहते हैं?",
+    "unsavedChanges": "असहेजे गए परिवर्तन"
+  },
+  "file": {
+    "new": "नया",
+    "open": "खोलें",
+    "save": "सहेजें",
+    "saveAs": "इस रूप में सहेजें",
+    "untitled": "शीर्षकहीन"
+  },
+  "dialog": {
+    "save": "सहेजें",
+    "dontSave": "न सहेजें",
+    "cancel": "रद्द करें",
+    "ok": "ठीक है",
+    "yes": "हाँ",
+    "no": "नहीं"
+  },
+  "statusBar": {
+    "words": "{count} शब्द",
+    "pages": "पृष्ठ {current} का {total}",
+    "zoom": "ज़ूम",
+    "ready": "तैयार"
+  },
+  "theme": {
+    "light": "हल्का (लाइट)",
+    "dark": "गहरा (डार्क)",
+    "highContrast": "उच्च कंट्रास्ट",
+    "system": "सिस्टम",
+    "settings": "थीम सेटिंग्स"
+  },
+  "ai": {
+    "title": "एआई सहायक",
+    "enable": "सहायक सक्षम करें",
+    "disabledNotice": "एआई वर्तमान में अक्षम है",
+    "offlineNotice": "डिफ़ॉल्ट रूप से बंद &bull; शून्य टेलीमेट्री",
+    "generate": "एआई से उत्पन्न करें",
+    "insert": "दस्तावेज़ में जोड़ें"
+  },
+  "templates": {
+    "galleryTitle": "टेम्पलेट्स गैलरी",
+    "useTemplate": "टेम्पलेट का उपयोग करें",
+    "search": "20+ मूल टेम्पलेट्स खोजें..."
+  },
+  "settings": {
+    "title": "सेटिंग्स केंद्र",
+    "appearance": "दिखावट",
+    "typography": "टाइपोग्राफी",
+    "language": "भाषा और क्षेत्र",
+    "plugins": "प्लगइन्स",
+    "privacy": "गोपनीयता और सुरक्षा"
+  },
+  "recovery": {
+    "title": "असहेजे गए कार्य को पुनर्प्राप्त करें",
+    "message": "Zoffice को पिछले सत्र के असहेजे गए दस्तावेज़ मिले। क्या आप उन्हें पुनर्प्राप्त करना चाहते हैं?",
+    "recover": "पुनर्प्राप्त करें",
+    "discard": "खारिज करें"
+  },
+  "errors": {
+    "fileNotFound": "फ़ाइल नहीं मिली: {path}",
+    "saveFailed": "फ़ाइल सहेजने में विफल: {reason}",
+    "invalidFileType": "असमर्थित फ़ाइल प्रकार: {ext}"
+  }
+}

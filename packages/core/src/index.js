@@ -1,4 +1,13 @@
-export { t, setLocale, getLocale, registerLocale } from './i18n/i18n.js'
+export {
+  t,
+  setLocale,
+  getLocale,
+  registerLocale,
+  SUPPORTED_LOCALES,
+  RTL_LOCALES,
+  isRtlLocale,
+  subscribeLocale,
+} from './i18n/i18n.js'
 export { createShortcutRegistry } from './shortcuts/shortcut-registry.js'
 export { createUndoRedoStack } from './undo-redo/undo-redo.js'
 export {

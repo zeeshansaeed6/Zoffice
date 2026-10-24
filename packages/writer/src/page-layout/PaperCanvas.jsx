@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { EditorContent } from '@tiptap/react'
+import { isRtlLocale } from '@zoffice/core'
 import { PAGE_SIZES, PAGE_MARGINS, calculatePageCount } from './page-utils.js'
 
 /**
@@ -20,6 +21,7 @@ export function PaperCanvas({
   onPageCountChange,
 }) {
   const containerRef = useRef(null)
+  const isRtl = isRtlLocale()
   const sizeConfig = PAGE_SIZES[pageSize] || PAGE_SIZES.a4
   const marginConfig = PAGE_MARGINS[margins] || PAGE_MARGINS.normal
 
@@ -44,7 +46,10 @@ export function PaperCanvas({
       <div
         ref={containerRef}
         data-testid="paper-sheet"
-        className="relative origin-top rounded-sm border border-neutral-300 bg-white shadow-xl transition-transform dark:border-neutral-800 dark:bg-neutral-900"
+        dir={isRtl ? 'rtl' : 'ltr'}
+        className={`relative origin-top rounded-sm border border-neutral-300 bg-white shadow-xl transition-transform dark:border-neutral-800 dark:bg-neutral-900 ${
+          isRtl ? 'text-right' : 'text-left'
+        }`}
         style={{
           width: `${sizeConfig.widthPx}px`,
           minHeight: `${sizeConfig.heightPx}px`,
@@ -52,7 +57,7 @@ export function PaperCanvas({
           paddingBottom: `${marginConfig.bottom}px`,
           paddingLeft: `${marginConfig.left}px`,
           paddingRight: `${marginConfig.right}px`,
-          transform: `scale(${zoom / 100})`,
+          transform: `${zoom !== 100 ? `scale(${zoom / 100})` : 'none'}`,
         }}
       >
         <EditorContent editor={editor} />

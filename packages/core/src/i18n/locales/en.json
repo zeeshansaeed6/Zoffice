@@ -1,32 +1,33 @@
 {
   "app": {
     "name": "Zoffice",
-    "tagline": "Your free, open-source office suite",
+    "tagline": "Your free, offline-first, open-source office suite",
     "version": "Version {version}"
   },
   "start": {
     "title": "Start",
+    "welcome": "Create documents, analyze spreadsheets, design presentations, and organize your work — 100% offline.",
     "newDocument": "New",
+    "openExisting": "Open Existing",
     "openFile": "Open File",
     "recentFiles": "Recent Files",
     "templates": "Templates",
-    "noRecentFiles": "No recent files yet",
+    "noRecent": "No recent documents yet",
     "clearRecent": "Clear Recent",
-    "templatesComing": "Templates coming soon"
+    "templatesComing": "Templates coming soon",
+    "browseTemplates": "Browse Templates"
   },
   "apps": {
-    "writer": {
-      "name": "ZWriter",
-      "description": "Word processing"
-    },
-    "sheets": {
-      "name": "ZSheets",
-      "description": "Spreadsheets"
-    },
-    "slides": {
-      "name": "ZSlides",
-      "description": "Presentations"
-    }
+    "writer": { "name": "ZWriter", "description": "Word processing & documents" },
+    "sheets": { "name": "ZSheets", "description": "Spreadsheets & calculations" },
+    "slides": { "name": "ZSlides", "description": "Presentations & slide decks" },
+    "notes": { "name": "ZNotes", "description": "Freeform canvas & notebook" },
+    "mail": { "name": "ZMail", "description": "Mailbox & calendars" },
+    "forms": { "name": "ZForms", "description": "Form builder & surveys" },
+    "planner": { "name": "ZPlanner", "description": "Kanban & project boards" },
+    "draw": { "name": "ZDraw", "description": "Vector diagrams & architecture" },
+    "base": { "name": "ZBase", "description": "Local SQLite databases" },
+    "drive": { "name": "ZDrive", "description": "Local workspace file manager" }
   },
   "ribbon": {
     "home": "Home",
@@ -37,6 +38,8 @@
     "data": "Data",
     "design": "Design",
     "transitions": "Transitions",
+    "animations": "Animations",
+    "slideshow": "Slide Show",
     "collapse": "Collapse Ribbon",
     "expand": "Expand Ribbon"
   },
@@ -75,8 +78,30 @@
   "theme": {
     "light": "Light",
     "dark": "Dark",
+    "highContrast": "High Contrast",
     "system": "System",
     "settings": "Theme Settings"
+  },
+  "ai": {
+    "title": "AI Assistant",
+    "enable": "Enable Assistant",
+    "disabledNotice": "AI is Currently Disabled",
+    "offlineNotice": "Off by default &bull; Zero telemetry",
+    "generate": "Generate with AI",
+    "insert": "Insert into Document"
+  },
+  "templates": {
+    "galleryTitle": "Templates Gallery",
+    "useTemplate": "Use Template",
+    "search": "Search 20+ original templates..."
+  },
+  "settings": {
+    "title": "Settings Center",
+    "appearance": "Appearance",
+    "typography": "Typography",
+    "language": "Language & Region",
+    "plugins": "Plugins & Extensions",
+    "privacy": "Privacy & Security"
   },
   "recovery": {
     "title": "Recover Unsaved Work",

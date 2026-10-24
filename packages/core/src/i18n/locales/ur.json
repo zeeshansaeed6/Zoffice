@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Zoffice",
+    "tagline": "آپ کا مفت، آف لائن اور اوپن سورس آفس سوٹ",
+    "version": "ورژن {version}"
+  },
+  "start": {
+    "title": "شروع کریں",
+    "welcome": "دستاویزات بنائیں، اسپریڈشیٹ کا تجزیہ کریں، پریزنٹیشنز ڈیزائن کریں اور اپنے کام کو منظم کریں — 100٪ آف لائن۔",
+    "newDocument": "نیا",
+    "openExisting": "موجودہ فائل کھولیں",
+    "openFile": "فائل کھولیں",
+    "recentFiles": "حالیہ فائلیں",
+    "templates": "ٹیمپلیٹس",
+    "noRecent": "ابھی تک کوئی حالیہ دستاویز نہیں ہے",
+    "clearRecent": "حالیہ ہسٹری صاف کریں",
+    "templatesComing": "ٹیمپلیٹس جلد دستیاب ہوں گے",
+    "browseTemplates": "ٹیمپلیٹس تلاش کریں"
+  },
+  "apps": {
+    "writer": { "name": "ZWriter", "description": "ورڈ پروسیسنگ اور دستاویزات" },
+    "sheets": { "name": "ZSheets", "description": "اسپریڈشیٹ اور حساب کتاب" },
+    "slides": { "name": "ZSlides", "description": "پریزنٹیشنز اور سلائیڈز" },
+    "notes": { "name": "ZNotes", "description": "نوٹ بک اور فری کینوس" },
+    "mail": { "name": "ZMail", "description": "ای میل اور کیلنڈر" },
+    "forms": { "name": "ZForms", "description": "فارم بلڈر اور سروے" },
+    "planner": { "name": "ZPlanner", "description": "کانبان اور پروجیکٹ بورڈ" },
+    "draw": { "name": "ZDraw", "description": "ویکٹر ڈایاگرام اور خاکے" },
+    "base": { "name": "ZBase", "description": "لوکل ایس کیو ایل لائٹ ڈیٹا بیس" },
+    "drive": { "name": "ZDrive", "description": "لوکل فائل مینیجر" }
+  },
+  "ribbon": {
+    "home": "ہوم",
+    "insert": "داخل کریں",
+    "layout": "لے آؤٹ",
+    "view": "دیکھیں",
+    "formulas": "فارمولے",
+    "data": "ڈیٹا",
+    "design": "ڈیزائن",
+    "transitions": "ٹرانزیشنز",
+    "animations": "اینیمیشنز",
+    "slideshow": "سلائیڈ شو",
+    "collapse": "ربن سمیٹیں",
+    "expand": "ربن پھیلائیں"
+  },
+  "toolbar": {
+    "save": "محفوظ کریں",
+    "undo": "واپس لیں",
+    "redo": "دوبارہ کریں",
+    "print": "پرنٹ کریں"
+  },
+  "tabs": {
+    "close": "بند کریں",
+    "closeConfirm": "کیا آپ \"{title}\" میں کی گئی تبدیلیاں محفوظ کرنا چاہتے ہیں؟",
+    "unsavedChanges": "غیر محفوظ شدہ تبدیلیاں"
+  },
+  "file": {
+    "new": "نیا",
+    "open": "کھولیں",
+    "save": "محفوظ کریں",
+    "saveAs": "اس نام سے محفوظ کریں",
+    "untitled": "بے نام دستاویز"
+  },
+  "dialog": {
+    "save": "محفوظ کریں",
+    "dontSave": "محفوظ نہ کریں",
+    "cancel": "منسوخ کریں",
+    "ok": "ٹھیک ہے",
+    "yes": "ہاں",
+    "no": "نہیں"
+  },
+  "statusBar": {
+    "words": "{count} الفاظ",
+    "pages": "صفحہ {current} از {total}",
+    "zoom": "زوم",
+    "ready": "تیار ہے"
+  },
+  "theme": {
+    "light": "روشن (لائٹ)",
+    "dark": "تاریک (ڈارک)",
+    "highContrast": "ہائی کنٹراسٹ",
+    "system": "سسٹم ڈیفالٹ",
+    "settings": "تھیم سیٹنگز"
+  },
+  "ai": {
+    "title": "اے آئی اسسٹنٹ",
+    "enable": "اسسٹنٹ فعال کریں",
+    "disabledNotice": "اے آئی اس وقت غیر فعال ہے",
+    "offlineNotice": "مکمل طور پر پرائیویٹ &bull; زیرو ٹیلی میٹری",
+    "generate": "اے آئی کے ساتھ بنائیں",
+    "insert": "دستاویز میں شامل کریں"
+  },
+  "templates": {
+    "galleryTitle": "ٹیمپلیٹس گیلری",
+    "useTemplate": "ٹیمپلیٹ استعمال کریں",
+    "search": "20+ ٹیمپلیٹس میں تلاش کریں..."
+  },
+  "settings": {
+    "title": "سیٹنگز سینٹر",
+    "appearance": "ظاہری شکل",
+    "typography": "فونٹ اور خطاطی",
+    "language": "زبان اور علاقہ",
+    "plugins": "پلگ انز",
+    "privacy": "رازداری اور تحفظ"
+  },
+  "recovery": {
+    "title": "غیر محفوظ شدہ کام بحال کریں",
+    "message": "پچھلے سیشن سے غیر محفوظ دستاویزات ملیں۔ کیا آپ انہیں بحال کرنا چاہتے ہیں؟",
+    "recover": "بحال کریں",
+    "discard": "مسترد کریں"
+  },
+  "errors": {
+    "fileNotFound": "فائل نہیں ملی: {path}",
+    "saveFailed": "فائل محفوظ کرنے میں ناکامی: {reason}",
+    "invalidFileType": "غیر معاون فائل کی قسم: {ext}"
+  }
+}

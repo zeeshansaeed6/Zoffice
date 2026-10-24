@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Zoffice",
+    "tagline": "Ihre freie, offline-fähige Open-Source-Office-Suite",
+    "version": "Version {version}"
+  },
+  "start": {
+    "title": "Startseite",
+    "welcome": "Erstellen Sie Dokumente, analysieren Sie Tabellen, gestalten Sie Präsentationen und organisieren Sie Ihre Projekte — 100% offline.",
+    "newDocument": "Neu",
+    "openExisting": "Datei öffnen",
+    "openFile": "Öffnen",
+    "recentFiles": "Zuletzt verwendete Dateien",
+    "templates": "Vorlagen",
+    "noRecent": "Noch keine zuletzt verwendeten Dokumente",
+    "clearRecent": "Verlauf leeren",
+    "templatesComing": "Vorlagen folgen in Kürze",
+    "browseTemplates": "Vorlagen durchsuchen"
+  },
+  "apps": {
+    "writer": { "name": "ZWriter", "description": "Textverarbeitung und Dokumente" },
+    "sheets": { "name": "ZSheets", "description": "Tabellenkalkulation und Formeln" },
+    "slides": { "name": "ZSlides", "description": "Präsentationen und Folien" },
+    "notes": { "name": "ZNotes", "description": "Notizbuch und freie Leinwand" },
+    "mail": { "name": "ZMail", "description": "E-Mail und Kalender" },
+    "forms": { "name": "ZForms", "description": "Formulargenerator und Umfragen" },
+    "planner": { "name": "ZPlanner", "description": "Kanban- und Projekt-Boards" },
+    "draw": { "name": "ZDraw", "description": "Vektordiagramme und Architektur" },
+    "base": { "name": "ZBase", "description": "Lokale SQLite-Datenbanken" },
+    "drive": { "name": "ZDrive", "description": "Lokale Dateiverwaltung" }
+  },
+  "ribbon": {
+    "home": "Start",
+    "insert": "Einfügen",
+    "layout": "Layout",
+    "view": "Ansicht",
+    "formulas": "Formeln",
+    "data": "Daten",
+    "design": "Entwurf",
+    "transitions": "Übergänge",
+    "animations": "Animationen",
+    "slideshow": "Bildschirmpräsentation",
+    "collapse": "Menüband minimieren",
+    "expand": "Menüband erweitern"
+  },
+  "toolbar": {
+    "save": "Speichern",
+    "undo": "Rückgängig",
+    "redo": "Wiederholen",
+    "print": "Drucken"
+  },
+  "tabs": {
+    "close": "Schließen",
+    "closeConfirm": "Möchten Sie die Änderungen an \"{title}\" speichern?",
+    "unsavedChanges": "Ungespeicherte Änderungen"
+  },
+  "file": {
+    "new": "Neu",
+    "open": "Öffnen",
+    "save": "Speichern",
+    "saveAs": "Speichern unter",
+    "untitled": "Unbenannt"
+  },
+  "dialog": {
+    "save": "Speichern",
+    "dontSave": "Nicht speichern",
+    "cancel": "Abbrechen",
+    "ok": "OK",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "statusBar": {
+    "words": "{count} Wörter",
+    "pages": "Seite {current} von {total}",
+    "zoom": "Zoom",
+    "ready": "Bereit"
+  },
+  "theme": {
+    "light": "Hell",
+    "dark": "Dunkel",
+    "highContrast": "Hoher Kontrast",
+    "system": "System",
+    "settings": "Design-Einstellungen"
+  },
+  "ai": {
+    "title": "KI-Assistent",
+    "enable": "Assistent aktivieren",
+    "disabledNotice": "KI ist derzeit deaktiviert",
+    "offlineNotice": "Standardmäßig aus &bull; Null Telemetrie",
+    "generate": "Mit KI generieren",
+    "insert": "In Dokument einfügen"
+  },
+  "templates": {
+    "galleryTitle": "Vorlagengalerie",
+    "useTemplate": "Vorlage verwenden",
+    "search": "Über 20 Vorlagen durchsuchen..."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "appearance": "Erscheinungsbild",
+    "typography": "Schriftarten",
+    "language": "Sprache und Region",
+    "plugins": "Erweiterungen",
+    "privacy": "Datenschutz & Sicherheit"
+  },
+  "recovery": {
+    "title": "Ungespeicherte Arbeit wiederherstellen",
+    "message": "Zoffice hat ungespeicherte Dokumente aus einer früheren Sitzung gefunden. Möchten Sie diese wiederherstellen?",
+    "recover": "Wiederherstellen",
+    "discard": "Verwerfen"
+  },
+  "errors": {
+    "fileNotFound": "Datei nicht gefunden: {path}",
+    "saveFailed": "Speichern fehlgeschlagen: {reason}",
+    "invalidFileType": "Nicht unterstützter Dateityp: {ext}"
+  }
+}

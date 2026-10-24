@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Zoffice",
+    "tagline": "Tu suite ofimática libre, sin conexión y de código abierto",
+    "version": "Versión {version}"
+  },
+  "start": {
+    "title": "Inicio",
+    "welcome": "Crea documentos, analiza hojas de cálculo, diseña presentaciones y organiza tu trabajo — 100% sin conexión.",
+    "newDocument": "Nuevo",
+    "openExisting": "Abrir existente",
+    "openFile": "Abrir archivo",
+    "recentFiles": "Archivos recientes",
+    "templates": "Plantillas",
+    "noRecent": "Aún no hay documentos recientes",
+    "clearRecent": "Borrar recientes",
+    "templatesComing": "Próximamente más plantillas",
+    "browseTemplates": "Explorar plantillas"
+  },
+  "apps": {
+    "writer": { "name": "ZWriter", "description": "Procesador de textos y documentos" },
+    "sheets": { "name": "ZSheets", "description": "Hojas de cálculo y fórmulas" },
+    "slides": { "name": "ZSlides", "description": "Presentaciones y diapositivas" },
+    "notes": { "name": "ZNotes", "description": "Cuaderno y lienzo libre" },
+    "mail": { "name": "ZMail", "description": "Correo y calendarios" },
+    "forms": { "name": "ZForms", "description": "Creador de formularios y encuestas" },
+    "planner": { "name": "ZPlanner", "description": "Tableros Kanban y proyectos" },
+    "draw": { "name": "ZDraw", "description": "Diagramas vectoriales y arquitectura" },
+    "base": { "name": "ZBase", "description": "Bases de datos SQLite locales" },
+    "drive": { "name": "ZDrive", "description": "Gestor de archivos local" }
+  },
+  "ribbon": {
+    "home": "Inicio",
+    "insert": "Insertar",
+    "layout": "Disposición",
+    "view": "Vista",
+    "formulas": "Fórmulas",
+    "data": "Datos",
+    "design": "Diseño",
+    "transitions": "Transiciones",
+    "animations": "Animaciones",
+    "slideshow": "Presentación",
+    "collapse": "Contraer cinta",
+    "expand": "Expandir cinta"
+  },
+  "toolbar": {
+    "save": "Guardar",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "print": "Imprimir"
+  },
+  "tabs": {
+    "close": "Cerrar",
+    "closeConfirm": "¿Deseas guardar los cambios en \"{title}\"?",
+    "unsavedChanges": "Cambios sin guardar"
+  },
+  "file": {
+    "new": "Nuevo",
+    "open": "Abrir",
+    "save": "Guardar",
+    "saveAs": "Guardar como",
+    "untitled": "Sin título"
+  },
+  "dialog": {
+    "save": "Guardar",
+    "dontSave": "No guardar",
+    "cancel": "Cancelar",
+    "ok": "Aceptar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "statusBar": {
+    "words": "{count} palabras",
+    "pages": "Página {current} de {total}",
+    "zoom": "Zoom",
+    "ready": "Listo"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "highContrast": "Alto contraste",
+    "system": "Sistema",
+    "settings": "Ajustes de tema"
+  },
+  "ai": {
+    "title": "Asistente IA",
+    "enable": "Habilitar asistente",
+    "disabledNotice": "La IA está desactivada actualmente",
+    "offlineNotice": "Desactivada por defecto &bull; Cero telemetría",
+    "generate": "Generar con IA",
+    "insert": "Insertar en el documento"
+  },
+  "templates": {
+    "galleryTitle": "Galería de plantillas",
+    "useTemplate": "Usar plantilla",
+    "search": "Buscar más de 20 plantillas..."
+  },
+  "settings": {
+    "title": "Centro de configuración",
+    "appearance": "Apariencia",
+    "typography": "Tipografía",
+    "language": "Idioma y región",
+    "plugins": "Extensiones y complementos",
+    "privacy": "Privacidad y seguridad"
+  },
+  "recovery": {
+    "title": "Recuperar trabajo no guardado",
+    "message": "Zoffice encontró documentos no guardados de una sesión anterior. ¿Deseas recuperarlos?",
+    "recover": "Recuperar",
+    "discard": "Descartar"
+  },
+  "errors": {
+    "fileNotFound": "Archivo no encontrado: {path}",
+    "saveFailed": "Error al guardar el archivo: {reason}",
+    "invalidFileType": "Tipo de archivo no compatible: {ext}"
+  }
+}
