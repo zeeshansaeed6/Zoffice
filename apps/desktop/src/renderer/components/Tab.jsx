@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { X, FileText, Sheet, Presentation } from 'lucide-react'
+import { X, FileText, Sheet, Presentation, Book, Mail, CheckSquare, Kanban } from 'lucide-react'
 
 /**
  * @param {Object} props
@@ -39,6 +39,14 @@ export function Tab({ tab, isActive, index, onSelect, onClose, onMove }) {
         return <Sheet size={14} className="text-emerald-600 dark:text-emerald-400" />
       case 'slides':
         return <Presentation size={14} className="text-amber-600 dark:text-amber-400" />
+      case 'notes':
+        return <Book size={14} className="text-violet-600 dark:text-violet-400" />
+      case 'mail':
+        return <Mail size={14} className="text-indigo-600 dark:text-indigo-400" />
+      case 'forms':
+        return <CheckSquare size={14} className="text-teal-600 dark:text-teal-400" />
+      case 'planner':
+        return <Kanban size={14} className="text-rose-600 dark:text-rose-400" />
       default:
         return <FileText size={14} className="text-blue-600 dark:text-blue-400" />
     }

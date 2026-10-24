@@ -10,6 +10,7 @@ export default {
     '../../packages/notes/src/**/*.{js,jsx}',
     '../../packages/mail/src/**/*.{js,jsx}',
     '../../packages/forms/src/**/*.{js,jsx}',
+    '../../packages/planner/src/**/*.{js,jsx}',
   ],
   darkMode: 'class',
   theme: {

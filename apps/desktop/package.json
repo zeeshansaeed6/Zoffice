@@ -20,6 +20,7 @@
     "@zoffice/forms": "workspace:*",
     "@zoffice/mail": "workspace:*",
     "@zoffice/notes": "workspace:*",
+    "@zoffice/planner": "workspace:*",
     "@zoffice/sheets": "workspace:*",
     "@zoffice/slides": "workspace:*",
     "@zoffice/ui": "workspace:*",

@@ -7,6 +7,7 @@ import { ZSlides } from '@zoffice/slides'
 import { ZNotes } from '@zoffice/notes'
 import { ZMail } from '@zoffice/mail'
 import { ZForms } from '@zoffice/forms'
+import { ZPlanner } from '@zoffice/planner'
 import { saveFile, saveFileAs } from '@zoffice/core'
 
 /**
@@ -83,6 +84,17 @@ export function AppLoader() {
     case 'forms':
       return (
         <ZForms
+          key={activeTab.id}
+          id={activeTab.id}
+          title={activeTab.title}
+          initialContent={activeTab.content}
+          onChange={handleContentChange}
+          onSave={handleSave}
+        />
+      )
+    case 'planner':
+      return (
+        <ZPlanner
           key={activeTab.id}
           id={activeTab.id}
           title={activeTab.title}

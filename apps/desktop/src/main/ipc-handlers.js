@@ -6,6 +6,7 @@ import { saveAutosaveDocument, listAutosaveDocuments, removeAutosaveDocument } f
 import * as notesDb from './notes-db.js'
 import * as mailDb from './mail-db.js'
 import * as formsDb from './forms-db.js'
+import * as plannerDb from './planner-db.js'
 
 /**
  * Registers all validated IPC handlers for main process.
@@ -174,4 +175,10 @@ export function registerIpcHandlers(win) {
   ipcMain.handle('forms:clearResponses', async (_event, formId) =>
     formsDb.clearFormResponses(formId),
   )
+
+  // Planner SQLite persistence
+  ipcMain.handle('planner:getBoards', async () => plannerDb.getAllBoards())
+  ipcMain.handle('planner:getBoard', async (_event, id) => plannerDb.getBoardById(id))
+  ipcMain.handle('planner:saveBoard', async (_event, board) => plannerDb.saveBoard(board))
+  ipcMain.handle('planner:deleteBoard', async (_event, id) => plannerDb.deleteBoard(id))
 }

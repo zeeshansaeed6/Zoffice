@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { notesBridge } from './notes-api.js'
 import { mailBridge, calendarBridge, contactsBridge } from './mail-api.js'
 import { formsBridge } from './forms-api.js'
+import { plannerBridge } from './planner-api.js'
 
 /**
  * Validated Electron IPC Bridge.
@@ -157,6 +158,7 @@ const zofficeAPI = {
   calendar: calendarBridge,
   contacts: contactsBridge,
   forms: formsBridge,
+  planner: plannerBridge,
 
   /**
    * Subscribe to native menu actions and keyboard shortcuts.
@@ -176,3 +178,4 @@ const zofficeAPI = {
 }
 
 contextBridge.exposeInMainWorld('zofficeAPI', zofficeAPI)
+contextBridge.exposeInMainWorld('api', zofficeAPI)

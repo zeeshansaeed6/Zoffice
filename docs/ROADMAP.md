@@ -231,3 +231,16 @@ This roadmap outlines the planned phases for building Zoffice into a full-featur
   - **Main Process Backend & Storage** (`forms-db.js`, `ipc-handlers.js`, `preload/forms-api.js`): SQLite tables for forms and submissions with typed preload bridge.
   - **Desktop Shell Integration**: Registered in Start Screen, `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
   - **Test Coverage**: 21 passing unit tests across 4 test suites in `@zoffice/forms`.
+
+### App 4: ZPlanner (Project Management, Kanban & Gantt)
+
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - **Kanban Board** (`packages/planner/src/kanban`): Drag-and-drop card movement across customizable columns with add column, column title editing, priority badges (`urgent`, `high`, `medium`, `low`, `none`), checklist counts, assignee avatars, overdue badges, and progress bars.
+  - **Task Detail Inspector** (`TaskDetailModal.jsx`): Comprehensive property editor for title, description, column, priority, start and due dates, progress slider (0–100%), milestone flag, interactive checklists with completion status, and predecessor dependency linking.
+  - **Gantt Chart Timeline** (`packages/planner/src/gantt` & `gantt-engine.js`): Left task breakdown tree with right scrollable timeline canvas. Auto-bounding timeline window, Day / Week / Month zoom levels, milestone diamonds, and SVG dependency connector lines (`calculateDependencyPath`).
+  - **Task Calendar View** (`packages/planner/src/calendar`): Full monthly grid mapping tasks to their start and due dates with previous/next month navigation, today jump, and direct card click to edit.
+  - **Trello JSON Importer & Board Exporter** (`trello-importer.js` & `dialogs/TrelloImportModal.jsx`): Converts standard Trello board JSON exports (lists, cards, checklists, label color priorities) into native ZPlanner boards and exports boards to JSON.
+  - **SQLite Database & IPC Bridge** (`planner-db.js`, `ipc-handlers.js`, `preload/planner-api.js`): Offline persistence for boards, columns, and tasks with typed preload bridge.
+  - **Desktop Shell Integration**: Registered in Start Screen (`ZPlanner` tile + recent file icon), `AppLoader`, `tab-store`, Tailwind config, and Vitest workspace.
+  - **Test Coverage**: 14 passing unit tests across 4 test suites in `@zoffice/planner` plus Playwright E2E test in `apps/desktop/e2e/planner.spec.js`.

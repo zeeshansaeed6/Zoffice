@@ -12,6 +12,7 @@ import {
   Book,
   Mail,
   CheckSquare,
+  Kanban,
 } from 'lucide-react'
 import { useTabStore } from '../stores/tab-store.js'
 import { getRecentFiles, clearRecentFiles, openFile, t } from '@zoffice/core'
@@ -100,6 +101,14 @@ export function StartScreen() {
       color: 'bg-teal-600 hover:bg-teal-700 text-white',
       accent: 'border-teal-500/20 bg-teal-50/50 dark:bg-teal-950/20',
       icon: <CheckSquare size={32} className="text-teal-600 dark:text-teal-400" />,
+    },
+    {
+      id: 'planner',
+      name: 'ZPlanner',
+      tagline: 'Kanban, Gantt and project tasks',
+      color: 'bg-rose-600 hover:bg-rose-700 text-white',
+      accent: 'border-rose-500/20 bg-rose-50/50 dark:bg-rose-950/20',
+      icon: <Kanban size={32} className="text-rose-600 dark:text-rose-400" />,
     },
   ]
 
@@ -221,6 +230,8 @@ export function StartScreen() {
                             <Mail size={18} className="text-indigo-600" />
                           ) : item.appId === 'forms' ? (
                             <CheckSquare size={18} className="text-teal-600" />
+                          ) : item.appId === 'planner' ? (
+                            <Kanban size={18} className="text-rose-600" />
                           ) : (
                             <FileText size={18} className="text-blue-600" />
                           )}
