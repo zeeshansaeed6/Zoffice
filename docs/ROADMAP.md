@@ -420,4 +420,52 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Wired settings modal to Start Screen header, application Edit menu (`Preferences...`), and `Ctrl+,` (Cmd+,) shortcut in Shell.
   - Added unit test suite in `packages/ui/src/__tests__/SettingsModal.test.jsx` (total 304 unit tests passing, 0 ESLint warnings).
 
+### Task 10: Release Engineering & Security Infrastructure
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Authored multi-OS GitHub Actions workflow (`.github/workflows/release.yml`) building native installers for Windows (`nsis`, `portable`, `msi`), macOS (`dmg` x64 & arm64), and Linux (`AppImage`, `deb`) on tag pushes (`v*.*.*`).
+  - Authored automated conventional changelog generator (`scripts/generate-changelog.js`) and npm script `pnpm changelog` generating categorized markdown releases.
+  - Authored official [`SECURITY.md`](../SECURITY.md) detailing supported versions, confidential vulnerability disclosure SLA, process isolation, Electron sandboxing, and OS credential encryption (`safeStorage`).
+  - Published detailed roadmap for v1.1, v1.2, and v2.0 below.
+
+---
+
+## Post-v1.0 Roadmap: v1.1+ Vision & Future Architecture
+
+### Version 1.1: Peer-to-Peer Sync & Extended Workflows (Target: Q1 2027)
+
+1. **Local Area Network (LAN) Real-Time Collaboration:**
+   - Zero-cloud, local P2P document collaboration using CRDTs (Yjs / Automerge) over WebRTC and mDNS.
+   - Edit docs and spreadsheets simultaneously with peers on the same Wi-Fi network without external servers.
+2. **Advanced PDF Annotation & Form Filling:**
+   - Direct PDF form filling, digital signature stamping, and pen annotation in ZWriter and ZDraw.
+3. **Custom Dictionary & Hunspell Expansion:**
+   - Import user-supplied Hunspell `.dic` / `.aff` files for regional and medical/technical terminology.
+4. **Command Palette (`Ctrl+K`):**
+   - Universal fast launcher for ribbon actions, recent files, template search, and app navigation.
+
+### Version 1.2: End-to-End Encrypted Cloud Backups & CLI Suite (Target: Q2 2027)
+
+1. **User-Owned Cloud Storage Connectors:**
+   - Optional client-side encrypted backup sync to Nextcloud, WebDAV, MinIO, and AWS S3.
+   - Encryption keys remain strictly in the user's local keystore; cloud providers only see ciphertext.
+2. **Headless CLI Utility (`zoffice-cli`):**
+   - Headless document conversion (`zoffice-cli convert document.docx output.pdf`).
+   - Batch spreadsheet calculation runner (`zoffice-cli compute financial_model.xlsx`).
+   - Template batch generator from CSV/JSON data.
+3. **Extended Formula Engine:**
+   - Add financial and engineering functions (`XIRR`, `MIRR`, `BESSELJ`, `ERF`).
+   - Dynamic array spill formulas (`FILTER`, `SORT`, `UNIQUE`).
+
+### Version 2.0: Multi-Platform Ecosystem & Sovereign Mobile (Target: Q3/Q4 2027)
+
+1. **Mobile Companion Apps (Android & iOS):**
+   - High-fidelity offline document viewer and quick-editor built with React Native / Capacitor.
+   - P2P sync with desktop suite over local Wi-Fi or QR-code paired storage.
+2. **WebAssembly Extension Plugins:**
+   - Support for sandboxed Wasm plugins written in Rust, C++, or Go.
+3. **Advanced Relational Automations in ZBase:**
+   - Webhook trigger simulations, cron-style local scheduled queries, and relational graph visualization.
+
+
 
