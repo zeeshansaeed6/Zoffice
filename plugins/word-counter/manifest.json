@@ -1,0 +1,34 @@
+{
+  "id": "zoffice-word-counter",
+  "name": "Word Frequency Counter",
+  "version": "1.0.0",
+  "description": "Analyzes word frequency, vocabulary diversity, and reading time in ZWriter documents.",
+  "author": "Zoffice Community",
+  "targetApps": ["writer"],
+  "main": "index.js",
+  "permissions": [
+    "active-document:read",
+    "ui:ribbon",
+    "ui:sidebar"
+  ],
+  "contributions": {
+    "ribbonButtons": [
+      {
+        "id": "btn-word-frequency",
+        "tabId": "review",
+        "groupId": "proof",
+        "label": "Word Stats",
+        "icon": "BarChart3",
+        "action": "openStats"
+      }
+    ],
+    "sidebarPanels": [
+      {
+        "id": "panel-word-frequency",
+        "title": "Word Frequency",
+        "icon": "BarChart3",
+        "render": "renderSidebar"
+      }
+    ]
+  }
+}

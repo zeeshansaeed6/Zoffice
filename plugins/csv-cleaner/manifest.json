@@ -1,0 +1,34 @@
+{
+  "id": "zoffice-csv-cleaner",
+  "name": "CSV Data Cleaner",
+  "version": "1.0.0",
+  "description": "Cleans, trims whitespace, normalizes delimiters, and removes duplicates from CSV datasets in ZSheets.",
+  "author": "Zoffice Community",
+  "targetApps": ["sheets"],
+  "main": "index.js",
+  "permissions": [
+    "active-document:read",
+    "active-document:write",
+    "ui:ribbon",
+    "file-format:handler"
+  ],
+  "contributions": {
+    "ribbonButtons": [
+      {
+        "id": "btn-clean-csv-data",
+        "tabId": "data",
+        "groupId": "tools",
+        "label": "Clean CSV",
+        "icon": "Sparkles",
+        "action": "cleanCsvData"
+      }
+    ],
+    "fileFormatHandlers": [
+      {
+        "extension": "csv",
+        "mimeType": "text/csv",
+        "handler": "cleanAndParseCsv"
+      }
+    ]
+  }
+}

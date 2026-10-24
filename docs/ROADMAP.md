@@ -341,6 +341,19 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Upgraded Dialog with `aria-labelledby`, `aria-label`, escape key listener, and backdrop click dismissal.
   - Installed `axe-core` and verified zero critical/serious accessibility violations across UI components in `packages/ui/src/__tests__/a11y.test.jsx`.
 
+### Task 4: Plugin & Extension System
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Architected safe, offline-first plugin engine with isolated sandbox execution (`plugin-sandbox.js`, `plugin-engine.js`).
+  - Implemented strict permission gating (`active-document:read`, `active-document:write`, `ui:ribbon`, `ui:sidebar`, `ui:menu`, `file-format:handler`, `storage:local`).
+  - Added manifest validation (`plugin-manifest.js`) verifying IDs, semver versions, entry scripts, target apps, and contributions.
+  - Built 2 reference example plugins:
+    - **Word Frequency Counter** (`plugins/word-counter/`) for ZWriter: calculates word stats, unique words, estimated reading time, and top words with ribbon and sidebar contributions.
+    - **CSV Data Cleaner** (`plugins/csv-cleaner/`) for ZSheets: trims whitespace, normalizes CRLF line breaks, strips trailing commas, and deduplicates rows with ribbon action.
+  - Authored comprehensive developer documentation in [`docs/plugins.md`](plugins.md).
+  - Verified with 8 unit tests in `packages/core/src/__tests__/plugin-engine.test.js`.
+
+
 
 
 
