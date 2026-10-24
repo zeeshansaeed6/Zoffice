@@ -4,6 +4,7 @@ import { existsSync } from 'fs'
 import { registerIpcHandlers } from './ipc-handlers.js'
 import { setupApplicationMenu } from './menu.js'
 import { getDatabase } from './db.js'
+import { setupAutoUpdater } from './auto-updater.js'
 
 let mainWindow = null
 
@@ -62,9 +63,10 @@ function createWindow() {
   // Initialize SQLite database
   getDatabase()
 
-  // Register IPC and menu
+  // Register IPC, menu, and auto-updater
   registerIpcHandlers(mainWindow)
   setupApplicationMenu(mainWindow)
+  setupAutoUpdater(mainWindow)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

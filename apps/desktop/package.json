@@ -1,6 +1,6 @@
 {
   "name": "@zoffice/desktop",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "main": "out/main/index.js",
@@ -11,7 +11,9 @@
     "postinstall": "electron-builder install-app-deps",
     "test:e2e": "npx playwright test",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist:win:portable": "electron-builder --win portable --x64",
+    "dist:all": "electron-builder -mwl"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
@@ -29,6 +31,7 @@
     "@zoffice/ui": "workspace:*",
     "@zoffice/writer": "workspace:*",
     "better-sqlite3": "^11.6.0",
+    "electron-updater": "^6.8.11",
     "lucide-react": "^0.460.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -59,11 +62,23 @@
     "extraMetadata": {
       "main": "out/main/index.js"
     },
+    "publish": {
+      "provider": "github",
+      "owner": "nicholaszoffice",
+      "repo": "zoffice",
+      "releaseType": "release"
+    },
     "win": {
       "signAndEditExecutable": false,
       "target": [
         {
           "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
           "arch": [
             "x64"
           ]

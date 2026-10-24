@@ -166,6 +166,26 @@ const zofficeAPI = {
   base: baseBridge,
   drive: driveBridge,
 
+  updater: {
+    check: () => ipcRenderer.invoke('updater:check'),
+    download: () => ipcRenderer.invoke('updater:download'),
+    install: () => ipcRenderer.invoke('updater:install'),
+    /**
+     * @param {(status: { status: string, version?: string, percent?: number, error?: string }) => void} callback
+     * @returns {() => void}
+     */
+    onStatus: (callback) => {
+      if (typeof callback !== 'function') {
+        throw new TypeError('callback must be a function')
+      }
+      const handler = (_event, status) => callback(status)
+      ipcRenderer.on('updater:status', handler)
+      return () => {
+        ipcRenderer.removeListener('updater:status', handler)
+      }
+    },
+  },
+
   /**
    * Subscribe to native menu actions and keyboard shortcuts.
    * @param {(action: string) => void} callback

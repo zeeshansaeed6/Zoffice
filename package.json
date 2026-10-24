@@ -1,6 +1,6 @@
 {
   "name": "zoffice",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "A free, open-source desktop office suite with a familiar ribbon-style workflow",

@@ -397,3 +397,14 @@ All 7 companion applications of the Zoffice suite have been built strictly follo
   - Added RTL layout support to `PaperCanvas` and text alignment in ZWriter.
   - Added locale subscriber hook (`subscribeLocale`) and English fallback for missing keys.
   - Verified with 7 unit tests in `packages/core/src/__tests__/i18n.test.js` (total 301 tests passing).
+
+### Task 8: Auto-Update, Portable Builds & Code-Signing
+- **Status:** Completed & Verified ✅ (October 24, 2026)
+- **Deliverables:**
+  - Integrated `electron-updater` into `@zoffice/desktop` main process (`apps/desktop/src/main/auto-updater.js`).
+  - Implemented safe IPC event streaming (`updater:status`, `updater:check`, `updater:download`, `updater:install`) and exposed typed bridge in preload script.
+  - Respects user sovereignty: updates are opt-in, non-intrusive, and disable silent background downloading.
+  - Added portable Windows build configuration (`portable` target) alongside NSIS and MSI installers in `apps/desktop/package.json`.
+  - Configured GitHub Releases update provider (`nicholaszoffice/zoffice`) with release publication triggers.
+  - Authored comprehensive code-signing, notarization, and verification documentation in [`docs/code-signing.md`](code-signing.md) covering Windows Authenticode, macOS Gatekeeper / notarytool, and Linux GPG package signatures.
+
