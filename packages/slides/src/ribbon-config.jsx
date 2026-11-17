@@ -1,5 +1,5 @@
 import React from 'react'
-import { Palette } from 'lucide-react'
+import { Palette, PaintBucket } from 'lucide-react'
 import { getHomeTab } from './ribbon/ribbon-home.jsx'
 import { getInsertTab } from './ribbon/ribbon-insert.jsx'
 import { getTransitionsTab } from './ribbon/ribbon-transitions.jsx'
@@ -41,6 +41,30 @@ export function getSlidesRibbonConfig(actions = {}) {
                 size: 'large',
                 icon: <Palette size={18} />,
                 onClick: actions.onOpenThemeGallery,
+              },
+            ],
+          },
+          {
+            id: 'background-group',
+            label: 'Background',
+            controls: [
+              {
+                id: 'slide-background',
+                type: 'dropdown',
+                label: 'Background',
+                size: 'large',
+                icon: <PaintBucket size={18} />,
+                items: [
+                  ['White', '#ffffff'],
+                  ['Light Gray', '#f1f5f9'],
+                  ['Cream', '#fef9c3'],
+                  ['Sky', '#e0f2fe'],
+                  ['Dark', '#0f172a'],
+                ].map(([label, value]) => ({
+                  id: `bg-${label}`,
+                  label,
+                  onClick: () => actions.onSetBackground?.(value),
+                })),
               },
             ],
           },

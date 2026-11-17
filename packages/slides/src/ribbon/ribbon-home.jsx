@@ -18,8 +18,43 @@ import {
   AlignHorizontalDistributeCenter,
   AlignVerticalDistributeCenter,
   Sparkles,
+  Copy,
+  Trash2,
+  CaseSensitive,
+  Baseline,
+  TextCursorInput,
 } from 'lucide-react'
 import { SHAPE_TYPES } from '../core/slide-constants.js'
+
+export const FONT_FAMILIES = [
+  { label: 'Inter', value: 'Inter, sans-serif' },
+  { label: 'Carlito', value: 'Carlito, sans-serif' },
+  { label: 'Liberation Sans', value: "'Liberation Sans', sans-serif" },
+  { label: 'Serif', value: 'Georgia, serif' },
+  { label: 'Monospace', value: 'monospace' },
+]
+export const FONT_SIZES = [12, 14, 18, 24, 32, 40, 48, 64, 72]
+export const TEXT_COLORS = [
+  { label: 'Slate', value: '#1e293b' },
+  { label: 'Black', value: '#000000' },
+  { label: 'White', value: '#ffffff' },
+  { label: 'Red', value: '#dc2626' },
+  { label: 'Blue', value: '#2563eb' },
+  { label: 'Green', value: '#16a34a' },
+]
+
+const dropdown = (id, label, icon, entries, onPick) => ({
+  id,
+  type: 'dropdown',
+  label,
+  size: 'small',
+  icon,
+  items: entries.map((e) => ({
+    id: `${id}-${e.label}`,
+    label: e.label,
+    onClick: () => onPick?.(e.value),
+  })),
+})
 
 /**
  * Returns the Home tab definition for the ZSlides ribbon.
@@ -83,6 +118,29 @@ export function getHomeTab(actions = {}) {
               pressed: actions.underline,
               onToggle: actions.toggleUnderline,
             },
+          ],
+          [
+            dropdown(
+              'font-family',
+              'Font',
+              <CaseSensitive size={13} />,
+              FONT_FAMILIES,
+              actions.onSetFontFamily,
+            ),
+            dropdown(
+              'font-size',
+              'Size',
+              <TextCursorInput size={13} />,
+              FONT_SIZES.map((n) => ({ label: String(n), value: n })),
+              actions.onSetFontSize,
+            ),
+            dropdown(
+              'font-color',
+              'Color',
+              <Baseline size={13} />,
+              TEXT_COLORS,
+              actions.onSetTextColor,
+            ),
           ],
         ],
       },
@@ -192,6 +250,24 @@ export function getHomeTab(actions = {}) {
               size: 'small',
               icon: <SendToBack size={13} />,
               onClick: () => actions.onArrange?.('back'),
+            },
+          ],
+          [
+            {
+              id: 'duplicate-element',
+              type: 'button',
+              label: 'Duplicate',
+              size: 'small',
+              icon: <Copy size={13} />,
+              onClick: actions.onDuplicate,
+            },
+            {
+              id: 'delete-element',
+              type: 'button',
+              label: 'Delete',
+              size: 'small',
+              icon: <Trash2 size={13} />,
+              onClick: actions.onDeleteSelected,
             },
           ],
           [

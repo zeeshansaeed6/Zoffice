@@ -66,3 +66,37 @@ describe('ZSlides Step 5 - .pptx Read & Write Roundtrip', () => {
     expect(slide2Shape.height).toBeGreaterThan(0)
   })
 })
+
+describe('pptx notes, background and text formatting round trip', () => {
+  it('keeps speaker notes, slide background and text styling', async () => {
+    const base = createPresentationDeck()
+    const slide = {
+      ...base.slides[0],
+      notes: 'Mention Q3 results',
+      background: { type: 'solid', color: '#0f172a' },
+      elements: [
+        createTextElement({
+          text: 'Styled heading',
+          fontSize: 48,
+          bold: true,
+          italic: true,
+          color: '#dc2626',
+          align: 'center',
+        }),
+      ],
+    }
+    const bytes = await writePptx({ ...base, slides: [slide] }, 'arraybuffer')
+    const parsed = await readPptx(bytes)
+    const [back] = parsed.slides
+    expect(back.notes).toBe('Mention Q3 results')
+    expect(back.background.color).toBe('#0f172a')
+    expect(back.elements[0].properties).toMatchObject({
+      text: 'Styled heading',
+      fontSize: 48,
+      bold: true,
+      italic: true,
+      color: '#dc2626',
+      align: 'center',
+    })
+  })
+})
