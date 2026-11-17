@@ -100,13 +100,15 @@ function renderCellsAndGrid(ctx, { range, scrollX, scrollY, sheet, colors, width
       const rowH = getRowHeight(sheet, r)
 
       // Gridline border
-      ctx.strokeStyle = colors.gridline
-      ctx.lineWidth = 1
-      ctx.strokeRect(curX + 0.5, curY + 0.5, colW, rowH)
+      if (!sheet.hideGridlines) {
+        ctx.strokeStyle = colors.gridline
+        ctx.lineWidth = 1
+        ctx.strokeRect(curX + 0.5, curY + 0.5, colW, rowH)
+      }
 
       // Cell Content
       const cell = getCell(sheet, r, c)
-      if (cell && (cell.value !== undefined || cell.raw !== undefined)) {
+      if (cell) {
         renderCellContent(ctx, cell, curX, curY, colW, rowH, colors)
       }
 
@@ -121,17 +123,20 @@ function renderCellsAndGrid(ctx, { range, scrollX, scrollY, sheet, colors, width
 function renderCellContent(ctx, cell, x, y, width, height, colors) {
   const text =
     cell.display !== undefined ? String(cell.display) : String(cell.value ?? cell.raw ?? '')
-  if (!text) return
 
   ctx.save()
   ctx.beginPath()
   ctx.rect(x + 1, y + 1, width - 2, height - 2)
   ctx.clip()
 
-  // Background color if formatted
+  // Background color applies to empty cells too
   if (cell.style?.bgColor) {
     ctx.fillStyle = cell.style.bgColor
     ctx.fillRect(x + 1, y + 1, width - 2, height - 2)
+  }
+  if (!text) {
+    ctx.restore()
+    return
   }
 
   // Text font

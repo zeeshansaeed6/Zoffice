@@ -1,17 +1,28 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot, useTheme, AiAssistantSidebar } from '@zoffice/ui'
-import { getSheetsRibbonConfig } from './ribbon-config.jsx'
+import { saveFileAs } from '@zoffice/core'
+import { getSheetsRibbonConfig } from './ribbon/ribbon-config.jsx'
 import { CanvasGrid } from './grid/CanvasGrid.jsx'
 import { FormulaBar } from './formula-bar/FormulaBar.jsx'
 import { SheetTabBar } from './components/SheetTabBar.jsx'
+import { getCell, setCell, coordsToCellId } from './core/sheet-model.js'
+import { useSheetTabs } from './core/use-sheet-tabs.js'
+import { useWorkbook } from './core/use-workbook.js'
+import { DEFAULT_DECIMALS } from './core/number-format.js'
+import { summarizeSelection } from './core/selection-stats.js'
+import { sheetToCsv } from './core/csv-io.js'
+import { changeStructure } from './core/structure-ops.js'
 import {
-  createWorkbook,
-  createSheet,
-  getCell,
-  setCell,
-  coordsToCellId,
-} from './core/sheet-model.js'
-import { FormulaEngine } from './core/formula-engine.js'
+  updateActiveSheet,
+  applyStyle,
+  applyNumberFormat,
+  clearContents,
+  autoAggregate,
+  sortRange,
+  usedRange,
+} from './core/sheet-ops.js'
+
+const noRecalc = { recalc: false, history: false }
 
 /**
  * ZSheets Spreadsheet Application Component.
@@ -19,24 +30,17 @@ import { FormulaEngine } from './core/formula-engine.js'
  * @param {Object} props
  * @param {string} props.id - Active document tab ID
  * @param {string} [props.title='Untitled Spreadsheet']
- * @param {string} [props.initialContent]
+ * @param {string} [props.initialContent] - Workbook JSON, base64 .xlsx, or CSV text
+ * @param {(content: string) => void} [props.onChange]
  * @param {(content?: string) => void} [props.onSave]
  */
-export function ZSheets({ onSave, initialContent }) {
+export function ZSheets({ title = 'Untitled Spreadsheet', onSave, onChange, initialContent }) {
   const { mode: themeMode } = useTheme()
-
-  const [workbook, setWorkbook] = useState(() => {
-    if (initialContent) {
-      try {
-        const parsed =
-          typeof initialContent === 'string' ? JSON.parse(initialContent) : initialContent
-        if (parsed?.sheets) return parsed
-      } catch {
-        // Fallback to default blank workbook
-      }
-    }
-    return createWorkbook('Sheet1')
+  const { workbook, update, undo, redo, canUndo, canRedo, exportXlsx } = useWorkbook({
+    initialContent,
+    onChange,
   })
+
   const [activeCell, setActiveCell] = useState({ row: 0, col: 0 })
   const [selectedRange, setSelectedRange] = useState({
     startRow: 0,
@@ -45,65 +49,39 @@ export function ZSheets({ onSave, initialContent }) {
     endCol: 0,
   })
   const [isEditing, setIsEditing] = useState(false)
-  const [currentEditValue, setEditValue] = useState('')
+  const [editValue, setEditValue] = useState('')
   const [zoom, setZoom] = useState(100)
   const [showAiSidebar, setShowAiSidebar] = useState(false)
 
-  // Formula engine instance
-  const formulaEngine = useMemo(() => {
-    const engine = new FormulaEngine()
-    engine.ensureSheet('sheet1', 'Sheet1')
-    return engine
-  }, [])
+  const activeSheet = useMemo(
+    () => workbook.sheets.find((s) => s.id === workbook.activeSheetId) || workbook.sheets[0],
+    [workbook],
+  )
+  const currentCell = getCell(activeSheet, activeCell.row, activeCell.col)
+  const formulaValue = isEditing ? editValue : currentCell?.raw || currentCell?.value || ''
 
-  // Get active sheet
-  const activeSheet = useMemo(() => {
-    return workbook.sheets.find((s) => s.id === workbook.activeSheetId) || workbook.sheets[0]
-  }, [workbook])
+  const withSheet = useCallback((fn) => update((wb) => updateActiveSheet(wb, fn)), [update])
 
-  // Current active cell data
-  const currentCell = useMemo(() => {
-    return getCell(activeSheet, activeCell.row, activeCell.col)
-  }, [activeSheet, activeCell])
-
-  // Display formula bar value
-  const formulaValue = isEditing ? currentEditValue : currentCell?.raw || currentCell?.value || ''
-
-  // Commit editing changes to sheet
   const handleCommitEdit = useCallback(
     (override) => {
-      // A string override (e.g. AI-inserted formula) commits even when not already editing
+      // A string override (e.g. an AI-inserted formula) commits even when not editing
       const hasOverride = typeof override === 'string'
       if (!isEditing && !hasOverride) return
-      const editValue = hasOverride ? override : currentEditValue
-      formulaEngine.ensureSheet(activeSheet.id, activeSheet.name)
-      formulaEngine.setCell(activeSheet.id, activeCell.row, activeCell.col, editValue)
-
-      const computedVal = formulaEngine.getCellValue(activeSheet.id, activeCell.row, activeCell.col)
-
-      setWorkbook((prev) => {
-        const sheets = prev.sheets.map((s) => {
-          if (s.id !== prev.activeSheetId) return s
-          const updated = { ...s, data: { ...s.data } }
-          setCell(updated, activeCell.row, activeCell.col, {
-            raw: editValue,
-            value: computedVal !== undefined ? computedVal : editValue,
-          })
-          return updated
-        })
-        return { ...prev, sheets }
+      const text = hasOverride ? override : editValue
+      const { row, col } = activeCell
+      withSheet((s) => {
+        if (text === '')
+          clearContents(s, { startRow: row, startCol: col, endRow: row, endCol: col })
+        else setCell(s, row, col, { raw: text, value: text })
       })
       setIsEditing(false)
     },
-    [isEditing, activeSheet, activeCell, currentEditValue, formulaEngine],
+    [isEditing, editValue, activeCell, withSheet],
   )
 
   const handleAiInsert = useCallback(
     (result) => {
-      if (result) {
-        const formulaToInsert = result.formula || result.content || ''
-        handleCommitEdit(formulaToInsert)
-      }
+      if (result) handleCommitEdit(result.formula || result.content || '')
     },
     [handleCommitEdit],
   )
@@ -125,97 +103,97 @@ export function ZSheets({ onSave, initialContent }) {
     )
   }, [])
 
-  const handleColResize = useCallback((col, width) => {
-    setWorkbook((prev) => {
-      const sheets = prev.sheets.map((s) => {
-        if (s.id !== prev.activeSheetId) return s
-        return { ...s, colWidths: { ...s.colWidths, [col]: width } }
-      })
-      return { ...prev, sheets }
-    })
-  }, [])
+  const resize = useCallback(
+    (key, index, size) =>
+      update(
+        (wb) => ({
+          ...wb,
+          sheets: wb.sheets.map((s) =>
+            s.id === wb.activeSheetId ? { ...s, [key]: { ...s[key], [index]: size } } : s,
+          ),
+        }),
+        noRecalc,
+      ),
+    [update],
+  )
 
-  const handleRowResize = useCallback((row, height) => {
-    setWorkbook((prev) => {
-      const sheets = prev.sheets.map((s) => {
-        if (s.id !== prev.activeSheetId) return s
-        return { ...s, rowHeights: { ...s.rowHeights, [row]: height } }
-      })
-      return { ...prev, sheets }
-    })
-  }, [])
+  const handleClearRange = useCallback(
+    () => withSheet((s) => clearContents(s, selectedRange)),
+    [withSheet, selectedRange],
+  )
 
-  const handleClearRange = useCallback(() => {
-    setWorkbook((prev) => {
-      const sheets = prev.sheets.map((s) => {
-        if (s.id !== prev.activeSheetId) return s
-        const updated = { ...s, data: { ...s.data } }
-        for (let r = selectedRange.startRow; r <= selectedRange.endRow; r++) {
-          for (let c = selectedRange.startCol; c <= selectedRange.endCol; c++) {
-            setCell(updated, r, c, null)
-          }
-        }
-        return updated
-      })
-      return { ...prev, sheets }
-    })
-  }, [selectedRange])
+  const handleSort = useCallback(
+    (ascending) => {
+      const single =
+        selectedRange.startRow === selectedRange.endRow &&
+        selectedRange.startCol === selectedRange.endCol
+      const range = single ? usedRange(activeSheet) : selectedRange
+      if (range) withSheet((s) => sortRange(s, range, activeCell.col, ascending))
+    },
+    [withSheet, selectedRange, activeSheet, activeCell.col],
+  )
 
-  // Sheet Tabs Management
-  const handleAddSheet = useCallback(() => {
-    setWorkbook((prev) => {
-      const newIndex = prev.sheets.length + 1
-      const newSheet = createSheet(`sheet_${Date.now()}`, `Sheet${newIndex}`)
-      return {
-        ...prev,
-        activeSheetId: newSheet.id,
-        sheets: [...prev.sheets, newSheet],
-      }
-    })
-  }, [])
+  const handleChangeDecimals = useCallback(
+    (delta) => {
+      const fmt = currentCell?.numFmt
+      const typed = fmt && fmt !== 'general'
+      const fraction = String(currentCell?.value ?? '').split('.')[1]?.length ?? 0
+      const current = currentCell?.decimals ?? (typed ? DEFAULT_DECIMALS[fmt] : fraction)
+      const next = Math.min(10, Math.max(0, current + delta))
+      withSheet((s) => applyNumberFormat(s, selectedRange, typed ? fmt : 'number', next))
+    },
+    [withSheet, currentCell, selectedRange],
+  )
 
-  const handleSelectSheet = useCallback((sheetId) => {
-    setWorkbook((prev) => ({ ...prev, activeSheetId: sheetId }))
-  }, [])
+  const handleStructure = useCallback(
+    (axis, action) => {
+      const isRow = axis === 'row'
+      const index = isRow ? selectedRange.startRow : selectedRange.startCol
+      const count = isRow
+        ? selectedRange.endRow - selectedRange.startRow + 1
+        : selectedRange.endCol - selectedRange.startCol + 1
+      update((wb) => changeStructure(wb, axis, action, index, count))
+    },
+    [update, selectedRange],
+  )
 
-  const handleRenameSheet = useCallback((sheetId, newName) => {
-    setWorkbook((prev) => ({
-      ...prev,
-      sheets: prev.sheets.map((s) => (s.id === sheetId ? { ...s, name: newName } : s)),
-    }))
-  }, [])
+  const handleSave = useCallback(async () => {
+    if (onSave) onSave(await exportXlsx())
+  }, [onSave, exportXlsx])
 
-  // Range calculation summary for status bar (Count, Sum, Average)
-  const selectionStats = useMemo(() => {
-    let count = 0
-    let numericCount = 0
-    let sum = 0
+  const tabs = useSheetTabs(update)
 
-    for (let r = selectedRange.startRow; r <= selectedRange.endRow; r++) {
-      for (let c = selectedRange.startCol; c <= selectedRange.endCol; c++) {
-        const cell = getCell(activeSheet, r, c)
-        if (cell && (cell.value !== undefined || cell.raw !== undefined)) {
-          count++
-          const num = Number(cell.value ?? cell.raw)
-          if (!isNaN(num) && String(cell.value ?? cell.raw).trim() !== '') {
-            numericCount++
-            sum += num
-          }
-        }
-      }
-    }
+  const selectionStats = useMemo(
+    () => summarizeSelection(activeSheet, selectedRange),
+    [activeSheet, selectedRange],
+  )
 
-    if (numericCount === 0) {
-      return count > 0 ? `Count: ${count}` : 'Ready'
-    }
-    const avg = (sum / numericCount).toFixed(2).replace(/\.00$/, '')
-    return `Count: ${count} | Sum: ${sum} | Average: ${avg}`
-  }, [activeSheet, selectedRange])
-
+  const style = currentCell?.style || {}
   const ribbonConfig = getSheetsRibbonConfig({
-    onSave,
+    onSave: handleSave,
     canSave: true,
+    onUndo: undo,
+    onRedo: redo,
+    canUndo,
+    canRedo,
     onToggleAi: () => setShowAiSidebar((p) => !p),
+    activeStyle: style,
+    onToggleBold: () => withSheet((s) => applyStyle(s, selectedRange, { bold: !style.bold })),
+    onToggleItalic: () => withSheet((s) => applyStyle(s, selectedRange, { italic: !style.italic })),
+    onSetAlign: (align) => withSheet((s) => applyStyle(s, selectedRange, { align })),
+    onSetFill: (bgColor) => withSheet((s) => applyStyle(s, selectedRange, { bgColor })),
+    onSetTextColor: (textColor) => withSheet((s) => applyStyle(s, selectedRange, { textColor })),
+    onSetNumberFormat: (fmt) => withSheet((s) => applyNumberFormat(s, selectedRange, fmt)),
+    onChangeDecimals: handleChangeDecimals,
+    onClearContents: handleClearRange,
+    onStructure: handleStructure,
+    onDeleteSheet: tabs.deleteSheet,
+    onAutoSum: (fn) => withSheet((s) => autoAggregate(s, selectedRange, fn)),
+    onSort: handleSort,
+    onExportCsv: () => saveFileAs(title, sheetToCsv(activeSheet), 'csv'),
+    showGridlines: !activeSheet.hideGridlines,
+    onToggleGridlines: () =>
+      update((wb) => updateActiveSheet(wb, (s) => (s.hideGridlines = !s.hideGridlines)), noRecalc),
   })
 
   return (
@@ -225,7 +203,6 @@ export function ZSheets({ onSave, initialContent }) {
     >
       <Ribbon config={ribbonConfig} />
 
-      {/* Formula Bar */}
       <FormulaBar
         activeCell={activeCell}
         value={formulaValue}
@@ -238,7 +215,6 @@ export function ZSheets({ onSave, initialContent }) {
         onFxClick={handleStartEdit}
       />
 
-      {/* Workspace Grid & AI Sidebar */}
       <div className="flex flex-1 overflow-hidden">
         <CanvasGrid
           sheet={activeSheet}
@@ -246,10 +222,10 @@ export function ZSheets({ onSave, initialContent }) {
           selectedRange={selectedRange}
           themeMode={themeMode}
           onSelectionChange={handleSelectionChange}
-          onColResize={handleColResize}
-          onRowResize={handleRowResize}
+          onColResize={(col, width) => resize('colWidths', col, width)}
+          onRowResize={(row, height) => resize('rowHeights', row, height)}
           isEditing={isEditing}
-          editValue={currentEditValue}
+          editValue={editValue}
           onEditValueChange={setEditValue}
           onStartEdit={handleStartEdit}
           onCommitEdit={handleCommitEdit}
@@ -264,16 +240,14 @@ export function ZSheets({ onSave, initialContent }) {
         />
       </div>
 
-      {/* Multi-Sheet Bottom Tabs */}
       <SheetTabBar
         sheets={workbook.sheets}
         activeSheetId={workbook.activeSheetId}
-        onSelectSheet={handleSelectSheet}
-        onAddSheet={handleAddSheet}
-        onRenameSheet={handleRenameSheet}
+        onSelectSheet={tabs.selectSheet}
+        onAddSheet={tabs.addSheet}
+        onRenameSheet={tabs.renameSheet}
       />
 
-      {/* Status Bar */}
       <StatusBar
         leftContent={
           <>

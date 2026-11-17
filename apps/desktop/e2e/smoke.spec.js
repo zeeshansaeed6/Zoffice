@@ -40,7 +40,7 @@ test.describe('Zoffice Electron Smoke Tests', () => {
     // 1. Verify start screen is displayed
     const startScreen = page.locator('[data-testid="start-screen"]')
     await expect(startScreen).toBeVisible()
-    await expect(page.getByText('Zoffice')).toBeVisible()
+    await expect(page.getByText('Zoffice', { exact: true })).toBeVisible()
 
     // Capture screenshot to docs/screenshots/start-screen.png
     const screenshotPath = resolve(__dirname, '../../../docs/screenshots/start-screen.png')

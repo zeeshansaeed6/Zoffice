@@ -14,6 +14,7 @@
     "@zoffice/core": "workspace:*",
     "@zoffice/ui": "workspace:*",
     "hyperformula": "^3.5.0",
+    "jszip": "^3.10.2",
     "lucide-react": "^0.460.0"
   },
   "peerDependencies": {

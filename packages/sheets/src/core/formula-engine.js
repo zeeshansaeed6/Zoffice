@@ -117,6 +117,7 @@ export class FormulaEngine {
       for (const [cStr, cell] of Object.entries(cols)) {
         const col = parseInt(cStr, 10)
         const val = cell.raw !== undefined ? cell.raw : cell.value
+        if (val === undefined) continue // style-only cell
         this.hf.setCellContents({ sheet: hfSheetId, row, col }, [[val]])
       }
     }
