@@ -45,7 +45,7 @@ test.describe('ZNotes E2E Tests', () => {
 
     // Sidebar shows default notebook
     await expect(page.getByText('Notebooks')).toBeVisible()
-    await expect(page.getByText('My Notebook')).toBeVisible()
+    await expect(page.getByText('My Notebook').first()).toBeVisible()
 
     // Canvas shows initial block
     await expect(page.getByText(/Welcome to ZNotes/i)).toBeVisible()

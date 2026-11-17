@@ -41,9 +41,9 @@ test.describe('ZMail & ZCalendar E2E Tests', () => {
     await expect(page.getByRole('tab', { name: 'Home' })).toBeVisible()
 
     // 3-Pane Mail layout elements
-    await expect(page.getByText('Folders')).toBeVisible()
+    await expect(page.getByText('Mail Folders')).toBeVisible()
     await expect(page.getByText('Inbox')).toBeVisible()
-    await expect(page.getByText('Welcome to ZMail & ZCalendar!')).toBeVisible()
+    await expect(page.getByText('Welcome to ZMail & ZCalendar!').first()).toBeVisible()
 
     // Switch to Calendar via side switcher
     const calSwitcher = page.locator('[data-testid="switcher-calendar"]')

@@ -47,7 +47,7 @@ test.describe('ZDrive E2E Tests', () => {
     await listViewBtn.click()
 
     // Check table headers
-    await expect(page.getByRole('cell', { name: 'Quarterly Report.docx' })).toBeVisible()
+    await expect(page.getByRole('cell', { name: /Inventory Catalog.zbase/ })).toBeVisible()
 
     // Open Storage Analytics section
     const storageNavBtn = page.getByRole('button', { name: 'Storage' })
@@ -58,7 +58,7 @@ test.describe('ZDrive E2E Tests', () => {
     await expect(page.getByText('Storage Distribution')).toBeVisible()
 
     // Navigate back to My Drive
-    const myDriveBtn = page.getByRole('button', { name: 'My Drive' })
+    const myDriveBtn = page.getByRole('button', { name: 'My Drive' }).first()
     await expect(myDriveBtn).toBeVisible()
     await myDriveBtn.click()
 

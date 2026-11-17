@@ -39,8 +39,8 @@ test.describe('ZForms E2E Tests', () => {
 
     // Initial questions are rendered in builder
     await expect(page.getByPlaceholder('Form Title')).toBeVisible()
-    await expect(page.getByDisplayValue('Full Name')).toBeVisible()
-    await expect(page.getByDisplayValue('Email Address')).toBeVisible()
+    await expect(page.locator('input[value="Full Name"]')).toBeVisible()
+    await expect(page.locator('input[value="Email Address"]')).toBeVisible()
 
     // Switch to Preview
     const previewBtn = page.locator('[data-testid="btn-preview"]')
@@ -69,7 +69,7 @@ test.describe('ZForms E2E Tests', () => {
     await responsesTab.click()
 
     // Responses counter reflects submission
-    await expect(page.getByText('1 Response')).toBeVisible()
+    await expect(page.getByText('1 Response').first()).toBeVisible()
     await expect(page.getByText('Sam Respondent')).toBeVisible()
   })
 })

@@ -38,8 +38,8 @@ test.describe('ZBase E2E Tests', () => {
     await expect(baseApp).toBeVisible()
 
     // Default tables and views exist
-    await expect(page.getByRole('button', { name: 'Projects' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Team' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Projects', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Team', exact: true })).toBeVisible()
 
     // Switch view to Kanban
     const kanbanBtn = page.getByRole('button', { name: /Status Board/i })
@@ -62,7 +62,7 @@ test.describe('ZBase E2E Tests', () => {
     await expect(page.getByText(/row\(s\) returned/i)).toBeVisible()
 
     // Close SQL Console
-    const closeBtn = page.locator('button:has(svg.lucide-x)')
+    const closeBtn = page.locator('[role="dialog"] button:has(svg.lucide-x)')
     await closeBtn.click()
     await expect(page.getByText('ZBase SQL Console')).not.toBeVisible()
 

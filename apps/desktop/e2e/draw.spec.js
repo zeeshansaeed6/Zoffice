@@ -44,7 +44,7 @@ test.describe('ZDraw E2E Tests', () => {
 
     // Add a basic shape by clicking
     await page.getByRole('button', { name: 'Basic' }).click()
-    const rectShapeBtn = page.getByTitle(/Rectangle/i)
+    const rectShapeBtn = page.getByTitle('Click or drag Rectangle to canvas')
     await expect(rectShapeBtn).toBeVisible()
     await rectShapeBtn.click()
 

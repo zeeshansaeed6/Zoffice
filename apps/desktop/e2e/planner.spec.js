@@ -49,9 +49,9 @@ test.describe('ZPlanner E2E Tests', () => {
 
     // Verify Gantt timeline header is visible
     await expect(page.getByText(/Timeline \(/i)).toBeVisible()
-    await expect(page.getByRole('button', { name: /day/i })).toBeVisible()
-    await expect(page.getByRole('button', { name: /week/i })).toBeVisible()
-    await expect(page.getByRole('button', { name: /month/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^day$/i }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /^week$/i }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /^month$/i }).first()).toBeVisible()
 
     // Switch to Calendar view
     const calTab = page.locator('[data-testid="tab-calendar"]')
@@ -60,7 +60,7 @@ test.describe('ZPlanner E2E Tests', () => {
 
     // Verify Calendar view controls
     await expect(page.getByRole('button', { name: 'Today' })).toBeVisible()
-    await expect(page.getByText('Mon')).toBeVisible()
+    await expect(page.getByText('Mon').first()).toBeVisible()
     await expect(page.getByText('Fri')).toBeVisible()
 
     // Switch back to Kanban
