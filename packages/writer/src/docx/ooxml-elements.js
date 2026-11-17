@@ -1,4 +1,5 @@
 import { getChildElements, getFirstChildElement, getAttribute, emusToPixels } from './xml-utils.js'
+import { escapeAttr } from './ooxml-notes.js'
 import { parseRunProperties, parseParagraphProperties } from './ooxml-styles.js'
 
 /**
@@ -150,12 +151,27 @@ export function convertParagraphToHtml(pEl, context) {
 
   // Child runs & hyperlinks
   let innerHtml = ''
+  let commentOpen = false
   for (let i = 0; i < pEl.childNodes.length; i++) {
     const node = pEl.childNodes[i]
     if (node.nodeType === 1) {
       const el = /** @type {Element} */ (node)
       const local = el.localName || el.nodeName.split(':').pop()
-      if (local === 'r') {
+      if (local === 'commentRangeStart') {
+        const comment = context.comments?.get(getAttribute(el, 'id'))
+        if (comment && !commentOpen) {
+          const id = `docx-${getAttribute(el, 'id')}`
+          innerHtml += `<span data-comment-id="${id}" data-comment="${escapeAttr(comment.text)}" data-author="${escapeAttr(comment.author)}">`
+          commentOpen = true
+        }
+      } else if (local === 'commentRangeEnd' && commentOpen) {
+        innerHtml += '</span>'
+        commentOpen = false
+      } else if (local === 'r' && getFirstChildElement(el, 'footnoteReference')) {
+        const refId = getAttribute(getFirstChildElement(el, 'footnoteReference'), 'id')
+        const text = context.footnotes?.get(refId)
+        if (text !== undefined) innerHtml += `<sup data-footnote="${escapeAttr(text)}"></sup>`
+      } else if (local === 'r') {
         innerHtml += convertRunToHtml(el, { ...context, defaultRPr })
       } else if (local === 'hyperlink') {
         const rId = getAttribute(el, 'id') || getAttribute(el, 'r:id')
@@ -169,6 +185,8 @@ export function convertParagraphToHtml(pEl, context) {
       }
     }
   }
+
+  if (commentOpen) innerHtml += '</span>'
 
   // Check list item (w:numPr)
   let listInfo = null
@@ -211,6 +229,7 @@ export function convertParagraphToHtml(pEl, context) {
   const styles = []
   if (mergedPPr.align) styles.push(`text-align: ${mergedPPr.align}`)
   if (mergedPPr.lineSpacing) styles.push(`line-height: ${mergedPPr.lineSpacing}`)
+  if (mergedPPr.indent) styles.push(`margin-left: ${mergedPPr.indent * 48}px`)
 
   const styleAttr = styles.length > 0 ? ` style="${styles.join('; ')}"` : ''
   return {

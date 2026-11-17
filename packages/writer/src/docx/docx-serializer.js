@@ -10,6 +10,7 @@ import {
   PageBreak as DocxPageBreak,
 } from 'docx'
 import { injectPreservedParts } from './docx-package-preserver.js'
+import { createCommentRegistry, convertWithComments } from './docx-comments.js'
 import { buildSectionPageProperties, buildHeaderFooter } from './docx-section.js'
 import { convertTableNode } from './docx-serializer-table.js'
 
@@ -107,42 +108,45 @@ function convertTextNode(node) {
 
 // Footnotes collected while converting; reset by serializeDocxToBase64
 let footnotes = {}
+let commentRegistry = createCommentRegistry()
 
 function convertInlineContent(content = []) {
-  return content.map((child) => {
-    if (child.type === 'footnote') {
-      const id = Object.keys(footnotes).length + 1
-      footnotes[id] = {
-        children: [new Paragraph({ children: [new TextRun(child.attrs?.text || '')] })],
-      }
-      return new FootnoteReferenceRun(id)
+  return convertWithComments(content, convertInlineChild, commentRegistry)
+}
+
+function convertInlineChild(child) {
+  if (child.type === 'footnote') {
+    const id = Object.keys(footnotes).length + 1
+    footnotes[id] = {
+      children: [new Paragraph({ children: [new TextRun(child.attrs?.text || '')] })],
     }
-    if (child.type === 'text') {
-      return convertTextNode(child)
-    }
-    if (child.type === 'mathEquation' && child.attrs?.latex) {
-      return new TextRun({
-        text: child.attrs.latex,
-        italics: true,
-        font: 'Cambria Math',
+    return new FootnoteReferenceRun(id)
+  }
+  if (child.type === 'text') {
+    return convertTextNode(child)
+  }
+  if (child.type === 'mathEquation' && child.attrs?.latex) {
+    return new TextRun({
+      text: child.attrs.latex,
+      italics: true,
+      font: 'Cambria Math',
+    })
+  }
+  if (child.type === 'image' && child.attrs?.src) {
+    try {
+      const clean = child.attrs.src.replace(/^data:.*?;base64,/, '').trim()
+      return new ImageRun({
+        data: Buffer.from(clean, 'base64'),
+        transformation: {
+          width: child.attrs.width || 200,
+          height: child.attrs.height || 150,
+        },
       })
+    } catch {
+      return new TextRun({ text: '' })
     }
-    if (child.type === 'image' && child.attrs?.src) {
-      try {
-        const clean = child.attrs.src.replace(/^data:.*?;base64,/, '').trim()
-        return new ImageRun({
-          data: Buffer.from(clean, 'base64'),
-          transformation: {
-            width: child.attrs.width || 200,
-            height: child.attrs.height || 150,
-          },
-        })
-      } catch {
-        return new TextRun({ text: '' })
-      }
-    }
-    return new TextRun({ text: '' })
-  })
+  }
+  return new TextRun({ text: '' })
 }
 
 export function convertJsonToDocxElements(docJson) {
@@ -159,6 +163,7 @@ export function convertJsonToDocxElements(docJson) {
           new Paragraph({
             alignment: getAlignment(node.attrs?.textAlign),
             spacing: lineSpacing ? { line: lineSpacing } : undefined,
+            indent: node.attrs?.indent ? { left: node.attrs.indent * 720 } : undefined,
             children: convertInlineContent(node.content),
           }),
         )
@@ -244,6 +249,7 @@ export function convertJsonToDocxElements(docJson) {
  */
 export async function serializeDocxToBase64(docJson, options = {}) {
   footnotes = {}
+  commentRegistry = createCommentRegistry()
   const children = convertJsonToDocxElements(docJson)
   const properties = buildSectionPageProperties(options.pageSetup)
 
@@ -260,6 +266,7 @@ export async function serializeDocxToBase64(docJson, options = {}) {
       ],
     },
     footnotes,
+    comments: { children: commentRegistry.items },
     sections: [{ properties, ...buildHeaderFooter(options.pageSetup), children }],
   })
 

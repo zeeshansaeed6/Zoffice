@@ -1,5 +1,6 @@
 import mammoth from 'mammoth'
 import { readDocxPackage } from './ooxml-package.js'
+import { readNotesAndHeaders } from './ooxml-notes.js'
 import { parseStyles, resolveStyle } from './ooxml-styles.js'
 import { parseNumbering, resolveNumbering } from './ooxml-numbering.js'
 import { parsePageSetup } from './ooxml-page-setup.js'
@@ -29,11 +30,19 @@ export async function parseDocxDirect(input) {
     const body = getFirstChildElement(doc.documentElement, 'body')
     if (!body) throw new Error('Missing w:body in document.xml')
 
-    const pageSetup = parsePageSetup(doc.documentElement)
+    const notes = await readNotesAndHeaders(pkg.zip, pkg.documentXml, pkg.relationships)
+    const pageSetup = {
+      ...parsePageSetup(doc.documentElement),
+      header: notes.header,
+      footer: notes.footer,
+      pageNumbers: notes.pageNumbers,
+    }
 
     const context = {
       relationships: pkg.relationships,
       media: pkg.media,
+      footnotes: notes.footnotes,
+      comments: notes.comments,
       defaults,
       styles,
       resolveStyle: (id) => resolveStyle(id, styles, defaults),

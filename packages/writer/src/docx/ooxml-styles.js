@@ -202,6 +202,11 @@ export function parseParagraphProperties(pPrEl) {
     }
   }
 
+  // Left indent (720 twips per indent level)
+  const indEl = getFirstChildElement(pPrEl, 'ind')
+  const left = indEl ? parseFloat(getAttribute(indEl, 'left') || '0') : 0
+  if (left > 0) props.indent = Math.round(left / 720)
+
   // Keep with next
   if (getFirstChildElement(pPrEl, 'keepNext')) {
     props.keepNext = true

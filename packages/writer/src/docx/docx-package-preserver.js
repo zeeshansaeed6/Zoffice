@@ -19,8 +19,6 @@ export async function injectPreservedParts(generatedBuffer, preservedFiles) {
   for (const [path, fileEntry] of preservedFiles.entries()) {
     // Only copy if not already in newly generated docx (or if auxiliary header/footer/setting)
     if (
-      path.startsWith('word/header') ||
-      path.startsWith('word/footer') ||
       path === 'word/settings.xml' ||
       path.startsWith('word/theme/') ||
       path.startsWith('customXml/')

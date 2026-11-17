@@ -22,7 +22,7 @@ export const Footnote = Node.create({
   },
 
   parseHTML() {
-    return [{ tag: 'sup[data-footnote]' }]
+    return [{ tag: 'sup[data-footnote]', priority: 100 }]
   },
 
   renderHTML({ HTMLAttributes }) {

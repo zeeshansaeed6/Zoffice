@@ -118,8 +118,6 @@ export async function readDocxPackage(input) {
   const preservedFiles = new Map()
   zip.forEach((path, entry) => {
     if (
-      path.startsWith('word/header') ||
-      path.startsWith('word/footer') ||
       path === 'word/settings.xml' ||
       path.startsWith('word/theme/') ||
       path.startsWith('customXml/')
