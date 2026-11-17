@@ -96,3 +96,19 @@ body {
     box-shadow: none !important;
   }
 }
+
+/* Footnote numbering */
+.ProseMirror {
+  counter-reset: footnote;
+}
+
+sup.footnote-ref {
+  counter-increment: footnote;
+  cursor: help;
+}
+
+sup.footnote-ref::after {
+  content: counter(footnote);
+  color: #2563eb;
+  font-weight: 600;
+}

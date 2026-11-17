@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { EditorContent } from '@tiptap/react'
 import { isRtlLocale } from '@zoffice/core'
+import { collectFootnotes } from '../core/footnote-extension.js'
 import { getPageMetrics, calculatePageCount } from './page-utils.js'
 
 /**
@@ -17,6 +18,7 @@ export function PaperCanvas({ editor, zoom = 100, pageSetup = {}, onPageCountCha
   const isRtl = isRtlLocale()
   const { widthPx, heightPx, margins: marginConfig } = getPageMetrics(pageSetup)
   const columns = pageSetup.columns || 1
+  const footnotes = editor?.isInitialized ? collectFootnotes(editor.state.doc) : []
 
   const editorHtml = editor?.isInitialized ? editor.getHTML() : ''
   const pageHeight = heightPx
@@ -53,9 +55,36 @@ export function PaperCanvas({ editor, zoom = 100, pageSetup = {}, onPageCountCha
           transform: `${zoom !== 100 ? `scale(${zoom / 100})` : 'none'}`,
         }}
       >
+        {pageSetup.header && (
+          <div
+            data-testid="page-header"
+            className="absolute inset-x-0 top-0 truncate px-12 pt-6 text-xs text-neutral-500"
+          >
+            {pageSetup.header}
+          </div>
+        )}
         <div style={columns > 1 ? { columnCount: columns, columnGap: '32px' } : undefined}>
           <EditorContent editor={editor} />
         </div>
+        {footnotes.length > 0 && (
+          <ol
+            data-testid="footnotes-list"
+            className="mt-6 list-decimal border-t border-neutral-300 pl-5 pt-2 text-xs text-neutral-600 dark:text-neutral-400"
+          >
+            {footnotes.map((n) => (
+              <li key={n.number}>{n.text}</li>
+            ))}
+          </ol>
+        )}
+        {(pageSetup.footer || pageSetup.pageNumbers) && (
+          <div
+            data-testid="page-footer"
+            className="absolute inset-x-0 bottom-0 flex justify-between px-12 pb-6 text-xs text-neutral-500"
+          >
+            <span>{pageSetup.footer}</span>
+            {pageSetup.pageNumbers && <span>Page 1</span>}
+          </div>
+        )}
       </div>
     </div>
   )

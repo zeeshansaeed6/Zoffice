@@ -16,6 +16,7 @@ export {
   openFile,
   saveFile,
   saveFileAs,
+  exportPdf,
 } from './file-manager.js'
 export { createAutosaveController } from './autosave.js'
 export { getRecoverableDocuments, clearRecoveryDocument } from './recovery.js'

@@ -1,7 +1,8 @@
 import { test, expect, _electron as electron } from '@playwright/test'
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
-import { existsSync, unlinkSync } from 'fs'
+import { existsSync, unlinkSync, statSync } from 'fs'
+import { tmpdir } from 'os'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEST_DOCX_PATH = resolve(__dirname, '../../../test-fixtures/e2e-zwriter-test.docx')
@@ -190,5 +191,47 @@ test.describe('ZWriter Document Engine E2E Tests', () => {
     await expect(page.getByRole('button', { name: 'Table of Contents' })).toBeVisible()
     await page.getByRole('tab', { name: 'View', exact: true }).click()
     await expect(page.getByRole('button', { name: 'Print' })).toBeVisible()
+  })
+
+  test('header/footer, footnotes, comments and PDF export work', async () => {
+    await page.getByRole('button', { name: /ZWriter/i }).click()
+    const editor = page.getByRole('textbox', { name: 'Document editor' })
+    await expect(editor).toBeVisible()
+    await editor.fill('Annotated body text')
+
+    // Header & Footer with page number
+    await page.getByRole('tab', { name: 'Insert' }).click()
+    await page.getByRole('button', { name: 'Header & Footer' }).click()
+    await page.getByLabel('Header text').fill('Project Plan')
+    await page.getByLabel('Footer text').fill('Internal')
+    await page.getByLabel('Show page numbers').check()
+    await page.getByRole('button', { name: 'Apply' }).click()
+    await expect(page.getByTestId('page-header')).toHaveText('Project Plan')
+    await expect(page.getByTestId('page-footer')).toContainText('Page 1')
+
+    // Footnote
+    await page.getByRole('tab', { name: 'References' }).click()
+    await page.getByRole('button', { name: 'Insert Footnote' }).click()
+    await page.getByLabel('Footnote text').fill('Source: internal memo')
+    await page.getByRole('button', { name: 'OK' }).click()
+    await expect(page.getByTestId('footnotes-list')).toContainText('Source: internal memo')
+
+    // Comment on the selected text
+    await editor.press('Control+A')
+    await page.getByRole('tab', { name: 'Review' }).click()
+    await page.getByRole('button', { name: 'New Comment' }).click()
+    await page.getByLabel(/Comment \(applies/).fill('Check this wording')
+    await page.getByRole('button', { name: 'OK' }).click()
+    await expect(page.getByTestId('comments-panel')).toContainText('Check this wording')
+
+    // PDF export (native save dialog stubbed to a temp path)
+    const pdfPath = resolve(tmpdir(), `zoffice-e2e-${Date.now()}.pdf`)
+    await electronApp.evaluate(({ dialog }, target) => {
+      dialog.showSaveDialog = async () => ({ canceled: false, filePath: target })
+    }, pdfPath)
+    await page.getByRole('tab', { name: 'View', exact: true }).click()
+    await page.getByRole('button', { name: 'Export PDF' }).click()
+    await expect.poll(() => existsSync(pdfPath) && statSync(pdfPath).size).toBeGreaterThan(1000)
+    unlinkSync(pdfPath)
   })
 })

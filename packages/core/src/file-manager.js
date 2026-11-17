@@ -67,3 +67,16 @@ export async function saveFileAs(defaultName, content, defaultExtension = 'docx'
   }
   return { cancelled: true }
 }
+
+/**
+ * Exports the current window as a PDF via Electron IPC.
+ * @param {string} defaultName
+ * @returns {Promise<{ cancelled: boolean, filePath?: string }>}
+ */
+export async function exportPdf(defaultName) {
+  if (typeof window !== 'undefined' && window.zofficeAPI?.file?.exportPdf) {
+    return window.zofficeAPI.file.exportPdf(defaultName)
+  }
+  window.print()
+  return { cancelled: true }
+}

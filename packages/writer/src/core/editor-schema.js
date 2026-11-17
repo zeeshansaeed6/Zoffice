@@ -8,6 +8,8 @@ import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import Link from '@tiptap/extension-link'
 import { LineSpacing } from './line-spacing-extension.js'
+import { Footnote } from './footnote-extension.js'
+import { Comment } from './comment-extension.js'
 import { Indent } from './indent-extension.js'
 import { PageBreak } from './page-break-extension.js'
 import { ConfiguredTable, TableRow, TableHeader, CustomTableCell } from './table-extension.js'
@@ -76,6 +78,8 @@ export function getWriterExtensions() {
     Superscript,
     LineSpacing,
     Indent,
+    Footnote,
+    Comment,
     PageBreak,
     ConfiguredTable,
     TableRow,

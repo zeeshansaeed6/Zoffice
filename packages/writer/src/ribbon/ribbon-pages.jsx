@@ -11,6 +11,10 @@ import {
   ZoomOut,
   Printer,
   Maximize,
+  FileDown,
+  Quote,
+  MessageSquarePlus,
+  MessagesSquare,
 } from 'lucide-react'
 import { PAGE_MARGINS } from '../page-layout/page-utils.js'
 
@@ -75,6 +79,13 @@ export function getReferencesRibbonGroups(a) {
         bigButton('insert-toc', 'Table of Contents', <ListTree size={20} />, a.onInsertToc),
       ],
     },
+    {
+      id: 'footnotes',
+      label: 'Footnotes',
+      controls: [
+        bigButton('insert-footnote', 'Insert Footnote', <Quote size={20} />, a.onInsertFootnote),
+      ],
+    },
   ]
 }
 
@@ -97,6 +108,22 @@ export function getReviewRibbonGroups(a) {
         },
       ],
     },
+    {
+      id: 'comments',
+      label: 'Comments',
+      controls: [
+        bigButton('new-comment', 'New Comment', <MessageSquarePlus size={20} />, a.onNewComment),
+        {
+          id: 'show-comments',
+          type: 'toggle',
+          label: 'Show Comments',
+          size: 'large',
+          icon: <MessagesSquare size={20} />,
+          pressed: a.commentsOpen,
+          onToggle: a.onToggleComments,
+        },
+      ],
+    },
   ]
 }
 
@@ -115,7 +142,10 @@ export function getViewRibbonGroups(a) {
     {
       id: 'print',
       label: 'Print',
-      controls: [bigButton('print', 'Print', <Printer size={20} />, a.onPrint)],
+      controls: [
+        bigButton('print', 'Print', <Printer size={20} />, a.onPrint),
+        bigButton('export-pdf', 'Export PDF', <FileDown size={20} />, a.onExportPdf),
+      ],
     },
   ]
 }

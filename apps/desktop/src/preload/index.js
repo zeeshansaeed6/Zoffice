@@ -42,6 +42,17 @@ const zofficeAPI = {
       }
       return ipcRenderer.invoke('file:saveAs', defaultName, content, String(defaultExt))
     },
+
+    /**
+     * @param {string} defaultName
+     * @returns {Promise<{ cancelled: boolean, filePath?: string }>}
+     */
+    exportPdf: (defaultName) => {
+      if (typeof defaultName !== 'string') {
+        return Promise.reject(new TypeError('defaultName must be a string'))
+      }
+      return ipcRenderer.invoke('file:exportPdf', defaultName)
+    },
   },
 
   recent: {

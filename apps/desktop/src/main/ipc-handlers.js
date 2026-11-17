@@ -1,5 +1,6 @@
 import { ipcMain, app, dialog } from 'electron'
 import { showOpenDialog, saveToFile, showSaveAsDialog, isValidExtension } from './file-service.js'
+import { exportWindowToPdf } from './pdf-export.js'
 import { getRecentFiles, addRecentFile, clearRecentFiles } from './recent-files.js'
 import { getSetting, setSetting } from './settings.js'
 import { saveAutosaveDocument, listAutosaveDocuments, removeAutosaveDocument } from './autosave.js'
@@ -37,6 +38,13 @@ export function registerIpcHandlers(win) {
     }
     const safeExt = typeof defaultExt === 'string' ? defaultExt : 'docx'
     return showSaveAsDialog(win, defaultName, content, safeExt)
+  })
+
+  ipcMain.handle('file:exportPdf', async (_event, defaultName) => {
+    if (typeof defaultName !== 'string') {
+      throw new Error('Invalid arguments for file:exportPdf')
+    }
+    return exportWindowToPdf(win, defaultName)
   })
 
   // Recent files

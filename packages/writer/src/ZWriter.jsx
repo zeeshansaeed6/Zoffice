@@ -4,12 +4,12 @@ import { getWriterRibbonConfig } from './ribbon/ribbon-config.jsx'
 import { PaperCanvas } from './page-layout/PaperCanvas.jsx'
 import { useWriterEditor } from './core/use-writer-editor.js'
 import { FindReplaceDialog } from './dialogs/FindReplaceDialog.jsx'
-import { parseDocxToHtml, serializeDocxToBase64 } from './docx/index.js'
+import { useDocxDocument } from './core/use-docx-document.js'
 import * as actions from './ribbon/home-actions.js'
 import * as insertActions from './ribbon/insert-actions.js'
-import * as reviewActions from './ribbon/review-actions.js'
-import { PAGE_MARGINS } from './page-layout/page-utils.js'
-import { WordCountDialog } from './dialogs/WordCountDialog.jsx'
+import { buildExtraRibbonActions } from './ribbon/extra-actions.js'
+import { CommentsPanel } from './page-layout/CommentsPanel.jsx'
+import { WriterReviewDialogs } from './dialogs/WriterReviewDialogs.jsx'
 import { WriterInsertDialogs } from './dialogs/WriterInsertDialogs.jsx'
 
 /**
@@ -33,8 +33,6 @@ export function ZWriter({
   const [pageCount, setPageCount] = useState(1)
   const [showFindReplace, setShowFindReplace] = useState(false)
   const [isFormatPainting, setIsFormatPainting] = useState(false)
-  const [pageSetup, setPageSetup] = useState({ pageSize: 'a4', margins: 'normal' })
-  const [preservedFiles, setPreservedFiles] = useState(null)
 
   // Insert Dialog states
   const [showTablePicker, setShowTablePicker] = useState(false)
@@ -44,7 +42,8 @@ export function ZWriter({
   const [showEquationDialog, setShowEquationDialog] = useState(false)
   const [showSymbolDialog, setShowSymbolDialog] = useState(false)
   const [showAiSidebar, setShowAiSidebar] = useState(false)
-  const [showWordCount, setShowWordCount] = useState(false)
+  const [reviewDialog, setReviewDialog] = useState(null)
+  const [showComments, setShowComments] = useState(false)
   const [spellcheck, setSpellcheck] = useState(true)
 
   const handleEditorChange = useCallback(
@@ -91,38 +90,11 @@ export function ZWriter({
     })
   }, [editor, spellcheck])
 
-  // Load and decode base64 .docx if passed as initial content
-  useEffect(() => {
-    if (!editor || !initialContent) return
-    if (!initialContent.startsWith('<')) {
-      parseDocxToHtml(initialContent)
-        .then(({ html, pageSetup: parsedSetup, preservedFiles: files }) => {
-          if (html && editor) {
-            editor.commands.setContent(html)
-          }
-          if (parsedSetup) {
-            setPageSetup(parsedSetup)
-          }
-          if (files) {
-            setPreservedFiles(files)
-          }
-        })
-        .catch((err) => {
-          console.error('[ZWriter] Failed to parse initial docx:', err)
-        })
-    }
-  }, [editor, initialContent])
-
-  const handleSave = useCallback(async () => {
-    if (!editor) return
-    const docxBase64 = await serializeDocxToBase64(editor.getJSON(), {
-      pageSetup,
-      preservedFiles,
-    })
-    if (onSave) {
-      onSave(docxBase64)
-    }
-  }, [editor, onSave, pageSetup, preservedFiles])
+  const { pageSetup, setPageSetup, handleSave } = useDocxDocument({
+    editor,
+    initialContent,
+    onSave,
+  })
 
   const handleFormatPainter = () => {
     if (!editor) return
@@ -208,26 +180,12 @@ export function ZWriter({
     onOpenEquationDialog: () => setShowEquationDialog(true),
     onOpenSymbolDialog: () => setShowSymbolDialog(true),
 
-    // Home extras
-    onIncreaseIndent: () => reviewActions.increaseIndent(editor),
-    onDecreaseIndent: () => reviewActions.decreaseIndent(editor),
-    onChangeCase: (mode) => reviewActions.changeCase(editor, mode),
-
-    // Layout
-    onSetMargins: (preset) => setPageSetup((p) => ({ ...p, margins: { ...PAGE_MARGINS[preset] } })),
-    onSetOrientation: (orientation) => setPageSetup((p) => ({ ...p, orientation })),
-    onSetPageSize: (size) => setPageSetup((p) => ({ ...p, pageSize: size })),
-    onSetColumns: (columns) => setPageSetup((p) => ({ ...p, columns })),
-
-    // References / Review / View
-    onInsertToc: () => reviewActions.insertTableOfContents(editor),
-    onOpenWordCount: () => setShowWordCount(true),
-    spellcheck,
-    onToggleSpellcheck: () => setSpellcheck((v) => !v),
-    onZoomIn: () => setZoom((z) => Math.min(200, z + 10)),
-    onZoomOut: () => setZoom((z) => Math.max(50, z - 10)),
-    onZoomReset: () => setZoom(100),
-    onPrint: () => window.print(),
+    ...buildExtraRibbonActions({
+      editor,
+      title: _title,
+      state: { spellcheck, commentsOpen: showComments },
+      setters: { setPageSetup, setZoom, setSpellcheck, setReviewDialog, setShowComments },
+    }),
   })
 
   const selectedText = editor?.state?.doc
@@ -248,6 +206,11 @@ export function ZWriter({
           zoom={zoom}
           pageSetup={pageSetup}
           onPageCountChange={setPageCount}
+        />
+        <CommentsPanel
+          editor={editor}
+          isOpen={showComments}
+          onClose={() => setShowComments(false)}
         />
         <AiAssistantSidebar
           isOpen={showAiSidebar}
@@ -284,10 +247,13 @@ export function ZWriter({
         onZoomChange={setZoom}
       />
 
-      <WordCountDialog
-        isOpen={showWordCount}
-        onClose={() => setShowWordCount(false)}
+      <WriterReviewDialogs
+        dialog={reviewDialog}
+        onClose={() => setReviewDialog(null)}
         editor={editor}
+        pageSetup={pageSetup}
+        setPageSetup={setPageSetup}
+        onCommentAdded={() => setShowComments(true)}
       />
 
       {/* Find and Replace Modal */}

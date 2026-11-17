@@ -5,11 +5,12 @@ import {
   ImageRun,
   HeadingLevel,
   AlignmentType,
-  PageOrientation,
   Packer,
+  FootnoteReferenceRun,
   PageBreak as DocxPageBreak,
 } from 'docx'
 import { injectPreservedParts } from './docx-package-preserver.js'
+import { buildSectionPageProperties, buildHeaderFooter } from './docx-section.js'
 import { convertTableNode } from './docx-serializer-table.js'
 
 function getAlignment(align) {
@@ -104,8 +105,18 @@ function convertTextNode(node) {
   })
 }
 
+// Footnotes collected while converting; reset by serializeDocxToBase64
+let footnotes = {}
+
 function convertInlineContent(content = []) {
   return content.map((child) => {
+    if (child.type === 'footnote') {
+      const id = Object.keys(footnotes).length + 1
+      footnotes[id] = {
+        children: [new Paragraph({ children: [new TextRun(child.attrs?.text || '')] })],
+      }
+      return new FootnoteReferenceRun(id)
+    }
     if (child.type === 'text') {
       return convertTextNode(child)
     }
@@ -222,35 +233,6 @@ export function convertJsonToDocxElements(docJson) {
   return elements.length > 0 ? elements : [new Paragraph({ children: [new TextRun('')] })]
 }
 
-function buildSectionPageProperties(pageSetup) {
-  if (!pageSetup) return {}
-
-  const isLandscape = pageSetup.orientation === 'landscape'
-  const isLetter = pageSetup.pageSize === 'letter'
-  const widthTwips = isLetter ? 12240 : 11906
-  const heightTwips = isLetter ? 15840 : 16838
-
-  const margins = pageSetup.margins || {}
-  const marginOpts = {
-    top: Math.round(((margins.top || 96) / 96) * 1440),
-    bottom: Math.round(((margins.bottom || 96) / 96) * 1440),
-    left: Math.round(((margins.left || 96) / 96) * 1440),
-    right: Math.round(((margins.right || 96) / 96) * 1440),
-  }
-
-  return {
-    ...(pageSetup.columns > 1 ? { column: { count: pageSetup.columns, space: 708 } } : {}),
-    page: {
-      size: {
-        width: isLandscape ? heightTwips : widthTwips,
-        height: isLandscape ? widthTwips : heightTwips,
-        orientation: isLandscape ? PageOrientation.LANDSCAPE : PageOrientation.PORTRAIT,
-      },
-      margin: marginOpts,
-    },
-  }
-}
-
 /**
  * Serializes a TipTap document JSON tree into a .docx base64 string.
  *
@@ -261,6 +243,7 @@ function buildSectionPageProperties(pageSetup) {
  * @returns {Promise<string>} Base64-encoded .docx binary data
  */
 export async function serializeDocxToBase64(docJson, options = {}) {
+  footnotes = {}
   const children = convertJsonToDocxElements(docJson)
   const properties = buildSectionPageProperties(options.pageSetup)
 
@@ -276,7 +259,8 @@ export async function serializeDocxToBase64(docJson, options = {}) {
         },
       ],
     },
-    sections: [{ properties, children }],
+    footnotes,
+    sections: [{ properties, ...buildHeaderFooter(options.pageSetup), children }],
   })
 
   const generatedBuf = await Packer.toBuffer(doc)

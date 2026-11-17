@@ -11,6 +11,7 @@ import {
   Omega,
   Plus,
   Split,
+  PanelTop,
 } from 'lucide-react'
 
 /**
@@ -32,6 +33,14 @@ export function getInsertRibbonGroups(actions) {
           size: 'large',
           icon: <FileText size={20} />,
           onClick: actions.onInsertPageBreak,
+        },
+        {
+          id: 'header-footer',
+          type: 'button',
+          label: 'Header & Footer',
+          size: 'large',
+          icon: <PanelTop size={20} />,
+          onClick: actions.onOpenHeaderFooter,
         },
       ],
     },
