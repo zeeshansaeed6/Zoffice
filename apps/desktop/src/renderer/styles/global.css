@@ -75,3 +75,24 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(156, 163, 175, 0.7);
 }
+
+/* Print only the paper sheet, without app chrome */
+@media print {
+  [data-testid='tab-bar'],
+  [data-testid='ribbon'],
+  [data-testid='status-bar'] {
+    display: none !important;
+  }
+
+  [data-testid='paper-canvas-viewport'] {
+    padding: 0 !important;
+    overflow: visible !important;
+    background: none !important;
+  }
+
+  [data-testid='paper-sheet'] {
+    transform: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+}

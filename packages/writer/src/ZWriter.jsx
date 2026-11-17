@@ -7,6 +7,9 @@ import { FindReplaceDialog } from './dialogs/FindReplaceDialog.jsx'
 import { parseDocxToHtml, serializeDocxToBase64 } from './docx/index.js'
 import * as actions from './ribbon/home-actions.js'
 import * as insertActions from './ribbon/insert-actions.js'
+import * as reviewActions from './ribbon/review-actions.js'
+import { PAGE_MARGINS } from './page-layout/page-utils.js'
+import { WordCountDialog } from './dialogs/WordCountDialog.jsx'
 import { WriterInsertDialogs } from './dialogs/WriterInsertDialogs.jsx'
 
 /**
@@ -41,6 +44,8 @@ export function ZWriter({
   const [showEquationDialog, setShowEquationDialog] = useState(false)
   const [showSymbolDialog, setShowSymbolDialog] = useState(false)
   const [showAiSidebar, setShowAiSidebar] = useState(false)
+  const [showWordCount, setShowWordCount] = useState(false)
+  const [spellcheck, setSpellcheck] = useState(true)
 
   const handleEditorChange = useCallback(
     async (html) => {
@@ -74,6 +79,17 @@ export function ZWriter({
     },
     [editor],
   )
+
+  useEffect(() => {
+    if (!editor) return
+    const { editorProps } = editor.options
+    editor.setOptions({
+      editorProps: {
+        ...editorProps,
+        attributes: { ...editorProps?.attributes, spellcheck: String(spellcheck) },
+      },
+    })
+  }, [editor, spellcheck])
 
   // Load and decode base64 .docx if passed as initial content
   useEffect(() => {
@@ -191,6 +207,27 @@ export function ZWriter({
     onInsertDateTime: (format) => insertActions.insertDateTime(editor, format),
     onOpenEquationDialog: () => setShowEquationDialog(true),
     onOpenSymbolDialog: () => setShowSymbolDialog(true),
+
+    // Home extras
+    onIncreaseIndent: () => reviewActions.increaseIndent(editor),
+    onDecreaseIndent: () => reviewActions.decreaseIndent(editor),
+    onChangeCase: (mode) => reviewActions.changeCase(editor, mode),
+
+    // Layout
+    onSetMargins: (preset) => setPageSetup((p) => ({ ...p, margins: { ...PAGE_MARGINS[preset] } })),
+    onSetOrientation: (orientation) => setPageSetup((p) => ({ ...p, orientation })),
+    onSetPageSize: (size) => setPageSetup((p) => ({ ...p, pageSize: size })),
+    onSetColumns: (columns) => setPageSetup((p) => ({ ...p, columns })),
+
+    // References / Review / View
+    onInsertToc: () => reviewActions.insertTableOfContents(editor),
+    onOpenWordCount: () => setShowWordCount(true),
+    spellcheck,
+    onToggleSpellcheck: () => setSpellcheck((v) => !v),
+    onZoomIn: () => setZoom((z) => Math.min(200, z + 10)),
+    onZoomOut: () => setZoom((z) => Math.max(50, z - 10)),
+    onZoomReset: () => setZoom(100),
+    onPrint: () => window.print(),
   })
 
   const selectedText = editor?.state?.doc
@@ -209,14 +246,7 @@ export function ZWriter({
         <PaperCanvas
           editor={editor}
           zoom={zoom}
-          pageSize={pageSetup.pageSize || 'a4'}
-          margins={
-            typeof pageSetup.margins === 'string'
-              ? pageSetup.margins
-              : pageSetup.margins?.top <= 48
-                ? 'narrow'
-                : 'normal'
-          }
+          pageSetup={pageSetup}
           onPageCountChange={setPageCount}
         />
         <AiAssistantSidebar
@@ -252,6 +282,12 @@ export function ZWriter({
         centerContent="Ready"
         zoom={zoom}
         onZoomChange={setZoom}
+      />
+
+      <WordCountDialog
+        isOpen={showWordCount}
+        onClose={() => setShowWordCount(false)}
+        editor={editor}
       />
 
       {/* Find and Replace Modal */}

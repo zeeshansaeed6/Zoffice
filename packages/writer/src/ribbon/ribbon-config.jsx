@@ -1,5 +1,11 @@
 import { getHomeRibbonGroups } from './ribbon-groups.jsx'
 import { getInsertRibbonGroups } from './ribbon-insert.jsx'
+import {
+  getLayoutRibbonGroups,
+  getReferencesRibbonGroups,
+  getReviewRibbonGroups,
+  getViewRibbonGroups,
+} from './ribbon-pages.jsx'
 
 /**
  * Creates data-driven ribbon configuration for ZWriter.
@@ -30,6 +36,10 @@ export function getWriterRibbonConfig(actions = {}) {
         label: 'Insert',
         groups: getInsertRibbonGroups(actions),
       },
+      { id: 'layout', label: 'Layout', groups: getLayoutRibbonGroups(actions) },
+      { id: 'references', label: 'References', groups: getReferencesRibbonGroups(actions) },
+      { id: 'review', label: 'Review', groups: getReviewRibbonGroups(actions) },
+      { id: 'view', label: 'View', groups: getViewRibbonGroups(actions) },
     ],
   }
 }

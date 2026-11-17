@@ -18,6 +18,9 @@ import {
   Quote,
   Code,
   CheckSquare,
+  IndentIncrease,
+  IndentDecrease,
+  CaseSensitive,
   Sparkles,
 } from 'lucide-react'
 import { LINE_SPACINGS } from './ribbon-options.js'
@@ -103,6 +106,49 @@ export function getHomeRibbonGroups(actions, marks) {
               label: l.label,
               onClick: () => actions.setLineSpacing?.(l.value),
             })),
+          },
+          {
+            id: 'indent-increase',
+            type: 'button',
+            label: 'Indent',
+            icon: <IndentIncrease size={13} />,
+            onClick: actions.onIncreaseIndent,
+          },
+          {
+            id: 'indent-decrease',
+            type: 'button',
+            label: 'Outdent',
+            icon: <IndentDecrease size={13} />,
+            onClick: actions.onDecreaseIndent,
+          },
+          {
+            id: 'change-case',
+            type: 'dropdown',
+            label: 'Case',
+            size: 'small',
+            icon: <CaseSensitive size={13} />,
+            items: [
+              {
+                id: 'case-sentence',
+                label: 'Sentence case',
+                onClick: () => actions.onChangeCase?.('sentence'),
+              },
+              {
+                id: 'case-lower',
+                label: 'lowercase',
+                onClick: () => actions.onChangeCase?.('lower'),
+              },
+              {
+                id: 'case-upper',
+                label: 'UPPERCASE',
+                onClick: () => actions.onChangeCase?.('upper'),
+              },
+              {
+                id: 'case-title',
+                label: 'Capitalize Each Word',
+                onClick: () => actions.onChangeCase?.('title'),
+              },
+            ],
           },
         ],
         [

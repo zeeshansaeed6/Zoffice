@@ -165,4 +165,30 @@ test.describe('ZWriter Document Engine E2E Tests', () => {
     await page.screenshot({ path: insertScreenshotPath })
     expect(existsSync(insertScreenshotPath)).toBe(true)
   })
+
+  test('Layout, References, Review and View tabs work', async () => {
+    await page.getByRole('button', { name: /ZWriter/i }).click()
+    const editor = page.getByRole('textbox', { name: 'Document editor' })
+    await expect(editor).toBeVisible()
+    await editor.fill('Hello layout world')
+
+    // Layout: landscape makes the sheet wider than tall
+    await page.getByRole('tab', { name: 'Layout' }).click()
+    await page.getByRole('button', { name: 'Orientation' }).click()
+    await page.getByRole('button', { name: 'Landscape' }).click()
+    const box = await page.locator('[data-testid="paper-sheet"]').boundingBox()
+    expect(box.width).toBeGreaterThan(box.height * 0.9)
+
+    // Review: word count dialog
+    await page.getByRole('tab', { name: 'Review' }).click()
+    await page.getByRole('button', { name: 'Word Count' }).click()
+    await expect(page.getByTestId('word-count-table')).toContainText('3')
+    await page.keyboard.press('Escape')
+
+    // References and View tabs render their controls
+    await page.getByRole('tab', { name: 'References' }).click()
+    await expect(page.getByRole('button', { name: 'Table of Contents' })).toBeVisible()
+    await page.getByRole('tab', { name: 'View', exact: true }).click()
+    await expect(page.getByRole('button', { name: 'Print' })).toBeVisible()
+  })
 })

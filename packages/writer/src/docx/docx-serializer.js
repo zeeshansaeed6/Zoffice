@@ -239,6 +239,7 @@ function buildSectionPageProperties(pageSetup) {
   }
 
   return {
+    ...(pageSetup.columns > 1 ? { column: { count: pageSetup.columns, space: 708 } } : {}),
     page: {
       size: {
         width: isLandscape ? heightTwips : widthTwips,

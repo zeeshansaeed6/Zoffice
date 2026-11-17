@@ -73,3 +73,28 @@ export function getZoomScale(zoomPercent) {
   const safeZoom = Math.min(200, Math.max(50, Number(zoomPercent) || 100))
   return safeZoom / 100
 }
+
+/**
+ * Resolves a margins setting (preset name or px object) to a px object.
+ * @param {string | {top:number,bottom:number,left:number,right:number}} [margins]
+ * @returns {{top:number,bottom:number,left:number,right:number}}
+ */
+export function resolveMargins(margins) {
+  if (margins && typeof margins === 'object') return { ...PAGE_MARGINS.normal, ...margins }
+  return PAGE_MARGINS[margins] || PAGE_MARGINS.normal
+}
+
+/**
+ * Computes paper dimensions and margins for a page setup, honoring orientation.
+ * @param {{pageSize?: string, orientation?: string, margins?: any}} [setup]
+ * @returns {{widthPx:number, heightPx:number, margins:{top:number,bottom:number,left:number,right:number}}}
+ */
+export function getPageMetrics(setup = {}) {
+  const size = PAGE_SIZES[setup.pageSize] || PAGE_SIZES.a4
+  const landscape = setup.orientation === 'landscape'
+  return {
+    widthPx: landscape ? size.heightPx : size.widthPx,
+    heightPx: landscape ? size.widthPx : size.heightPx,
+    margins: resolveMargins(setup.margins),
+  }
+}

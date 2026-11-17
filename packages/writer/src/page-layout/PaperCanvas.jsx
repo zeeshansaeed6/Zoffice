@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { EditorContent } from '@tiptap/react'
 import { isRtlLocale } from '@zoffice/core'
-import { PAGE_SIZES, PAGE_MARGINS, calculatePageCount } from './page-utils.js'
+import { getPageMetrics, calculatePageCount } from './page-utils.js'
 
 /**
  * Visual Paper Page Canvas hosting the TipTap editor.
@@ -9,24 +9,17 @@ import { PAGE_SIZES, PAGE_MARGINS, calculatePageCount } from './page-utils.js'
  * @param {Object} props
  * @param {import('@tiptap/react').Editor} props.editor
  * @param {number} [props.zoom=100]
- * @param {'a4' | 'letter'} [props.pageSize='a4']
- * @param {'normal' | 'narrow' | 'moderate' | 'wide'} [props.margins='normal']
+ * @param {{pageSize?: string, orientation?: string, margins?: any, columns?: number}} [props.pageSetup]
  * @param {(pages: number) => void} [props.onPageCountChange]
  */
-export function PaperCanvas({
-  editor,
-  zoom = 100,
-  pageSize = 'a4',
-  margins = 'normal',
-  onPageCountChange,
-}) {
+export function PaperCanvas({ editor, zoom = 100, pageSetup = {}, onPageCountChange }) {
   const containerRef = useRef(null)
   const isRtl = isRtlLocale()
-  const sizeConfig = PAGE_SIZES[pageSize] || PAGE_SIZES.a4
-  const marginConfig = PAGE_MARGINS[margins] || PAGE_MARGINS.normal
+  const { widthPx, heightPx, margins: marginConfig } = getPageMetrics(pageSetup)
+  const columns = pageSetup.columns || 1
 
   const editorHtml = editor?.isInitialized ? editor.getHTML() : ''
-  const pageHeight = sizeConfig.heightPx
+  const pageHeight = heightPx
   const totalMarginY = marginConfig.top + marginConfig.bottom
 
   // Calculate and update page count on scroll/content change
@@ -51,8 +44,8 @@ export function PaperCanvas({
           isRtl ? 'text-right' : 'text-left'
         }`}
         style={{
-          width: `${sizeConfig.widthPx}px`,
-          minHeight: `${sizeConfig.heightPx}px`,
+          width: `${widthPx}px`,
+          minHeight: `${heightPx}px`,
           paddingTop: `${marginConfig.top}px`,
           paddingBottom: `${marginConfig.bottom}px`,
           paddingLeft: `${marginConfig.left}px`,
@@ -60,7 +53,9 @@ export function PaperCanvas({
           transform: `${zoom !== 100 ? `scale(${zoom / 100})` : 'none'}`,
         }}
       >
-        <EditorContent editor={editor} />
+        <div style={columns > 1 ? { columnCount: columns, columnGap: '32px' } : undefined}>
+          <EditorContent editor={editor} />
+        </div>
       </div>
     </div>
   )
