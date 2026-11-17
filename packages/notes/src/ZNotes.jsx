@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { NotebookSidebar } from './sidebar/NotebookSidebar.jsx'
 import { NoteCanvas } from './canvas/NoteCanvas.jsx'
@@ -53,7 +53,10 @@ export function ZNotes({
   } = useNoteStore()
 
   // Initialize notebooks on mount
+  const initialized = useRef(false)
   useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
     if (initialContent) {
       try {
         const parsed = JSON.parse(initialContent)

@@ -45,19 +45,9 @@ export function ZSheets({ onSave, initialContent }) {
     endCol: 0,
   })
   const [isEditing, setIsEditing] = useState(false)
-  const [editValue, setEditValue] = useState('')
+  const [currentEditValue, setEditValue] = useState('')
   const [zoom, setZoom] = useState(100)
   const [showAiSidebar, setShowAiSidebar] = useState(false)
-
-  const handleAiInsert = useCallback(
-    (result) => {
-      if (result) {
-        const formulaToInsert = result.formula || result.content || ''
-        handleCommitEdit(formulaToInsert)
-      }
-    },
-    [handleCommitEdit],
-  )
 
   // Formula engine instance
   const formulaEngine = useMemo(() => {
@@ -77,30 +67,46 @@ export function ZSheets({ onSave, initialContent }) {
   }, [activeSheet, activeCell])
 
   // Display formula bar value
-  const formulaValue = isEditing ? editValue : currentCell?.raw || currentCell?.value || ''
+  const formulaValue = isEditing ? currentEditValue : currentCell?.raw || currentCell?.value || ''
 
   // Commit editing changes to sheet
-  const handleCommitEdit = useCallback(() => {
-    if (!isEditing) return
-    formulaEngine.ensureSheet(activeSheet.id, activeSheet.name)
-    formulaEngine.setCell(activeSheet.id, activeCell.row, activeCell.col, editValue)
+  const handleCommitEdit = useCallback(
+    (override) => {
+      // A string override (e.g. AI-inserted formula) commits even when not already editing
+      const hasOverride = typeof override === 'string'
+      if (!isEditing && !hasOverride) return
+      const editValue = hasOverride ? override : currentEditValue
+      formulaEngine.ensureSheet(activeSheet.id, activeSheet.name)
+      formulaEngine.setCell(activeSheet.id, activeCell.row, activeCell.col, editValue)
 
-    const computedVal = formulaEngine.getCellValue(activeSheet.id, activeCell.row, activeCell.col)
+      const computedVal = formulaEngine.getCellValue(activeSheet.id, activeCell.row, activeCell.col)
 
-    setWorkbook((prev) => {
-      const sheets = prev.sheets.map((s) => {
-        if (s.id !== prev.activeSheetId) return s
-        const updated = { ...s, data: { ...s.data } }
-        setCell(updated, activeCell.row, activeCell.col, {
-          raw: editValue,
-          value: computedVal !== undefined ? computedVal : editValue,
+      setWorkbook((prev) => {
+        const sheets = prev.sheets.map((s) => {
+          if (s.id !== prev.activeSheetId) return s
+          const updated = { ...s, data: { ...s.data } }
+          setCell(updated, activeCell.row, activeCell.col, {
+            raw: editValue,
+            value: computedVal !== undefined ? computedVal : editValue,
+          })
+          return updated
         })
-        return updated
+        return { ...prev, sheets }
       })
-      return { ...prev, sheets }
-    })
-    setIsEditing(false)
-  }, [isEditing, activeSheet, activeCell, editValue, formulaEngine])
+      setIsEditing(false)
+    },
+    [isEditing, activeSheet, activeCell, currentEditValue, formulaEngine],
+  )
+
+  const handleAiInsert = useCallback(
+    (result) => {
+      if (result) {
+        const formulaToInsert = result.formula || result.content || ''
+        handleCommitEdit(formulaToInsert)
+      }
+    },
+    [handleCommitEdit],
+  )
 
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false)
@@ -243,7 +249,7 @@ export function ZSheets({ onSave, initialContent }) {
           onColResize={handleColResize}
           onRowResize={handleRowResize}
           isEditing={isEditing}
-          editValue={editValue}
+          editValue={currentEditValue}
           onEditValueChange={setEditValue}
           onStartEdit={handleStartEdit}
           onCommitEdit={handleCommitEdit}

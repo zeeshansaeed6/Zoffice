@@ -23,10 +23,7 @@ import {
   Plus,
 } from 'lucide-react'
 import { Dialog } from '@zoffice/ui'
-import {
-  getTemplates,
-  getCategoriesWithCounts,
-} from '@zoffice/core'
+import { getTemplates, getCategoriesWithCounts } from '@zoffice/core'
 import { useTabStore } from '../stores/tab-store.js'
 
 const ICON_MAP = {
@@ -51,12 +48,30 @@ const ICON_MAP = {
 }
 
 const APP_BADGES = {
-  writer: { label: 'ZWriter', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
-  sheets: { label: 'ZSheets', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' },
-  slides: { label: 'ZSlides', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300' },
-  notes: { label: 'ZNotes', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300' },
-  forms: { label: 'ZForms', color: 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300' },
-  planner: { label: 'ZPlanner', color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300' },
+  writer: {
+    label: 'ZWriter',
+    color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+  },
+  sheets: {
+    label: 'ZSheets',
+    color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+  },
+  slides: {
+    label: 'ZSlides',
+    color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
+  },
+  notes: {
+    label: 'ZNotes',
+    color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  },
+  forms: {
+    label: 'ZForms',
+    color: 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300',
+  },
+  planner: {
+    label: 'ZPlanner',
+    color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
+  },
   draw: { label: 'ZDraw', color: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300' },
 }
 
@@ -92,15 +107,10 @@ export function TemplatesGalleryModal({ isOpen, onClose, initialAppId = null }) 
   if (!isOpen) return null
 
   return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Templates Gallery"
-      size="4xl"
-    >
+    <Dialog isOpen={isOpen} onClose={onClose} title="Templates Gallery" size="4xl">
       <div className="flex max-h-[75vh] flex-col">
         {/* Search & Filter Bar */}
-        <div className="mb-4 flex flex-col gap-3 border-b border-neutral-200 pb-4 dark:border-neutral-800 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 flex flex-col gap-3 border-b border-neutral-200 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
           <div className="relative flex-1">
             <Search
               size={16}
@@ -125,7 +135,10 @@ export function TemplatesGalleryModal({ isOpen, onClose, initialAppId = null }) 
           </div>
 
           <div className="flex items-center gap-2">
-            <label htmlFor="app-filter-select" className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            <label
+              htmlFor="app-filter-select"
+              className="text-xs font-medium text-neutral-500 dark:text-neutral-400"
+            >
               App:
             </label>
             <select
@@ -168,7 +181,10 @@ export function TemplatesGalleryModal({ isOpen, onClose, initialAppId = null }) 
         <div className="flex-1 overflow-y-auto pr-1">
           {filteredTemplates.length === 0 ? (
             <div className="py-12 text-center">
-              <LayoutTemplate size={40} className="mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
+              <LayoutTemplate
+                size={40}
+                className="mx-auto mb-3 text-neutral-300 dark:text-neutral-600"
+              />
               <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
                 No templates found matching your criteria.
               </p>
@@ -195,14 +211,16 @@ export function TemplatesGalleryModal({ isOpen, onClose, initialAppId = null }) 
                         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                           <IconComponent size={18} />
                         </span>
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${badge.color}`}>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${badge.color}`}
+                        >
                           {badge.label}
                         </span>
                       </div>
                       <h4 className="text-sm font-semibold text-neutral-900 group-hover:text-blue-600 dark:text-neutral-100 dark:group-hover:text-blue-400">
                         {template.title}
                       </h4>
-                      <p className="mt-1.5 text-xs line-clamp-3 text-neutral-500 dark:text-neutral-400">
+                      <p className="mt-1.5 line-clamp-3 text-xs text-neutral-500 dark:text-neutral-400">
                         {template.description}
                       </p>
                     </div>

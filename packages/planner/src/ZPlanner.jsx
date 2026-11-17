@@ -4,7 +4,7 @@
  * @module ZPlanner
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { Kanban, BarChart2, Calendar, Search, Filter } from 'lucide-react'
 import { getPlannerRibbonConfig } from './ribbon-config.jsx'
@@ -51,7 +51,10 @@ export function ZPlanner({
   } = usePlannerStore()
 
   // Initialize from template or file content if provided
+  const initialized = useRef(false)
   useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
     if (_initialContent) {
       try {
         const parsed =

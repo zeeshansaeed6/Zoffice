@@ -6,7 +6,11 @@ const APP_META = {
   sheets: { name: 'ZSheets', color: 'text-emerald-600', desc: 'Loading spreadsheet engine...' },
   slides: { name: 'ZSlides', color: 'text-amber-600', desc: 'Loading presentation engine...' },
   notes: { name: 'ZNotes', color: 'text-violet-600', desc: 'Loading notebook canvas...' },
-  mail: { name: 'ZMail & ZCalendar', color: 'text-sky-600', desc: 'Loading mail & calendar client...' },
+  mail: {
+    name: 'ZMail & ZCalendar',
+    color: 'text-sky-600',
+    desc: 'Loading mail & calendar client...',
+  },
   forms: { name: 'ZForms', color: 'text-indigo-600', desc: 'Loading form builder...' },
   planner: { name: 'ZPlanner', color: 'text-teal-600', desc: 'Loading project board...' },
   draw: { name: 'ZDraw', color: 'text-rose-600', desc: 'Loading vector diagramming...' },

@@ -38,8 +38,8 @@
 
 .high-contrast button:focus-visible,
 .high-contrast input:focus-visible,
-.high-contrast [role="button"]:focus-visible,
-.high-contrast [role="tab"]:focus-visible {
+.high-contrast [role='button']:focus-visible,
+.high-contrast [role='tab']:focus-visible {
   outline: 3px solid #facc15 !important;
   outline-offset: 2px !important;
 }

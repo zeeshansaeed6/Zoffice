@@ -42,17 +42,6 @@ export function ZWriter({
   const [showSymbolDialog, setShowSymbolDialog] = useState(false)
   const [showAiSidebar, setShowAiSidebar] = useState(false)
 
-  const handleAiInsert = useCallback(
-    (result) => {
-      if (editor && result) {
-        const textToInsert =
-          typeof result === 'string' ? result : result.content || result.formula || ''
-        editor.commands.insertContent(textToInsert)
-      }
-    },
-    [editor],
-  )
-
   const handleEditorChange = useCallback(
     async (html) => {
       if (onChange) {
@@ -74,6 +63,17 @@ export function ZWriter({
     onChange: handleEditorChange,
     onSelectionUpdate: handleSelectionUpdate,
   })
+
+  const handleAiInsert = useCallback(
+    (result) => {
+      if (editor && result) {
+        const textToInsert =
+          typeof result === 'string' ? result : result.content || result.formula || ''
+        editor.commands.insertContent(textToInsert)
+      }
+    },
+    [editor],
+  )
 
   // Load and decode base64 .docx if passed as initial content
   useEffect(() => {

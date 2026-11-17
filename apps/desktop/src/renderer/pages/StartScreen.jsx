@@ -245,15 +245,9 @@ export function StartScreen() {
         </div>
       </div>
 
-      <TemplatesGalleryModal
-        isOpen={isGalleryOpen}
-        onClose={() => setIsGalleryOpen(false)}
-      />
+      <TemplatesGalleryModal isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
 
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
+      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { FileText, Eye, PieChart, Settings } from 'lucide-react'
 import { getFormsRibbonConfig } from './ribbon-config.jsx'
@@ -39,8 +39,12 @@ export function ZForms({
     setFormSettings,
   } = useFormStore()
 
-  // Initialize on mount
+  // Initialize once on mount. Re-running when initialContent changes would ping-pong with the
+  // onChange sync below (parent echoes content back as initialContent) and loop forever.
+  const initialized = useRef(false)
   useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
     if (_initialContent) {
       try {
         const parsed =

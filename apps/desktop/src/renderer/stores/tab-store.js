@@ -87,9 +87,16 @@ export const useTabStore = create(
       },
 
       updateContent: (id, content) => {
-        set((state) => ({
-          tabs: state.tabs.map((tab) => (tab.id === id ? { ...tab, content, dirty: true } : tab)),
-        }))
+        set((state) =>
+          // Unchanged content must not re-render or mark dirty (prevents onChange feedback loops)
+          state.tabs.find((tab) => tab.id === id)?.content === content
+            ? state
+            : {
+                tabs: state.tabs.map((tab) =>
+                  tab.id === id ? { ...tab, content, dirty: true } : tab,
+                ),
+              },
+        )
       },
 
       updateTitle: (id, title) => {

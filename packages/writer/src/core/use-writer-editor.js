@@ -22,7 +22,8 @@ export function useWriterEditor({ initialContent = '', onChange, onSelectionUpda
   const [activeMarks, setActiveMarks] = useState({})
 
   const updateMetrics = useCallback((editorInstance) => {
-    if (!editorInstance) return
+    // Tiptap 3 hands back the editor before its schema exists; reading it then throws
+    if (!editorInstance?.isInitialized) return
     const text = editorInstance.getText()
     const trimmed = text.trim()
     const words = trimmed ? trimmed.split(/\s+/).length : 0
@@ -69,6 +70,7 @@ export function useWriterEditor({ initialContent = '', onChange, onSelectionUpda
         'data-testid': 'document-editor-canvas',
       },
     },
+    onCreate: ({ editor: currentEditor }) => updateMetrics(currentEditor),
     onUpdate: ({ editor: currentEditor }) => {
       updateMetrics(currentEditor)
       if (onChange) {

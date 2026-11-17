@@ -55,6 +55,8 @@ export function getWriterExtensions() {
       heading: {
         levels: [1, 2, 3, 4, 5, 6],
       },
+      underline: false,
+      link: false,
       dropcursor: {
         color: '#2563eb',
         width: 2,

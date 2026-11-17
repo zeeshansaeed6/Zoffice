@@ -54,7 +54,8 @@ export function TabBar() {
       if (tabs[nextIdx]) setActiveTab(tabs[nextIdx].id)
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault()
-      const prevIdx = currentIdx === -1 ? tabs.length - 1 : (currentIdx - 1 + tabs.length) % tabs.length
+      const prevIdx =
+        currentIdx === -1 ? tabs.length - 1 : (currentIdx - 1 + tabs.length) % tabs.length
       if (tabs[prevIdx]) setActiveTab(tabs[prevIdx].id)
     }
   }

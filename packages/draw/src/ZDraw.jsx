@@ -4,7 +4,7 @@
  * @module ZDraw
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Ribbon, StatusBar, StatusBarSlot } from '@zoffice/ui'
 import { getDrawRibbonConfig } from './ribbon-config.jsx'
 import { useDrawStore } from './core/draw-store.js'
@@ -52,7 +52,10 @@ export function ZDraw({
   } = useDrawStore()
 
   // Initialize from template or file content if provided
+  const initialized = useRef(false)
   useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
     if (_initialContent) {
       try {
         const parsed =

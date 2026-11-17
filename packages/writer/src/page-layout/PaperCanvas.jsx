@@ -25,7 +25,7 @@ export function PaperCanvas({
   const sizeConfig = PAGE_SIZES[pageSize] || PAGE_SIZES.a4
   const marginConfig = PAGE_MARGINS[margins] || PAGE_MARGINS.normal
 
-  const editorHtml = editor?.getHTML()
+  const editorHtml = editor?.isInitialized ? editor.getHTML() : ''
   const pageHeight = sizeConfig.heightPx
   const totalMarginY = marginConfig.top + marginConfig.bottom
 

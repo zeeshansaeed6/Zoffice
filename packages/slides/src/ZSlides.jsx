@@ -202,7 +202,10 @@ export function ZSlides({ onSave, initialContent }) {
   })
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-100 font-sans dark:bg-neutral-900">
+    <div
+      data-testid="zslides-app"
+      className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-100 font-sans dark:bg-neutral-900"
+    >
       <Ribbon config={ribbonConfig} />
       <div className="relative flex flex-1 overflow-hidden">
         <ThumbnailPanel
