@@ -51,11 +51,7 @@ describe('Plugin System & Sandbox Engine', () => {
       }
 
       // Granted ONLY read permission
-      const readOnlyApi = createSandboxedApi(
-        'test-reader',
-        [PLUGIN_PERMISSIONS.DOC_READ],
-        context,
-      )
+      const readOnlyApi = createSandboxedApi('test-reader', [PLUGIN_PERMISSIONS.DOC_READ], context)
 
       expect(readOnlyApi.document.getContent()).toBe('Hello Zoffice Suite')
       expect(() => readOnlyApi.document.setContent('Hacked!')).toThrow(/Permission denied/)
@@ -112,7 +108,12 @@ describe('Plugin System & Sandbox Engine', () => {
       const regCsv = engine.registerPlugin(
         csvCleanerManifest,
         'module.exports = { cleanCsvData: () => "cleaned" };',
-        [PLUGIN_PERMISSIONS.DOC_READ, PLUGIN_PERMISSIONS.DOC_WRITE, PLUGIN_PERMISSIONS.UI_RIBBON, PLUGIN_PERMISSIONS.FILE_HANDLER],
+        [
+          PLUGIN_PERMISSIONS.DOC_READ,
+          PLUGIN_PERMISSIONS.DOC_WRITE,
+          PLUGIN_PERMISSIONS.UI_RIBBON,
+          PLUGIN_PERMISSIONS.FILE_HANDLER,
+        ],
       )
       expect(regCsv.success).toBe(true)
 
@@ -144,7 +145,8 @@ describe('Plugin System & Sandbox Engine', () => {
     it('executes Word Frequency Counter logic accurately', () => {
       let toastMessage = ''
       const hostContext = {
-        getContent: () => 'The quick brown fox jumps over the lazy dog. The fox was fast and the dog was brown.',
+        getContent: () =>
+          'The quick brown fox jumps over the lazy dog. The fox was fast and the dog was brown.',
         showToast: (msg) => {
           toastMessage = msg
         },
@@ -184,7 +186,8 @@ describe('Plugin System & Sandbox Engine', () => {
     })
 
     it('executes CSV Cleaner logic accurately', () => {
-      let documentData = ' Name ,  Department , Role \r\n Alice , Engineering , Dev \n Alice , Engineering , Dev \n Bob , Sales , Lead \r\n'
+      let documentData =
+        ' Name ,  Department , Role \r\n Alice , Engineering , Dev \n Alice , Engineering , Dev \n Bob , Sales , Lead \r\n'
       let toastMessage = ''
 
       const hostContext = {

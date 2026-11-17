@@ -35,7 +35,8 @@ export const SHEETS_TEMPLATES = [
   {
     id: 'budget-family-annual',
     title: 'Annual Family Household Budget',
-    description: 'Comprehensive annual budget model tracking monthly income, fixed costs, and net savings.',
+    description:
+      'Comprehensive annual budget model tracking monthly income, fixed costs, and net savings.',
     appId: 'sheets',
     category: 'finance',
     icon: 'DollarSign',
@@ -61,7 +62,8 @@ export const SHEETS_TEMPLATES = [
   {
     id: 'expense-tracker',
     title: 'Business Expense Tracker',
-    description: 'Reimbursement log categorizing business meals, travel, lodging, and tax deductions.',
+    description:
+      'Reimbursement log categorizing business meals, travel, lodging, and tax deductions.',
     appId: 'sheets',
     category: 'finance',
     icon: 'CreditCard',
@@ -100,7 +102,8 @@ export const SHEETS_TEMPLATES = [
   {
     id: 'invoice-sales-calculator',
     title: 'Sales Invoice & Tax Calculator',
-    description: 'Automated sales order calculator with line totals, volume discounts, and sales tax.',
+    description:
+      'Automated sales order calculator with line totals, volume discounts, and sales tax.',
     appId: 'sheets',
     category: 'finance',
     icon: 'FileSpreadsheet',
@@ -120,7 +123,8 @@ export const SHEETS_TEMPLATES = [
   {
     id: 'loan-amortization',
     title: 'Loan Amortization Schedule',
-    description: 'Standard term loan schedule calculating monthly principal, interest, and balance.',
+    description:
+      'Standard term loan schedule calculating monthly principal, interest, and balance.',
     appId: 'sheets',
     category: 'finance',
     icon: 'TrendingUp',

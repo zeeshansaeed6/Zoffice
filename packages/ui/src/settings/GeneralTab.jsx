@@ -92,7 +92,8 @@ export function GeneralTab({ locale, onLocaleChange }) {
           Application Language & Layout
         </label>
         <p className="mb-3 text-xs text-neutral-500 dark:text-neutral-400">
-          Change interface language. Urdu automatically switches editors and windows to Right-to-Left (RTL).
+          Change interface language. Urdu automatically switches editors and windows to
+          Right-to-Left (RTL).
         </p>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">

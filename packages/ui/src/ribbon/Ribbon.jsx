@@ -50,7 +50,8 @@ export function Ribbon({
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
 
   const activeId = activeTabId || internalActiveTab
-  const currentTab = config.tabs?.find((t) => t.id === activeId) || config.tabs?.[0] || { groups: [] }
+  const currentTab = config.tabs?.find((t) => t.id === activeId) ||
+    config.tabs?.[0] || { groups: [] }
 
   const handleTabClick = (tabId) => {
     if (onTabChange) {
@@ -82,7 +83,11 @@ export function Ribbon({
 
       {/* Tab Strip */}
       <div className="flex items-center justify-between border-b border-neutral-200 px-2 dark:border-neutral-800">
-        <div role="tablist" aria-label="Ribbon Tabs" className="flex items-center gap-0.5 overflow-x-auto">
+        <div
+          role="tablist"
+          aria-label="Ribbon Tabs"
+          className="flex items-center gap-0.5 overflow-x-auto"
+        >
           {config.fileMenuLabel && (
             <button
               type="button"

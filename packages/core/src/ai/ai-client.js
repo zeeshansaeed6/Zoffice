@@ -41,14 +41,26 @@ export async function sendAiPrompt(config, systemPrompt, userPrompt) {
     if (!config.apiKey) {
       throw new Error('API Key is required for OpenAI-compatible providers.')
     }
-    return callOpenAi(endpoint || 'https://api.openai.com/v1', model, config.apiKey, systemPrompt, userPrompt)
+    return callOpenAi(
+      endpoint || 'https://api.openai.com/v1',
+      model,
+      config.apiKey,
+      systemPrompt,
+      userPrompt,
+    )
   }
 
   if (provider === AI_PROVIDERS.ANTHROPIC) {
     if (!config.apiKey) {
       throw new Error('API Key is required for Anthropic Claude.')
     }
-    return callAnthropic(endpoint || 'https://api.anthropic.com/v1', model, config.apiKey, systemPrompt, userPrompt)
+    return callAnthropic(
+      endpoint || 'https://api.anthropic.com/v1',
+      model,
+      config.apiKey,
+      systemPrompt,
+      userPrompt,
+    )
   }
 
   throw new Error(`Unsupported AI provider: ${provider}`)

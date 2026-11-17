@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Palette,
-  Type,
-  Save,
-  Puzzle,
-  ShieldCheck,
-  X,
-} from 'lucide-react'
+import { Palette, Type, Save, Puzzle, ShieldCheck, X } from 'lucide-react'
 import { getSetting, setSetting, getLocale } from '@zoffice/core'
 import { GeneralTab } from './GeneralTab.jsx'
 import { TypographyFormatsTab } from './TypographyFormatsTab.jsx'

@@ -26,8 +26,10 @@ const SPELLCHECK_LANGS = [
  * @param {(key: string, val: any) => void} props.onChange
  */
 export function AutosaveSpellcheckTab({ settings, onChange }) {
-  const currentInterval = settings.autosave_interval !== undefined ? settings.autosave_interval : 30000
-  const spellcheckEnabled = settings.spellcheck_enabled !== undefined ? settings.spellcheck_enabled : true
+  const currentInterval =
+    settings.autosave_interval !== undefined ? settings.autosave_interval : 30000
+  const spellcheckEnabled =
+    settings.spellcheck_enabled !== undefined ? settings.spellcheck_enabled : true
   const currentSpellLang = settings.spellcheck_lang || 'en-US'
 
   return (

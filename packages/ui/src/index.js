@@ -22,4 +22,3 @@ export { TypographyFormatsTab } from './settings/TypographyFormatsTab.jsx'
 export { AutosaveSpellcheckTab } from './settings/AutosaveSpellcheckTab.jsx'
 export { PluginsTab } from './settings/PluginsTab.jsx'
 export { PrivacyTab } from './settings/PrivacyTab.jsx'
-

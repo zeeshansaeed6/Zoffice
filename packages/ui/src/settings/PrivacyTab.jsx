@@ -10,7 +10,7 @@ export function PrivacyTab() {
       <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4 dark:border-blue-900/50 dark:bg-blue-950/20">
         <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
           <ShieldCheck className="h-5 w-5" />
-          <h3 className="font-semibold text-base">Zoffice Privacy Guarantee</h3>
+          <h3 className="text-base font-semibold">Zoffice Privacy Guarantee</h3>
         </div>
         <p className="mt-1 text-xs text-blue-600 dark:text-blue-400">
           Zoffice is engineered from the ground up to guarantee total digital sovereignty and data
@@ -58,8 +58,8 @@ export function PrivacyTab() {
             Local Data Storage
           </div>
           <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-            Your settings, recent documents, notes, mail index, and planner boards are persisted
-            in a local SQLite database directly on your system disk.
+            Your settings, recent documents, notes, mail index, and planner boards are persisted in
+            a local SQLite database directly on your system disk.
           </p>
         </div>
       </div>
@@ -71,8 +71,8 @@ export function PrivacyTab() {
         <p className="mt-2 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
           Zoffice is an independent, community-driven desktop productivity suite. Zoffice is not
           affiliated with, associated with, sponsored by, or endorsed by Microsoft Corporation or
-          any of its subsidiaries. All product names, trademarks, and registered trademarks
-          belong to their respective holders.
+          any of its subsidiaries. All product names, trademarks, and registered trademarks belong
+          to their respective holders.
         </p>
       </div>
     </div>

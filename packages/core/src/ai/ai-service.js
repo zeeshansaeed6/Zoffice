@@ -121,7 +121,10 @@ Output raw JSON only without markdown code blocks.`
 
   const raw = await sendAiPrompt(config, systemPrompt, prompt)
   try {
-    const cleaned = raw.replace(/^```json/i, '').replace(/```$/i, '').trim()
+    const cleaned = raw
+      .replace(/^```json/i, '')
+      .replace(/```$/i, '')
+      .trim()
     const parsed = JSON.parse(cleaned)
     return {
       formula: parsed.formula || '=SUM()',
@@ -154,7 +157,10 @@ Do not wrap in markdown quotes. Valid JSON only.`
 
   const raw = await sendAiPrompt(config, systemPrompt, topic)
   try {
-    const cleaned = raw.replace(/^```json/i, '').replace(/```$/i, '').trim()
+    const cleaned = raw
+      .replace(/^```json/i, '')
+      .replace(/```$/i, '')
+      .trim()
     const parsed = JSON.parse(cleaned)
     if (Array.isArray(parsed)) return parsed
   } catch {
@@ -162,6 +168,9 @@ Do not wrap in markdown quotes. Valid JSON only.`
   }
 
   return [
-    { title: topic, bullets: ['Introduction to topic', 'Key market trends', 'Implementation plan'] },
+    {
+      title: topic,
+      bullets: ['Introduction to topic', 'Key market trends', 'Implementation plan'],
+    },
   ]
 }

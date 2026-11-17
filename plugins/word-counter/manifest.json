@@ -6,11 +6,7 @@
   "author": "Zoffice Community",
   "targetApps": ["writer"],
   "main": "index.js",
-  "permissions": [
-    "active-document:read",
-    "ui:ribbon",
-    "ui:sidebar"
-  ],
+  "permissions": ["active-document:read", "ui:ribbon", "ui:sidebar"],
   "contributions": {
     "ribbonButtons": [
       {

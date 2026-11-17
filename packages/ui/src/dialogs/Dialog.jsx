@@ -53,7 +53,12 @@ export function Dialog({ isOpen, onClose, title, children, footer, size = 'md' }
         className={`w-full ${selectedSizeClass} animate-in fade-in zoom-in-95 rounded-lg border border-neutral-200 bg-white shadow-xl dark:border-neutral-800 dark:bg-neutral-900`}
       >
         <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
-          <h2 id="zoffice-dialog-title" className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{title}</h2>
+          <h2
+            id="zoffice-dialog-title"
+            className="text-sm font-semibold text-neutral-900 dark:text-neutral-100"
+          >
+            {title}
+          </h2>
           <button
             type="button"
             aria-label="Close dialog"

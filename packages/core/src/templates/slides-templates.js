@@ -57,7 +57,8 @@ export const SLIDES_TEMPLATES = [
   {
     id: 'pitch-deck-startup',
     title: 'Startup Investment Pitch Deck',
-    description: '5-slide narrative: Title & Mission, Problem, Solution & Technology, Market, and The Ask.',
+    description:
+      '5-slide narrative: Title & Mission, Problem, Solution & Technology, Market, and The Ask.',
     appId: 'slides',
     category: 'presentations',
     icon: 'Presentation',
@@ -122,16 +123,7 @@ export const SLIDES_TEMPLATES = [
         },
         {
           elements: [
-            textElem(
-              't4',
-              '3. Market Size & Regulatory Tailwinds',
-              60,
-              50,
-              840,
-              50,
-              28,
-              true,
-            ),
+            textElem('t4', '3. Market Size & Regulatory Tailwinds', 60, 50, 840, 50, 28, true),
             textElem(
               'b4',
               'Over 40% of global defense, healthcare, and financial institutions face stringent sovereignty mandates. The total addressable privacy software market exceeds $32B globally by 2030.',
@@ -172,7 +164,17 @@ export const SLIDES_TEMPLATES = [
         {
           layout: 'title',
           elements: [
-            textElem('ps_t1', 'Project Horizon Architecture', 80, 160, 800, 70, 44, true, '#1d4ed8'),
+            textElem(
+              'ps_t1',
+              'Project Horizon Architecture',
+              80,
+              160,
+              800,
+              70,
+              44,
+              true,
+              '#1d4ed8',
+            ),
             textElem(
               'ps_s1',
               'Next-Generation Monorepo & UI Design System',
@@ -220,7 +222,8 @@ export const SLIDES_TEMPLATES = [
   {
     id: 'qbr-executive',
     title: 'Quarterly Business Review (QBR)',
-    description: 'Executive QBR review with financial performance, target OKRs, and strategic wins.',
+    description:
+      'Executive QBR review with financial performance, target OKRs, and strategic wins.',
     appId: 'slides',
     category: 'presentations',
     icon: 'BarChart',
@@ -230,7 +233,17 @@ export const SLIDES_TEMPLATES = [
           layout: 'title',
           bg: '#1e293b',
           elements: [
-            textElem('qbr_t1', 'Q3 Executive Business Review', 80, 160, 800, 70, 44, true, '#ffffff'),
+            textElem(
+              'qbr_t1',
+              'Q3 Executive Business Review',
+              80,
+              160,
+              800,
+              70,
+              44,
+              true,
+              '#ffffff',
+            ),
             textElem(
               'qbr_s1',
               'Strategic Performance, Revenue & Operational Metrics',
@@ -287,7 +300,17 @@ export const SLIDES_TEMPLATES = [
         {
           layout: 'title',
           elements: [
-            textElem('ws_t1', 'Modern JavaScript Engineering', 80, 160, 800, 70, 42, true, '#0f172a'),
+            textElem(
+              'ws_t1',
+              'Modern JavaScript Engineering',
+              80,
+              160,
+              800,
+              70,
+              42,
+              true,
+              '#0f172a',
+            ),
             textElem(
               'ws_s1',
               'Building High-Scale Desktop Applications without Toolchain Bloat',

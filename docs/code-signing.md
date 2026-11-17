@@ -7,6 +7,7 @@ This document outlines the code-signing, notarization, and integrity verificatio
 ## 1. Security & Integrity Principles
 
 Zoffice is committed to high standards of user security, offline sovereignty, and software integrity:
+
 - **Zero Tampering:** Binaries are signed and accompanied by SHA-256 checksums.
 - **No Remote Telemetry:** The updater only checks GitHub Releases when requested or running, never transmits telemetry, hardware fingerprints, or document data.
 - **User Agency:** Updates are never applied silently or without explicit confirmation.
@@ -16,11 +17,14 @@ Zoffice is committed to high standards of user security, offline sovereignty, an
 ## 2. Windows Authenticode Signing
 
 ### Requirements
+
 - A valid **EV (Extended Validation)** or **Standard Code Signing Certificate** from a trusted CA (e.g., DigiCert, Sectigo), OR an **Azure Trusted Signing** account.
 - `signtool.exe` (included in Windows SDK).
 
 ### Environment Variables
+
 For automated CI or local builds, set the following environment variables:
+
 ```bash
 # PKCS#12 Certificate file (Base64 encoded or path to .pfx)
 export CSC_LINK="/path/to/certificate.pfx"
@@ -31,7 +35,9 @@ export ELECTRON_BUILDER_TIMESTAMP_SERVER="http://timestamp.digicert.com"
 ```
 
 ### electron-builder Configuration
+
 In `apps/desktop/package.json`:
+
 ```json
 "win": {
   "target": [
@@ -46,7 +52,9 @@ In `apps/desktop/package.json`:
 ```
 
 ### Manual Signing Verification
+
 To inspect an executable's signature on Windows:
+
 ```powershell
 Get-AuthenticodeSignature .\release\Zoffice-Setup-1.0.0.exe
 SignTool.exe verify /pa /v .\release\Zoffice-1.0.0-portable.exe
@@ -57,11 +65,13 @@ SignTool.exe verify /pa /v .\release\Zoffice-1.0.0-portable.exe
 ## 3. macOS Gatekeeper & Notarization
 
 ### Requirements
+
 - Apple Developer Account ($99/year).
 - **Developer ID Application Certificate** generated in the Apple Developer Portal.
 - App-specific password generated at [appleid.apple.com](https://appleid.apple.com).
 
 ### Environment Variables
+
 ```bash
 export CSC_LINK="/path/to/developer_id_app.p12"
 export CSC_KEY_PASSWORD="ExportPassword"
@@ -73,7 +83,9 @@ export APPLE_TEAM_ID="ABC1234XYZ"
 ```
 
 ### Hardened Runtime & Entitlements
+
 Create `build/entitlements.mac.plist`:
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -90,6 +102,7 @@ Create `build/entitlements.mac.plist`:
 ```
 
 In `apps/desktop/package.json`:
+
 ```json
 "mac": {
   "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
@@ -105,6 +118,7 @@ In `apps/desktop/package.json`:
 ```
 
 ### Verifying macOS Notarization & Staple
+
 ```bash
 spctl -a -vvv -t install /Applications/Zoffice.app
 xcrun stapler validate release/Zoffice-1.0.0.dmg
@@ -115,24 +129,30 @@ xcrun stapler validate release/Zoffice-1.0.0.dmg
 ## 4. Linux Package Signing & Verification
 
 ### Requirements
+
 - GPG key generated for Zoffice releases:
+
 ```bash
 gpg --quick-generate-key "Zoffice Release Team <releases@zoffice.org>" rsa4096 sign 2y
 ```
 
 ### Debian (`.deb`) Package Signing
+
 ```bash
 dpkg-sig --sign builder release/zoffice_1.0.0_amd64.deb
 ```
 
 ### Checksums Publication
+
 Every release must publish a `SHASUMS256.txt` file containing cryptographic hashes of all binary artifacts:
+
 ```bash
 sha256sum release/* > SHASUMS256.txt
 gpg --armor --detach-sign SHASUMS256.txt
 ```
 
 Users can verify release integrity offline:
+
 ```bash
 sha256sum --check SHASUMS256.txt
 gpg --verify SHASUMS256.txt.asc SHASUMS256.txt

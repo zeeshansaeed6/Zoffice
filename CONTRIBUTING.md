@@ -20,12 +20,14 @@ Every pull request must strictly comply with these core rules:
 ## 🚀 Development Setup
 
 ### Prerequisites
+
 - **Node.js** >= 20.0.0
 - **pnpm** >= 9.0.0
 - **Git**
 - C++ / Python build tools (for native `better-sqlite3` rebuilds)
 
 ### Clone & Run
+
 ```bash
 # Clone repository
 git clone https://github.com/nicholaszoffice/zoffice.git
@@ -61,6 +63,7 @@ If you are new to the codebase, look for issues labeled:
 - `template` — creating original templates in `packages/core/src/templates/`.
 
 ### Recommended First Tasks
+
 1. **Add a New Localization**:
    Add a new dictionary file (e.g. `it.json`, `pt.json`, `ar.json`) in `packages/core/src/i18n/dictionaries/` and register it in `i18n.js`.
 2. **Build a Sandboxed Plugin**:

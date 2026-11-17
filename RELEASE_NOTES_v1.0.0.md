@@ -17,17 +17,21 @@ Zoffice provides a familiar, modern ribbon interface to write documents, compute
 ## 🌟 Key Highlights & Philosophy
 
 ### 1. 100% Digital Sovereignty
+
 - **Zero Telemetry:** Zoffice transmits no usage metrics, device fingerprints, or analytics beacons.
 - **Offline by Default:** Everything runs locally. You can use Zoffice completely disconnected from the internet.
 - **No Accounts or Paywalls:** No email signups, product keys, or feature tier gates.
 
 ### 2. High-Performance Engineering
+
 - **Instant Launch (< 1.5s):** Fast startup achieved through modular package lazy loading and optimized electron-vite bundling.
 - **Lean Memory:** Idle Start Screen consumes under 75 MB RSS.
 - **In-Process SQLite:** High-speed, ACID-compliant local database persistence.
 
 ### 3. Native Open XML & Open Standards
+
 Read and write standard formats with high fidelity:
+
 - Word Processing: `.docx`, `.odt`, `.txt`, `.md`
 - Spreadsheets: `.xlsx`, `.ods`, `.csv`
 - Presentations: `.pptx`, `.odp`, `.pdf`
@@ -38,6 +42,7 @@ Read and write standard formats with high fidelity:
 ## 📦 What's Inside: The 10-App Suite
 
 ### 📝 ZWriter (Word Processor)
+
 - Document canvas with pagination, margins, headers, footers, and footnotes.
 - Rich typography with open fonts (**Inter**, **Carlito**, **Liberation Sans**).
 - Tables, borders, shading, and image insertion.
@@ -45,12 +50,14 @@ Read and write standard formats with high fidelity:
 - Included **Word Frequency Counter** plugin for vocabulary and reading-time analysis.
 
 ### 📊 ZSheets (Spreadsheet Engine)
+
 - Virtualized canvas grid smoothly navigating 100,000+ rows.
 - HyperFormula engine supporting **300+ standard Excel functions** (`SUM`, `VLOOKUP`, `INDEX/MATCH`, `XLOOKUP`, `FILTER`).
 - Cell formatting for currency, percentages, dates, and custom numbers.
 - Included **CSV Data Cleaner** plugin for normalizing raw datasets.
 
 ### 📽️ ZSlides (Presentation Engine)
+
 - 16:9 presentation canvas with text boxes, geometric shapes, and tables.
 - **12 Curated Designer Themes** (Midnight, Ivory, Nordic Blue, Slate, Emerald, Coral, and more).
 - 60fps hardware-accelerated slide transitions and object animations.
@@ -58,37 +65,44 @@ Read and write standard formats with high fidelity:
 - Printable multi-slide handout generator.
 
 ### 📒 ZNotes (Personal Notebook)
+
 - Hierarchical organization: Notebooks → Sections → Pages.
 - Free-form canvas supporting text blocks, checklists, and pen sketches.
 - Instant full-text search with local SQLite indexing.
 
 ### 📬 ZMail & ZCalendar (Email & Schedule)
+
 - Offline-first email client with IMAP/SMTP connectivity.
 - Unified calendar with Day, Week, and Month views.
 - Offline address book and contacts directory.
 - Passwords encrypted at rest using OS-native `safeStorage` (Windows DPAPI, macOS Keychain, Linux Secret Service).
 
 ### 📋 ZForms (Form & Survey Builder)
+
 - Drag-and-drop form designer with text, dropdown, radio, rating, and file inputs.
 - Conditional branching logic based on user responses.
 - Local response storage and 1-click CSV/JSON export.
 
 ### 📌 ZPlanner (Agile Project Management)
+
 - Kanban boards with drag-and-drop cards and customizable swimlanes.
 - Interactive Gantt chart timeline view with dependencies and milestones.
 - Trello / CSV board import and export.
 
 ### ✏️ ZDraw (Vector Diagramming)
+
 - Flowchart and system architecture shape libraries.
 - Smart connector routing with orthogonal and curved lines.
 - SVG, PNG, and native `.zdraw` export.
 
 ### 🗄️ ZBase (Relational Visual Database)
+
 - Multi-table relational visual database.
 - Grid, Kanban, and Form views for table records.
 - In-app SQL query console for direct SQLite queries.
 
 ### 💾 ZDrive (Local Cloud Explorer)
+
 - Sovereign document explorer with automatic version history tracking.
 - Tag-based organization and disk storage quota monitoring.
 
@@ -108,14 +122,14 @@ Read and write standard formats with high fidelity:
 
 ## 📥 Downloads & Binary Verification
 
-| OS | Package | File | SHA-256 Checksum |
-| :--- | :--- | :--- | :--- |
-| **Windows** | Setup Installer | `Zoffice-Setup-1.0.0.exe` | *(published with release)* |
-| **Windows** | Portable Edition | `Zoffice-1.0.0-portable.exe` | *(published with release)* |
-| **Windows** | Enterprise MSI | `Zoffice-1.0.0.msi` | *(published with release)* |
-| **macOS** | Universal DMG | `Zoffice-1.0.0.dmg` | *(published with release)* |
-| **Linux** | Universal AppImage | `Zoffice-1.0.0.AppImage` | *(published with release)* |
-| **Linux** | Debian Package | `zoffice_1.0.0_amd64.deb` | *(published with release)* |
+| OS          | Package            | File                         | SHA-256 Checksum           |
+| :---------- | :----------------- | :--------------------------- | :------------------------- |
+| **Windows** | Setup Installer    | `Zoffice-Setup-1.0.0.exe`    | _(published with release)_ |
+| **Windows** | Portable Edition   | `Zoffice-1.0.0-portable.exe` | _(published with release)_ |
+| **Windows** | Enterprise MSI     | `Zoffice-1.0.0.msi`          | _(published with release)_ |
+| **macOS**   | Universal DMG      | `Zoffice-1.0.0.dmg`          | _(published with release)_ |
+| **Linux**   | Universal AppImage | `Zoffice-1.0.0.AppImage`     | _(published with release)_ |
+| **Linux**   | Debian Package     | `zoffice_1.0.0_amd64.deb`    | _(published with release)_ |
 
 Verify downloaded assets using the published `SHASUMS256.txt` and cryptographic signatures.
 
@@ -128,4 +142,4 @@ Verify downloaded assets using the published `SHASUMS256.txt` and cryptographic 
 - **Issue Tracker:** [GitHub Issues](https://github.com/nicholaszoffice/zoffice/issues)
 - **Security Inquiries:** `security@zoffice.org` / [SECURITY.md](SECURITY.md)
 
-*Zoffice is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Microsoft Corporation.*
+_Zoffice is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Microsoft Corporation._

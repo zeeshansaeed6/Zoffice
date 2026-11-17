@@ -278,9 +278,15 @@ body.theme-light .site-header {
   border-radius: 50%;
 }
 
-.dot.red { background: #ef4444; }
-.dot.yellow { background: #f59e0b; }
-.dot.green { background: #10b981; }
+.dot.red {
+  background: #ef4444;
+}
+.dot.yellow {
+  background: #f59e0b;
+}
+.dot.green {
+  background: #10b981;
+}
 
 .window-title {
   flex: 1;
@@ -422,7 +428,10 @@ body.theme-light .site-header {
 }
 
 /* Apps Grid */
-.apps-section, .why-section, .downloads-section, .faq-section {
+.apps-section,
+.why-section,
+.downloads-section,
+.faq-section {
   padding: 80px 0;
   border-top: 1px solid var(--border-color);
 }
@@ -438,7 +447,9 @@ body.theme-light .site-header {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .app-card:hover {

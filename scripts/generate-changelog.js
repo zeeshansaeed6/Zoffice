@@ -113,10 +113,15 @@ function run() {
         writeFileSync(changelogPath, `# Changelog\n\n${newSection}\n---\n\n${existingContent}`)
       }
     } else {
-      writeFileSync(changelogPath, `# Changelog\n\nAll notable changes to Zoffice are documented in this file.\n\n${newSection}`)
+      writeFileSync(
+        changelogPath,
+        `# Changelog\n\nAll notable changes to Zoffice are documented in this file.\n\n${newSection}`,
+      )
     }
 
-    console.info(`Successfully generated CHANGELOG.md for ${version} (${commits.length} commits processed)`)
+    console.info(
+      `Successfully generated CHANGELOG.md for ${version} (${commits.length} commits processed)`,
+    )
   } catch (err) {
     console.error('Failed to generate changelog:', err.message)
     process.exit(1)

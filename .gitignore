@@ -34,3 +34,5 @@ playwright-report/
 *.sqlite
 *.sqlite3
 *.db
+
+graphify-out/

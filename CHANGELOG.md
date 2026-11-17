@@ -39,8 +39,8 @@ All notable changes to Zoffice are documented in this file.
 
 ### Maintenance & Infrastructure
 
--  fixed errors and contuniung phhae 4 (`9b83116`)
--  adding mail to packages (`9ed4946`)
+- fixed errors and contuniung phhae 4 (`9b83116`)
+- adding mail to packages (`9ed4946`)
 - config edited --- imp (`c28ceb5`)
 - Phase 4 started and updating opacxkages till now (`167ef93`)
 - added files and edited in package and changed global.css (`d282753`)
@@ -57,4 +57,3 @@ All notable changes to Zoffice are documented in this file.
 ### Other Improvements
 
 - Zwriter inserted tab (`be3e778`)
-

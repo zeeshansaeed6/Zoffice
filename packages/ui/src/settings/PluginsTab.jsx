@@ -106,7 +106,7 @@ export function PluginsTab() {
                       <span
                         key={perm}
                         title={PERMISSION_DESCRIPTIONS[perm] || perm}
-                        className="rounded bg-neutral-100 px-2 py-0.5 text-[10px] font-mono text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                        className="rounded bg-neutral-100 px-2 py-0.5 font-mono text-[10px] text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                       >
                         {perm}
                       </span>

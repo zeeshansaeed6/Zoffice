@@ -25,14 +25,18 @@ export function createSandboxedApi(pluginId, grantedPermissions, hostContext = {
     document: {
       getContent: () => {
         if (!hasPerm(PLUGIN_PERMISSIONS.DOC_READ)) {
-          throw new Error(`Permission denied: "${PLUGIN_PERMISSIONS.DOC_READ}" required to read document content.`)
+          throw new Error(
+            `Permission denied: "${PLUGIN_PERMISSIONS.DOC_READ}" required to read document content.`,
+          )
         }
         return hostContext.getContent ? hostContext.getContent() : ''
       },
 
       setContent: (newContent) => {
         if (!hasPerm(PLUGIN_PERMISSIONS.DOC_WRITE)) {
-          throw new Error(`Permission denied: "${PLUGIN_PERMISSIONS.DOC_WRITE}" required to modify document content.`)
+          throw new Error(
+            `Permission denied: "${PLUGIN_PERMISSIONS.DOC_WRITE}" required to modify document content.`,
+          )
         }
         if (hostContext.setContent) {
           hostContext.setContent(newContent)
@@ -41,7 +45,9 @@ export function createSandboxedApi(pluginId, grantedPermissions, hostContext = {
 
       getSelectedText: () => {
         if (!hasPerm(PLUGIN_PERMISSIONS.DOC_READ)) {
-          throw new Error(`Permission denied: "${PLUGIN_PERMISSIONS.DOC_READ}" required to read selection.`)
+          throw new Error(
+            `Permission denied: "${PLUGIN_PERMISSIONS.DOC_READ}" required to read selection.`,
+          )
         }
         return hostContext.getSelectedText ? hostContext.getSelectedText() : ''
       },
@@ -50,21 +56,27 @@ export function createSandboxedApi(pluginId, grantedPermissions, hostContext = {
     storage: {
       get: (key) => {
         if (!hasPerm(PLUGIN_PERMISSIONS.STORAGE)) {
-          throw new Error(`Permission denied: "${PLUGIN_PERMISSIONS.STORAGE}" required to access plugin storage.`)
+          throw new Error(
+            `Permission denied: "${PLUGIN_PERMISSIONS.STORAGE}" required to access plugin storage.`,
+          )
         }
         return storageMap.get(key)
       },
 
       set: (key, value) => {
         if (!hasPerm(PLUGIN_PERMISSIONS.STORAGE)) {
-          throw new Error(`Permission denied: "${PLUGIN_PERMISSIONS.STORAGE}" required to access plugin storage.`)
+          throw new Error(
+            `Permission denied: "${PLUGIN_PERMISSIONS.STORAGE}" required to access plugin storage.`,
+          )
         }
         storageMap.set(key, value)
       },
 
       remove: (key) => {
         if (!hasPerm(PLUGIN_PERMISSIONS.STORAGE)) {
-          throw new Error(`Permission denied: "${PLUGIN_PERMISSIONS.STORAGE}" required to access plugin storage.`)
+          throw new Error(
+            `Permission denied: "${PLUGIN_PERMISSIONS.STORAGE}" required to access plugin storage.`,
+          )
         }
         storageMap.delete(key)
       },

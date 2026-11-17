@@ -90,8 +90,6 @@ export function getCategoriesWithCounts() {
   return CATEGORIES.map((cat) => ({
     ...cat,
     count:
-      cat.id === 'all'
-        ? TEMPLATES.length
-        : TEMPLATES.filter((t) => t.category === cat.id).length,
+      cat.id === 'all' ? TEMPLATES.length : TEMPLATES.filter((t) => t.category === cat.id).length,
   }))
 }

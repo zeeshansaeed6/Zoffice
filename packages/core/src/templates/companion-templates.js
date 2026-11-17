@@ -9,7 +9,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'notes-meeting-action',
     title: 'Project Kickoff Notes & Checklist',
-    description: 'Structured notebook with goals, agenda, attendee roster, and interactive action items.',
+    description:
+      'Structured notebook with goals, agenda, attendee roster, and interactive action items.',
     appId: 'notes',
     category: 'productivity',
     icon: 'BookOpen',
@@ -49,8 +50,14 @@ export const COMPANION_TEMPLATES = [
                       items: [
                         { text: 'Finalize core plugin sandbox permission prompts', checked: true },
                         { text: 'Implement accessible high-contrast color scheme', checked: true },
-                        { text: 'Profile cold startup time on target low-spec machine', checked: false },
-                        { text: 'Verify GitHub Actions build matrix across 3 OS targets', checked: false },
+                        {
+                          text: 'Profile cold startup time on target low-spec machine',
+                          checked: false,
+                        },
+                        {
+                          text: 'Verify GitHub Actions build matrix across 3 OS targets',
+                          checked: false,
+                        },
                       ],
                     }),
                   },
@@ -65,7 +72,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'notes-project-research',
     title: 'Research & Technical Deep Dive',
-    description: 'Technical investigation notebook with problem context, references, and benchmark results.',
+    description:
+      'Technical investigation notebook with problem context, references, and benchmark results.',
     appId: 'notes',
     category: 'productivity',
     icon: 'Search',
@@ -92,7 +100,8 @@ export const COMPANION_TEMPLATES = [
                     y: 20,
                     width: 600,
                     height: 80,
-                    content: '<h2>SQLite WAL Mode vs In-Memory Cache</h2><p>Investigating sub-5ms query times across 50,000 indexed records.</p>',
+                    content:
+                      '<h2>SQLite WAL Mode vs In-Memory Cache</h2><p>Investigating sub-5ms query times across 50,000 indexed records.</p>',
                   },
                 ],
               },
@@ -107,7 +116,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'forms-feedback-nps',
     title: 'Customer Feedback & NPS Survey',
-    description: 'Product satisfaction survey featuring 1-10 NPS rating scale and qualitative feedback.',
+    description:
+      'Product satisfaction survey featuring 1-10 NPS rating scale and qualitative feedback.',
     appId: 'forms',
     category: 'productivity',
     icon: 'Smile',
@@ -115,7 +125,8 @@ export const COMPANION_TEMPLATES = [
       form: {
         id: 'form_nps',
         title: 'Product Experience & Satisfaction Survey',
-        description: 'Help us improve by sharing your thoughts on performance, reliability, and usability.',
+        description:
+          'Help us improve by sharing your thoughts on performance, reliability, and usability.',
         themeColor: '#2563eb',
         sections: [{ id: 'sec_1', title: 'General Experience', description: '' }],
         questions: [
@@ -166,7 +177,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'forms-event-registration',
     title: 'Conference Registration & Intake',
-    description: 'Attendee registration form capturing contact info, workshop tracks, and preferences.',
+    description:
+      'Attendee registration form capturing contact info, workshop tracks, and preferences.',
     appId: 'forms',
     category: 'productivity',
     icon: 'UserCheck',
@@ -276,7 +288,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'planner-marketing-launch',
     title: 'Product Launch Marketing Plan',
-    description: 'Multi-stage marketing tracker for copy, design, outreach, staging, and press release.',
+    description:
+      'Multi-stage marketing tracker for copy, design, outreach, staging, and press release.',
     appId: 'planner',
     category: 'productivity',
     icon: 'Megaphone',
@@ -316,7 +329,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'draw-cloud-architecture',
     title: 'Cloud Infrastructure Diagram',
-    description: 'Scalable service topology showing CDN, API Gateway, Microservices, and Databases.',
+    description:
+      'Scalable service topology showing CDN, API Gateway, Microservices, and Databases.',
     appId: 'draw',
     category: 'diagrams',
     icon: 'Network',
@@ -428,7 +442,8 @@ export const COMPANION_TEMPLATES = [
   {
     id: 'draw-org-chart',
     title: 'Company Organization Hierarchy Chart',
-    description: 'Executive leadership hierarchy branching to Product, Engineering, and Operations.',
+    description:
+      'Executive leadership hierarchy branching to Product, Engineering, and Operations.',
     appId: 'draw',
     category: 'diagrams',
     icon: 'GitFork',

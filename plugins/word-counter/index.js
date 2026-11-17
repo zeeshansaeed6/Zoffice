@@ -43,7 +43,7 @@ module.exports = {
     const stats = countWords(content)
     const topSummary = stats.topWords.map((item) => `${item.word}: ${item.count}`).join(', ')
     zoffice.ui.showToast(
-      `Document Analysis: ${stats.total} words (${stats.unique} unique). Est. read time: ${stats.readingTimeMinutes} min. Top words: ${topSummary || 'None'}`
+      `Document Analysis: ${stats.total} words (${stats.unique} unique). Est. read time: ${stats.readingTimeMinutes} min. Top words: ${topSummary || 'None'}`,
     )
     return stats
   },

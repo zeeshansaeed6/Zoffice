@@ -157,7 +157,9 @@ export function AiAssistantSidebar({
         <form onSubmit={handleSaveSettings} className="flex-1 overflow-y-auto p-4 text-xs">
           <div className="mb-3 flex items-center justify-between rounded-lg bg-neutral-50 p-2.5 dark:bg-neutral-800/60">
             <div>
-              <p className="font-semibold text-neutral-800 dark:text-neutral-200">Enable Assistant</p>
+              <p className="font-semibold text-neutral-800 dark:text-neutral-200">
+                Enable Assistant
+              </p>
               <p className="text-[10px] text-neutral-500">Off by default &bull; Zero telemetry</p>
             </div>
             <input
@@ -397,7 +399,9 @@ export function AiAssistantSidebar({
                   <div className="space-y-2">
                     {output.slides.map((s, idx) => (
                       <div key={idx} className="rounded bg-white p-2 dark:bg-neutral-900">
-                        <strong className="block text-purple-600 dark:text-purple-400">{s.title}</strong>
+                        <strong className="block text-purple-600 dark:text-purple-400">
+                          {s.title}
+                        </strong>
                         <ul className="mt-1 list-disc pl-4 text-[10px]">
                           {s.bullets?.map((b, bIdx) => (
                             <li key={bIdx}>{b}</li>
@@ -407,7 +411,7 @@ export function AiAssistantSidebar({
                     ))}
                   </div>
                 ) : (
-                  <p className="font-sans whitespace-pre-wrap">{output.content}</p>
+                  <p className="whitespace-pre-wrap font-sans">{output.content}</p>
                 )}
               </div>
 

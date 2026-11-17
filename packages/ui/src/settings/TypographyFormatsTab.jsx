@@ -4,7 +4,11 @@ import { Type, FileText } from 'lucide-react'
 const FONTS = [
   { id: 'Inter', name: 'Inter (Sans-Serif Modern)', sample: 'The quick brown fox jumps' },
   { id: 'Carlito', name: 'Carlito (Clean & Contemporary)', sample: 'The quick brown fox jumps' },
-  { id: 'Liberation Sans', name: 'Liberation Sans (Universal)', sample: 'The quick brown fox jumps' },
+  {
+    id: 'Liberation Sans',
+    name: 'Liberation Sans (Universal)',
+    sample: 'The quick brown fox jumps',
+  },
 ]
 
 const FONT_SIZES = [10, 11, 12, 14, 16]
@@ -67,7 +71,10 @@ export function TypographyFormatsTab({ settings, onChange }) {
                   {font.name}
                 </span>
               </div>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400" style={{ fontFamily: font.id }}>
+              <span
+                className="text-xs text-neutral-500 dark:text-neutral-400"
+                style={{ fontFamily: font.id }}
+              >
                 {font.sample}
               </span>
             </label>

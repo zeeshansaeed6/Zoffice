@@ -144,7 +144,11 @@ describe('AI Assistant Service', () => {
       }),
     })
 
-    const res = await generateFormulaHelp('Sum sales of Hardware', ['A: Category', 'B: Sales'], config)
+    const res = await generateFormulaHelp(
+      'Sum sales of Hardware',
+      ['A: Category', 'B: Sales'],
+      config,
+    )
     expect(res.formula).toBe('=SUMIF(A:A, "Hardware", B:B)')
     expect(res.explanation).toContain('Sums all values')
   })

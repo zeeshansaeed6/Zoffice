@@ -8,14 +8,14 @@ This guide describes the configuration, category structure, and community modera
 
 Configure the following categories in the GitHub repository settings (`Settings -> Features -> Discussions`):
 
-| Category | Icon | Format | Description |
-| :--- | :---: | :---: | :--- |
-| **Announcements** | 📢 | Announcement | Official releases, roadmap updates, and security disclosures (maintainer posting only). |
-| **General** | 💬 | Open Discussion | Open conversations, productivity workflows, and community chat. |
-| **Ideas & Feature Requests** | 💡 | Open Discussion | Proposals for new features, UI enhancements, and roadmap suggestions. |
-| **Q&A & Troubleshooting** | ❓ | Question / Answer | Support requests, installation questions, and usage questions (enables "Mark as Answer"). |
-| **Show and Tell** | 🙌 | Open Discussion | Share original templates, themes, custom workflows, or setups with the community. |
-| **Plugins & Extensions** | 🧩 | Open Discussion | Showcase third-party sandboxed plugins, manifest questions, and developer discussion. |
+| Category                     | Icon |      Format       | Description                                                                               |
+| :--------------------------- | :--: | :---------------: | :---------------------------------------------------------------------------------------- |
+| **Announcements**            |  📢  |   Announcement    | Official releases, roadmap updates, and security disclosures (maintainer posting only).   |
+| **General**                  |  💬  |  Open Discussion  | Open conversations, productivity workflows, and community chat.                           |
+| **Ideas & Feature Requests** |  💡  |  Open Discussion  | Proposals for new features, UI enhancements, and roadmap suggestions.                     |
+| **Q&A & Troubleshooting**    |  ❓  | Question / Answer | Support requests, installation questions, and usage questions (enables "Mark as Answer"). |
+| **Show and Tell**            |  🙌  |  Open Discussion  | Share original templates, themes, custom workflows, or setups with the community.         |
+| **Plugins & Extensions**     |  🧩  |  Open Discussion  | Showcase third-party sandboxed plugins, manifest questions, and developer discussion.     |
 
 ---
 
